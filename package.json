@@ -1,0 +1,20 @@
+{
+  "name": "payflow-protocol",
+  "version": "1.0.0",
+  "description": "Soroban-native payment streaming, escrow, and milestone-based disbursement platform built on Stellar.",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter \"@payflow/*\" --filter \"payflow-cli\" --filter \"payflow-web\" build",
+    "test": "pnpm --recursive test",
+    "lint": "pnpm --recursive lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
