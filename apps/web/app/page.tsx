@@ -2,15 +2,16 @@
 
 import React from 'react';
 import Link from 'next/link';
-import WalletButton from '../components/WalletButton.js';
-import { useWalletStore } from '../lib/store/walletStore.js';
+import WalletButton from '../components/WalletButton';
+import { useWalletStore } from '../lib/store/walletStore';
 import { ArrowRight, Activity, ShieldCheck, Cpu } from 'lucide-react';
 
 export default function Home() {
-  const { address } = useWalletStore();
+  const { publicKey } = useWalletStore();
 
   return (
     <div className="relative min-h-screen bg-dark-900 overflow-hidden flex flex-col justify-between">
+      {/* TODO(issue): #T3 — Implement responsive mobile layouts across all pages */}
       {/* Background radial effects */}
       <div className="absolute top-[-10%] left-[-10%] h-[50%] w-[50%] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] h-[50%] w-[50%] bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
@@ -42,7 +43,7 @@ export default function Home() {
           </p>
         </div>
 
-        {address ? (
+        {publicKey ? (
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/streams"

@@ -1,38 +1,40 @@
+'use client';
+
 import { create } from 'zustand';
-import { connectFreighter, isFreighterInstalled } from '../stellar.js';
 
 interface WalletState {
-  address: string | null;
+  publicKey: string | null;
+  isConnected: boolean;
+  network: 'testnet' | 'mainnet';
   isConnecting: boolean;
-  error: string | null;
-  hasFreighter: boolean;
-  checkFreighter: () => Promise<void>;
+  // Actions
   connect: () => Promise<void>;
   disconnect: () => void;
+  setNetwork: (network: 'testnet' | 'mainnet') => void;
 }
 
 export const useWalletStore = create<WalletState>((set) => ({
-  address: null,
+  publicKey:    null,
+  isConnected:  false,
+  network:      'testnet',
   isConnecting: false,
-  error: null,
-  hasFreighter: false,
-
-  checkFreighter: async () => {
-    const installed = await isFreighterInstalled();
-    set({ hasFreighter: installed });
-  },
 
   connect: async () => {
-    set({ isConnecting: true, error: null });
+    set({ isConnecting: true });
     try {
-      const address = await connectFreighter();
-      set({ address, isConnecting: false });
+      // Dynamic import to avoid SSR crash — Freighter only exists in browser
+      const { isConnected, getPublicKey } = await import('@stellar/freighter-api');
+      const connected = await isConnected();
+      if (!connected) throw new Error('Freighter extension not found. Please install it.');
+      const publicKey = await getPublicKey();
+      set({ publicKey, isConnected: true, isConnecting: false });
     } catch (err: any) {
-      set({ error: err.message || 'Failed to connect wallet', isConnecting: false });
+      set({ isConnecting: false });
+      throw err;
     }
   },
 
-  disconnect: () => {
-    set({ address: null, error: null });
-  }
+  disconnect: () => set({ publicKey: null, isConnected: false }),
+
+  setNetwork: (network) => set({ network }),
 }));

@@ -1,23 +1,24 @@
 import { Command } from 'commander';
 import ora from 'ora';
-import chalk from 'chalk';
-import { loadConfig } from '../utils/config.js';
+import { printError } from '../utils/display.js';
 
+// TODO(issue): #M6 — Implement approve-milestone CLI command
 export function registerApproveMilestone(program: Command) {
   program
     .command('approve-milestone')
-    .description('Approve a specific milestone within an escrow')
-    .requiredOption('-e, --escrow-id <id>', 'Escrow contract ID')
-    .requiredOption('-i, --index <number>', 'Milestone index to approve (0-indexed)')
-    .action(async (options) => {
-      const spinner = ora(`Signing approval for escrow ${options.escrowId} milestone index ${options.index}...`).start();
+    .description('Approve a specific milestone inside an escrow (approver only)')
+    .requiredOption('-e, --escrow-id <id>',          'Numeric ID of the escrow')
+    .requiredOption('-i, --milestone-index <index>',  'Zero-based index of the milestone to approve')
+    .action(async (opts) => {
+      const spinner = ora(`Approving milestone #${opts.milestoneIndex} in escrow #${opts.escrowId}…`).start();
       try {
-        const config = loadConfig();
-        // TODO(issue): #71 — Call SDK escrow.approveMilestone, sign, and submit.
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        spinner.succeed(chalk.green(`Successfully approved milestone ${options.index} for escrow ${options.escrowId}.`));
+        // TODO(issue): #M6 — Call escrow.approveMilestone({ escrowId, milestoneIndex, approver })
+        spinner.stop();
+        printError('approve-milestone not implemented — see issue #M6');
       } catch (err: any) {
-        spinner.fail(chalk.red(`Approval failed: ${err.message}`));
+        spinner.stop();
+        printError(err.message);
+        process.exit(1);
       }
     });
 }

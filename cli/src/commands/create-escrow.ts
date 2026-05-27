@@ -1,26 +1,25 @@
 import { Command } from 'commander';
 import ora from 'ora';
-import chalk from 'chalk';
-import { loadConfig } from '../utils/config.js';
+import { printError } from '../utils/display.js';
 
+// TODO(issue): #M6 — Implement create-escrow CLI command
 export function registerCreateEscrow(program: Command) {
   program
     .command('create-escrow')
-    .description('Initialize a milestone-gated escrow vault')
-    .requiredOption('-r, --recipient <address>', 'Stellar address of the recipient')
-    .requiredOption('-t, --token <address>', 'Asset token contract ID')
-    .requiredOption('-m, --milestones <json>', 'JSON array of milestones [{title, amount}]')
-    .requiredOption('-a, --approvers <list>', 'Comma-separated list of approver addresses')
-    .requiredOption('-th, --threshold <number>', 'Number of approvals needed to release')
-    .action(async (options) => {
-      const spinner = ora('Validating params and deploying escrow...').start();
+    .description('Create a multi-milestone escrow vault on-chain')
+    .requiredOption('-r, --recipient <address>',  'Stellar address of the recipient')
+    .requiredOption('-t, --token <address>',       'Asset/token contract ID (C-address)')
+    .requiredOption('-m, --milestones <json>',     'JSON array of milestone objects: [{title,amount}]')
+    .action(async (opts) => {
+      const spinner = ora('Building create-escrow transaction…').start();
       try {
-        const config = loadConfig();
-        // TODO(issue): #70 — Parse parameters, call SDK escrow.create, sign with config secret key, and submit.
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        spinner.succeed(chalk.green(`Escrow created successfully!`));
+        // TODO(issue): #M6 — Parse milestones JSON, load config, call escrow.createEscrow()
+        spinner.stop();
+        printError('create-escrow not implemented — see issue #M6');
       } catch (err: any) {
-        spinner.fail(chalk.red(`Failed to create escrow: ${err.message}`));
+        spinner.stop();
+        printError(err.message);
+        process.exit(1);
       }
     });
 }

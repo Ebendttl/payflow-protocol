@@ -1,23 +1,22 @@
+---
 name: Feature request
-description: Propose a new feature or enhancement for PayFlow Protocol
-labels: ["enhancement"]
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Suggest a new idea or improvement.
-  - type: textarea
-    id: feature-description
-    attributes:
-      label: Describe the feature
-      description: What should this feature do?
-      placeholder: E.g., Add support for streaming assets with vesting curves.
-    validations:
-      required: true
-  - type: textarea
-    id: problem-solved
-    attributes:
-      label: What problem does this solve?
-      description: Explain the use case or user friction this feature addresses.
-    validations:
-      required: true
+about: Propose a new feature or enhancement for PayFlow Protocol
+title: 'feat: '
+labels: enhancement
+assignees: ''
+---
+
+## Description
+<!-- A clear and concise description of what the feature should do. -->
+
+## Requirements and context
+<!-- Any user stories, business rules, or context from the specification. -->
+
+## Suggested execution
+<!-- Your technical suggestions or how you envision the implementation. -->
+
+## Complexity
+<!-- Trivial, Medium, or High. -->
+
+## Acceptance criteria
+<!-- What must be true for this issue to be considered complete? -->

@@ -25,17 +25,23 @@ Make sure you have Rust and the Soroban target installed:
 rustup target add wasm32-unknown-unknown
 ```
 
+### Build Contract
+Compile the smart contract into optimized WASM bytecodes:
+```bash
+cargo build --target wasm32-unknown-unknown --release
+```
+
 ### Run Tests
-To test the stubbed contract implementation:
+To test the contract implementation:
 ```bash
 cargo test
 ```
 
-### Expected Output
-When running tests, the stub will compile successfully and trigger the expected panic from the unimplemented stubs:
-```text
-running 1 test
-test test_create_stream_stub ... ok
-
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+### Deploy to Stellar Testnet
+Deploy your optimized contract binary to the Stellar testnet:
+```bash
+stellar contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/stream_vault.wasm \
+  --source-account my-secret-key \
+  --network testnet
 ```

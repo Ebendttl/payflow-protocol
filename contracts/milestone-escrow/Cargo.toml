@@ -7,10 +7,13 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-soroban-sdk = { version = "22.0.1" }
+soroban-sdk = { workspace = true }
 
 [dev-dependencies]
-soroban-sdk = { version = "22.0.1", features = ["testutils"] }
+soroban-sdk = { workspace = true, features = ["testutils"] }
+
+[features]
+testutils = ["soroban-sdk/testutils"]
 
 [profile.release]
 opt-level = "z"
@@ -19,3 +22,4 @@ debug = false
 panic = "abort"
 lto = true
 codegen-units = 1
+

@@ -1,22 +1,23 @@
 import { Command } from 'commander';
 import ora from 'ora';
-import chalk from 'chalk';
-import { loadConfig } from '../utils/config.js';
+import { printError } from '../utils/display.js';
 
+// TODO(issue): #M6 — Implement claim CLI command
 export function registerClaimStream(program: Command) {
   program
-    .command('claim-stream')
-    .description('Claim accrued tokens from an active stream')
-    .requiredOption('-s, --stream-id <id>', 'Target stream ID')
-    .action(async (options) => {
-      const spinner = ora(`Calculating claimable balance and building tx...`).start();
+    .command('claim')
+    .description('Claim accrued tokens from a stream (recipient only)')
+    .requiredOption('-s, --stream-id <id>', 'Numeric ID of the stream to claim from')
+    .action(async (opts) => {
+      const spinner = ora(`Claiming from stream #${opts.streamId}…`).start();
       try {
-        const config = loadConfig();
-        // TODO(issue): #69 — Query claimableAmount via SDK, execute claim transaction submission, and report amount claimed.
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        spinner.succeed(chalk.green(`Tokens from stream ${options.streamId} claimed successfully.`));
+        // TODO(issue): #M6 — Call streams.claim({ streamId: BigInt(opts.streamId) })
+        spinner.stop();
+        printError('claim not implemented — see issue #M6');
       } catch (err: any) {
-        spinner.fail(chalk.red(`Failed to claim tokens: ${err.message}`));
+        spinner.stop();
+        printError(err.message);
+        process.exit(1);
       }
     });
 }

@@ -1,22 +1,23 @@
 import { Command } from 'commander';
 import ora from 'ora';
-import chalk from 'chalk';
-import { loadConfig } from '../utils/config.js';
+import { printError } from '../utils/display.js';
 
+// TODO(issue): #M6 — Implement cancel-stream CLI command
 export function registerCancelStream(program: Command) {
   program
     .command('cancel-stream')
-    .description('Cancel an active stream and refund remaining tokens to sender')
-    .requiredOption('-s, --stream-id <id>', 'Target stream ID')
-    .action(async (options) => {
-      const spinner = ora(`Initiating cancellation for stream ID: ${options.streamId}...`).start();
+    .description('Cancel an active stream and refund unaccrued funds to the sender')
+    .requiredOption('-s, --stream-id <id>', 'Numeric ID of the stream to cancel')
+    .action(async (opts) => {
+      const spinner = ora(`Cancelling stream #${opts.streamId}…`).start();
       try {
-        const config = loadConfig();
-        // TODO(issue): #68 — Call SDK streams.cancel, sign, submit, and display returned transaction hash.
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        spinner.succeed(chalk.green(`Stream ${options.streamId} cancelled successfully.`));
+        // TODO(issue): #M6 — Call streams.cancelStream({ streamId: BigInt(opts.streamId) })
+        spinner.stop();
+        printError('cancel-stream not implemented — see issue #M6');
       } catch (err: any) {
-        spinner.fail(chalk.red(`Failed to cancel stream: ${err.message}`));
+        spinner.stop();
+        printError(err.message);
+        process.exit(1);
       }
     });
 }

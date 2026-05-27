@@ -17,8 +17,31 @@ Refer to `src/lib.rs` for the full trait definition:
 - `get_escrow(escrow_id)`
 - `get_milestone(escrow_id, index)`
 
-## Run Tests
-To test the stubbed contract implementation:
+## Local Development & Testing
+
+### Prerequisite
+Make sure you have Rust and the Soroban target installed:
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+### Build Contract
+Compile the smart contract into optimized WASM bytecodes:
+```bash
+cargo build --target wasm32-unknown-unknown --release
+```
+
+### Run Tests
+To test the contract implementation:
 ```bash
 cargo test
+```
+
+### Deploy to Stellar Testnet
+Deploy your optimized contract binary to the Stellar testnet:
+```bash
+stellar contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/milestone_escrow.wasm \
+  --source-account my-secret-key \
+  --network testnet
 ```

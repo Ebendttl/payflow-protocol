@@ -5,25 +5,47 @@ describe('PayFlowClient SDK Stubs', () => {
   const client = new PayFlowClient({
     network: 'testnet',
     contractIds: {
-      streamVault: 'CDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-      milestoneEscrow: 'CBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-      streamFactory: 'CCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-    }
+      streamVault:    'CDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+      milestoneEscrow:'CBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+      streamFactory:  'CCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    },
   });
 
-  it('should initialize clients', () => {
+  it('should initialise all three sub-clients', () => {
     expect(client.streams).toBeDefined();
     expect(client.escrow).toBeDefined();
     expect(client.factory).toBeDefined();
   });
 
-  it('should return reject promises for unimplemented methods', async () => {
-    await expect(client.streams.create({
-      sender: 'GB...',
-      recipient: 'GD...',
-      token: 'CA...',
-      totalAmount: 1000n,
-      durationSeconds: 3600n
-    })).rejects.toBe('not implemented');
+  it('streams.createStream rejects with not-implemented message', async () => {
+    await expect(
+      client.streams.createStream({
+        sender: 'GBAAAA',
+        recipient: 'GDBBBB',
+        token: 'CAAAAA',
+        totalAmount: 1_000_000_000n,
+        durationSeconds: 2_592_000n,
+      })
+    ).rejects.toThrow('not implemented — see issue #H4');
+  });
+
+  it('escrow.createEscrow rejects with not-implemented message', async () => {
+    await expect(
+      client.escrow.createEscrow({
+        sender: 'GBAAAA',
+        recipient: 'GDBBBB',
+        token: 'CAAAAA',
+        totalAmount: 1_000_000_000n,
+        milestones: [{ title: 'M1', amount: 1_000_000_000n }],
+        approvers: ['GCCCCC'],
+        threshold: 1,
+      })
+    ).rejects.toThrow('not implemented — see issue #H4');
+  });
+
+  it('factory.getStreamVault rejects with not-implemented message', async () => {
+    await expect(client.factory.getStreamVault()).rejects.toThrow(
+      'not implemented — see issue #H4'
+    );
   });
 });

@@ -1,47 +1,57 @@
+// TODO(issue): #H5 — Implement upsertStream, upsertEscrow, getStreamsBySender,
+// getEscrowsBySender, getStreamById, getEscrowById using Drizzle ORM query builder
+
+import { eq } from 'drizzle-orm';
 import { streams, escrows, milestones } from './schema.js';
 
-export interface DBClient {
-  select: any;
-  insert: any;
-  update: any;
+type AnyDB = {
+  select: () => any;
+  insert: (table: any) => any;
+  update: (table: any) => any;
+};
+
+// ─── Streams ────────────────────────────────────────────────────────────────
+
+export async function upsertStream(db: AnyDB, stream: typeof streams.$inferInsert) {
+  // TODO(issue): #H5 — Use Drizzle .insert().onConflictDoUpdate() to upsert stream record
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function upsertStream(db: any, stream: typeof streams.$inferInsert) {
-  // TODO(issue): #35 — Implement SQLite upsert logic for streams table using Drizzle ORM.
-  throw new Error("not implemented");
+export async function getStreamById(db: AnyDB, id: string) {
+  // TODO(issue): #H5 — Return db.select().from(streams).where(eq(streams.id, id))
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function getStreamById(db: any, id: string) {
-  // TODO(issue): #36 — Retrieve a single stream by primary key id.
-  throw new Error("not implemented");
+export async function getStreamsBySender(db: AnyDB, sender: string) {
+  // TODO(issue): #H5 — Return db.select().from(streams).where(eq(streams.sender, sender))
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function getStreamsBySender(db: any, sender: string) {
-  // TODO(issue): #37 — Query all streams where sender matches, ordered by last_updated descending.
-  throw new Error("not implemented");
+// ─── Escrows ────────────────────────────────────────────────────────────────
+
+export async function upsertEscrow(db: AnyDB, escrow: typeof escrows.$inferInsert) {
+  // TODO(issue): #H5 — Use Drizzle .insert().onConflictDoUpdate() for escrow record
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function upsertEscrow(db: any, escrow: typeof escrows.$inferInsert) {
-  // TODO(issue): #38 — Implement SQLite upsert logic for escrows.
-  throw new Error("not implemented");
+export async function getEscrowById(db: AnyDB, id: string) {
+  // TODO(issue): #H5 — Return db.select().from(escrows).where(eq(escrows.id, id))
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function getEscrowById(db: any, id: string) {
-  // TODO(issue): #39 — Query single escrow by id.
-  throw new Error("not implemented");
+export async function getEscrowsBySender(db: AnyDB, sender: string) {
+  // TODO(issue): #H5 — Return db.select().from(escrows).where(eq(escrows.sender, sender))
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function getEscrowsBySender(db: any, sender: string) {
-  // TODO(issue): #40 — Query all escrows where sender matches.
-  throw new Error("not implemented");
+// ─── Milestones ─────────────────────────────────────────────────────────────
+
+export async function upsertMilestone(db: AnyDB, milestone: typeof milestones.$inferInsert) {
+  // TODO(issue): #H5 — Upsert milestone row; increment approval_count on conflict
+  throw new Error('not implemented — see issue #H5');
 }
 
-export async function upsertMilestone(db: any, milestone: typeof milestones.$inferInsert) {
-  // TODO(issue): #41 — Implement SQLite upsert logic for milestones.
-  throw new Error("not implemented");
-}
-
-export async function getMilestonesForEscrow(db: any, escrowId: string) {
-  // TODO(issue): #42 — Query all milestones associated with an escrowId, ordered by milestone index.
-  throw new Error("not implemented");
+export async function getMilestonesForEscrow(db: AnyDB, escrowId: string) {
+  // TODO(issue): #H5 — Return all milestones for a given escrowId ordered by index ASC
+  throw new Error('not implemented — see issue #H5');
 }

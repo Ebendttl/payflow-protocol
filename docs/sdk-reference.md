@@ -1,5 +1,7 @@
 # PayFlow TypeScript SDK Reference Guide
 
+<!-- TODO(issue): #T5 — Write full SDK developer documentation -->
+
 The `@payflow/sdk` library allows client-side applications, indexers, backend servers, and command-line tools to interface with PayFlow's Soroban smart contracts. It abstracts transaction building, footprint registration, signature collection, and network submission.
 
 ---

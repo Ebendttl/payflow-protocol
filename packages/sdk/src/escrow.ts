@@ -1,62 +1,44 @@
-import { Escrow, EscrowCreateParams, Milestone, PayFlowConfig } from './types.js';
+// TODO(issue): #H4 — Implement EscrowClient methods using @stellar/stellar-sdk contract invocation builders
+import type {
+  Escrow,
+  Milestone,
+  CreateEscrowParams,
+  ApproveMilestoneParams,
+  ReleaseMilestoneParams,
+  CancelEscrowParams,
+  PayFlowConfig,
+} from './types.js';
 
 export class EscrowClient {
   constructor(private config: PayFlowConfig) {}
 
-  /**
-   * Creates a milestone-gated escrow contract.
-   */
-  async create(params: EscrowCreateParams): Promise<string> {
-    // TODO(issue): #25 — Build, sign, and optionally submit create_escrow transaction using MilestoneEscrow contract.
-    return Promise.reject("not implemented");
+  /** Build and optionally submit a create_escrow transaction. */
+  async createEscrow(params: CreateEscrowParams): Promise<string> {
+    throw new Error('not implemented — see issue #H4');
   }
 
-  /**
-   * Approves a specific milestone inside an escrow.
-   */
-  async approveMilestone(params: {
-    escrowId: bigint;
-    milestoneIndex: number;
-    approver: string;
-    autoSubmit?: boolean;
-  }): Promise<string> {
-    // TODO(issue): #26 — Build, sign, and optionally submit approve_milestone transaction.
-    return Promise.reject("not implemented");
+  /** Build and optionally submit an approve_milestone transaction (approver only). */
+  async approveMilestone(params: ApproveMilestoneParams): Promise<string> {
+    throw new Error('not implemented — see issue #H4');
   }
 
-  /**
-   * Releases a milestone if the threshold is reached.
-   */
-  async releaseMilestone(params: {
-    escrowId: bigint;
-    milestoneIndex: number;
-    autoSubmit?: boolean;
-  }): Promise<string> {
-    // TODO(issue): #27 — Build, sign, and optionally submit release_milestone transaction.
-    return Promise.reject("not implemented");
+  /** Build and optionally submit a release_milestone transaction. */
+  async releaseMilestone(params: ReleaseMilestoneParams): Promise<string> {
+    throw new Error('not implemented — see issue #H4');
   }
 
-  /**
-   * Cancels the escrow, returning remaining unreleased milestone funds to the sender.
-   */
-  async cancelEscrow(params: { escrowId: bigint; autoSubmit?: boolean }): Promise<string> {
-    // TODO(issue): #28 — Build, sign, and optionally submit cancel_escrow transaction.
-    return Promise.reject("not implemented");
+  /** Build and optionally submit a cancel_escrow transaction (sender only). */
+  async cancelEscrow(params: CancelEscrowParams): Promise<string> {
+    throw new Error('not implemented — see issue #H4');
   }
 
-  /**
-   * Fetches the complete escrow status.
-   */
-  async get(escrowId: bigint): Promise<Escrow> {
-    // TODO(issue): #29 — Invoke get_escrow view call and parse XDR structure into Escrow JS object.
-    return Promise.reject("not implemented");
+  /** Query on-chain state for a single escrow by ID. */
+  async getEscrow(escrowId: bigint): Promise<Escrow> {
+    throw new Error('not implemented — see issue #H4');
   }
 
-  /**
-   * Fetches specific milestone status.
-   */
-  async getMilestone(params: { escrowId: bigint; index: number }): Promise<Milestone> {
-    // TODO(issue): #30 — Invoke get_milestone view call and parse returning XDR structure.
-    return Promise.reject("not implemented");
+  /** Query a single milestone by escrow ID and milestone index. */
+  async getMilestone(escrowId: bigint, milestoneIndex: number): Promise<Milestone> {
+    throw new Error('not implemented — see issue #H4');
   }
 }

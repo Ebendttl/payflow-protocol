@@ -2,42 +2,44 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import StreamCard from '../../components/StreamCard.js';
-import WalletButton from '../../components/WalletButton.js';
-import { useWalletStore } from '../../lib/store/walletStore.js';
+import StreamCard from '../../components/StreamCard';
+import WalletButton from '../../components/WalletButton';
+import { useWalletStore } from '../../lib/store/walletStore';
 import { Plus, LayoutGrid, SlidersHorizontal, Home } from 'lucide-react';
 import { Stream } from '@payflow/sdk';
 
 export default function StreamsDashboard() {
-  const { address } = useWalletStore();
+  const { publicKey } = useWalletStore();
   const [filter, setFilter] = useState<'All' | 'Active' | 'Paused' | 'Cancelled'>('All');
 
-  // TODO(issue): #63 — Connect to indexer REST API `GET /streams?sender={address}` to load active streams list.
+  // TODO(issue): #M2 — Connect to indexer REST API `GET /streams?sender={publicKey}` to load active streams list.
   // Mock streams list:
   const mockStreams: Stream[] = [
     {
       id: 1n,
-      sender: address || "GBX...",
+      sender: publicKey || "GBX...",
       recipient: "GDYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       token: "USDC",
       totalAmount: 10000000000n, // 1000 USDC
       startTime: BigInt(Math.floor(Date.now() / 1000) - 86400 * 5), // 5 days ago
       endTime: BigInt(Math.floor(Date.now() / 1000) + 86400 * 10), // 10 days left
       claimedAmount: 2000000000n,
+      pausedAt: null,
+      totalPausedDuration: 0n,
       status: "Active",
-      lastUpdated: BigInt(Math.floor(Date.now() / 1000)),
     },
     {
       id: 2n,
-      sender: address || "GBX...",
+      sender: publicKey || "GBX...",
       recipient: "GDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       token: "XLM",
       totalAmount: 5000000000n, // 500 XLM
       startTime: BigInt(Math.floor(Date.now() / 1000) - 3600),
       endTime: BigInt(Math.floor(Date.now() / 1000) + 3600 * 4),
       claimedAmount: 0n,
+      pausedAt: BigInt(Math.floor(Date.now() / 1000) - 300),
+      totalPausedDuration: 300n,
       status: "Paused",
-      lastUpdated: BigInt(Math.floor(Date.now() / 1000)),
     }
   ];
 

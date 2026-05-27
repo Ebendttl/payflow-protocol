@@ -3,14 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEscrow } from '../../../lib/hooks/useEscrow.js';
-import EscrowPanel from '../../../components/EscrowPanel.js';
-import WalletButton from '../../../components/WalletButton.js';
+import { useEscrow } from '../../../lib/hooks/useEscrow';
+import EscrowPanel from '../../../components/EscrowPanel';
+import WalletButton from '../../../components/WalletButton';
 import { ArrowLeft, Home, Loader } from 'lucide-react';
 
 export default function EscrowDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { escrow, loading, error } = useEscrow(id);
+  const { escrow, isLoading, error } = useEscrow(BigInt(id ?? 0));
 
   return (
     <div className="min-h-screen bg-dark-900 flex flex-col justify-between relative overflow-hidden">
@@ -42,7 +42,7 @@ export default function EscrowDetailPage() {
           Back to Escrows
         </Link>
 
-        {loading && (
+        {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 space-y-3">
             <Loader size={40} className="animate-spin text-primary" />
             <span className="text-sm text-dark-600">Fetching Escrow Details...</span>
@@ -56,7 +56,7 @@ export default function EscrowDetailPage() {
           </div>
         )}
 
-        {!loading && !error && escrow && (
+        {!isLoading && !error && escrow && (
           <EscrowPanel escrow={escrow} />
         )}
       </main>

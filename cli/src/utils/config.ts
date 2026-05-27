@@ -4,38 +4,45 @@ import os from 'os';
 
 export interface CLIConfig {
   network: 'testnet' | 'mainnet';
+  /** WARNING: never log or print this value */
   secretKey: string;
   contractIds: {
-    streamVault: string;
+    streamVault:    string;
     milestoneEscrow: string;
-    streamFactory: string;
+    streamFactory:  string;
   };
 }
 
-const CONFIG_PATH = path.join(os.homedir(), '.payflow', 'config.json');
+const CONFIG_DIR  = path.join(os.homedir(), '.payflow');
+const CONFIG_PATH = path.join(CONFIG_DIR, 'config.json');
 
+const DEFAULTS: CLIConfig = {
+  network: 'testnet',
+  secretKey: '',
+  contractIds: {
+    streamVault:     '',
+    milestoneEscrow: '',
+    streamFactory:   '',
+  },
+};
+
+/** Loads ~/.payflow/config.json, falling back to empty defaults. */
 export function loadConfig(): CLIConfig {
-  // TODO(issue): #65 — Read configuration from CONFIG_PATH file, parsing the JSON. Return default or error if not found.
-  if (!fs.existsSync(CONFIG_PATH)) {
-    // Return mock configuration for setup purposes
-    return {
-      network: 'testnet',
-      secretKey: 'SDA...',
-      contractIds: {
-        streamVault: 'CDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-        milestoneEscrow: 'CBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-        streamFactory: 'CCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-      }
-    };
+  if (!fs.existsSync(CONFIG_PATH)) return { ...DEFAULTS };
+  try {
+    return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8')) as CLIConfig;
+  } catch {
+    return { ...DEFAULTS };
   }
-  const content = fs.readFileSync(CONFIG_PATH, 'utf-8');
-  return JSON.parse(content);
 }
 
+/** Persists config to ~/.payflow/config.json, creating the dir if necessary. */
 export function saveConfig(config: CLIConfig): void {
-  const dir = path.dirname(CONFIG_PATH);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, { recursive: true });
   fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
+}
+
+/** Convenience helper that returns only the contractIds section. */
+export function getContractIds(): CLIConfig['contractIds'] {
+  return loadConfig().contractIds;
 }

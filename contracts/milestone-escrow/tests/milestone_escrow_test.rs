@@ -2,27 +2,40 @@
 use milestone_escrow::{MilestoneEscrow, MilestoneEscrowClient, MilestoneInput};
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
+// TODO(issue): #T1 — Implement comprehensive test suite for MilestoneEscrow
+
 #[test]
-#[should_panic(expected = "Escrow creation is not implemented yet")]
-fn test_create_escrow_stub() {
-    let env = Env::default();
-    env.mock_all_auths();
+fn test_create_escrow() {
+    // TODO: Verify that create_escrow validates amount sums, transfers funds, and records active escrow status.
+    todo!("Test verify escrow creation and validation registers correctly");
+}
 
-    let contract_id = env.register_contract(None, MilestoneEscrow);
-    let client = MilestoneEscrowClient::new(&env, &contract_id);
+#[test]
+fn test_approve_milestone() {
+    // TODO: Verify that authorized approvers can record milestone approvals, increments approval_count, and flags Approved status.
+    todo!("Test verify milestone approval count progress and status transitions");
+}
 
-    let sender = Address::generate(&env);
-    let recipient = Address::generate(&env);
-    let token = Address::generate(&env);
+#[test]
+fn test_release_milestone() {
+    // TODO: Verify that approved milestones can be released, transferring milestone allocation to recipient and transitioning to Released status.
+    todo!("Test verify milestone release and token payout");
+}
 
-    let mut milestones = Vec::new(&env);
-    milestones.push_back(MilestoneInput {
-        title: String::from_str(&env, "Milestone 1"),
-        amount: 1000,
-    });
+#[test]
+fn test_cancel_escrow() {
+    // TODO: Verify that cancelling an active escrow refunds unreleased funds to sender and updates status to Cancelled.
+    todo!("Test verify escrow cancellation refunds sender correctly");
+}
 
-    let mut approvers = Vec::new(&env);
-    approvers.push_back(Address::generate(&env));
+#[test]
+fn test_cannot_approve_completed() {
+    // TODO: Verify that trying to approve milestones on an escrow with Completed status aborts execution.
+    todo!("Test verify that completed escrows block further approval actions");
+}
 
-    client.create_escrow(&sender, &recipient, &token, &1000, &milestones, &approvers, &1);
+#[test]
+fn test_threshold_validation() {
+    // TODO: Verify that creating an escrow with invalid threshold (e.g. threshold > approvers count) triggers panic validation.
+    todo!("Test verify threshold validation constraints at creation");
 }

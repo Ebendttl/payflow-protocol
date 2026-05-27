@@ -2,29 +2,29 @@
 
 import React from 'react';
 import Link from 'next/link';
-import WalletButton from '../../components/WalletButton.js';
-import { useWalletStore } from '../../lib/store/walletStore.js';
+import WalletButton from '../../components/WalletButton';
+import { useWalletStore } from '../../lib/store/walletStore';
 import { ShieldAlert, ArrowRight, Home, Plus } from 'lucide-react';
 import { Escrow } from '@payflow/sdk';
 
 export default function EscrowDashboard() {
-  const { address } = useWalletStore();
+  const { publicKey } = useWalletStore();
 
-  // TODO(issue): #64 — Connect to indexer REST API `GET /escrows?sender={address}` to load active escrows list.
+  // TODO(issue): #M3 — Connect to indexer REST API `GET /escrows?sender={publicKey}` to load active escrows list.
   // Mock escrows list:
   const mockEscrows: Escrow[] = [
     {
       id: 101n,
-      sender: address || "GBX...",
+      sender: publicKey || "GBX...",
       recipient: "GDYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       token: "USDC",
       totalAmount: 5000000000n, // 500 USDC
       threshold: 2,
       approvers: ["GBA...", "GBB...", "GBC..."],
-      cancelled: false,
+      status: "Active",
       milestones: [
-        { title: "Design Sign-off", amount: 2000000000n, approvals: ["GBA...", "GBB..."], released: true },
-        { title: "Smart Contract Audit", amount: 3000000000n, approvals: ["GBA..."], released: false },
+        { title: "Design Sign-off", amount: 2000000000n, approvalCount: 2, status: "Released" },
+        { title: "Smart Contract Audit", amount: 3000000000n, approvalCount: 1, status: "Pending" },
       ]
     }
   ];
@@ -71,7 +71,7 @@ export default function EscrowDashboard() {
         {mockEscrows.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-8">
             {mockEscrows.map((escrow) => {
-              const released = escrow.milestones.filter(m => m.released).reduce((sum, m) => sum + m.amount, 0n);
+              const released = escrow.milestones.filter(m => m.status === 'Released').reduce((sum: bigint, m) => sum + m.amount, 0n);
               const progress = Number((released * 100n) / escrow.totalAmount);
               return (
                 <div key={escrow.id.toString()} className="glass p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-64 hover:scale-[1.01] transition duration-300">

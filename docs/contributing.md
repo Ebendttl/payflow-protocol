@@ -1,48 +1,82 @@
-# Contribution Guidelines
+# PayFlow Protocol: Open-Source Contribution Guide
 
-Welcome to the PayFlow Protocol codebase! This project is designed to be highly modular and friendly to open-source contributions, particularly under the **Drips Wave** program.
+Welcome! This repository is designed to be highly modular, developer-friendly, and optimized for community contributions—particularly under the **Drips Wave** program.
 
 ---
 
-## 🛠️ Issue Mapping Workflow
+## 🛠️ The Issue Mapping Workflow
 
-Every issue is mapped directly to a `TODO` comment in the codebase. The format is:
+To keep the codebase clean and accessible for first-time open-source contributors, every open issue is mapped directly to a distinct `TODO` comment in the codebase. The format is strictly:
 
 ```typescript
 // TODO(issue): #ISSUE_NUMBER — description
 ```
 
-For example, if you are assigned issue `#12` to implement the `claim` function in `StreamVault`, you will search for:
-```rust
-// TODO(issue): #12 — implement the claim function in StreamVault
+### How to contribute in 3 simple steps:
+1. **Search**: Search the workspace for `TODO(issue): #<your-assigned-issue-number>`.
+2. **Implement**: Implement the requested logic, keeping all other codebase elements intact.
+3. **Verify**: Run the local test runner (`cargo test` or `pnpm test`) to ensure your implementation compiles and passes all test specifications.
+
+---
+
+## 📦 Workspace Structure
+
+The monorepo workspace is split logically into five distinct packages:
+
 ```
-And replace it with your implementation.
+├── contracts/               # Soroban Smart Contracts
+│   ├── stream-vault/        # Real-time streaming payment settlement engine
+│   ├── milestone-escrow/    # Multi-sig milestoneLocked-token vault
+│   └── stream-factory/      # Ecosystem directory and address registry
+├── packages/
+│   ├── sdk/                 # TypeScript client library wrapping contract interactions
+│   └── indexer/             # Event-driven polling service, Drizzle ORM schema, and Hono REST API
+├── apps/
+│   └── web/                 # Next.js 14 Web Application containing cards, stores, and wizard forms
+├── cli/                     # Node.js command-line interface for developer interaction
+└── docs/                    # Architectural documents and contract specs
+```
 
 ---
 
-## 📦 Workspace Organization
+## 🚀 Setting Up the Development Workspace
 
-1. **Contracts (`/contracts`)**:
-   - `stream-vault`: Real-time streaming contract.
-   - `milestone-escrow`: Multi-milestone escrow contract.
-   - `stream-factory`: Deploys and registers vaults and escrows.
-2. **SDK (`/packages/sdk`)**:
-   - Wraps contract invocations, builds Stellar transactions, supports Freighter wallet.
-3. **Indexer (`/packages/indexer`)**:
-   - Polls Stellar Horizon, parses transaction events, stores states, exposes REST endpoints.
-4. **App (`/apps/web`)**:
-   - React components, Next.js page views, state orchestration via Zustand.
-5. **CLI (`/cli`)**:
-   - Dev CLI to interact directly with deployed contracts.
+### Prerequisites
+Ensure you have the following installed locally:
+- Node.js (v18+) & `pnpm` (v8+)
+- Rust (1.75+) and the wasm32 target:
+  ```bash
+  rustup target add wasm32-unknown-unknown
+  ```
+- Soroban CLI (recommended for contract deployment)
+
+### 1. Install Workspace Dependencies
+From the root of the monorepo, run:
+```bash
+pnpm install
+```
+
+### 2. Compile Soroban Contracts
+Compile all smart contracts in the workspace:
+```bash
+cargo build --target wasm32-unknown-unknown --release
+```
+
+### 3. Run the Monorepo Test Suites
+Run the entire monorepo test suite (Rust and TypeScript):
+```bash
+# Run Rust smart contract unit tests
+cargo test --workspace
+
+# Run TypeScript SDK and Indexer unit tests
+pnpm test
+```
 
 ---
 
-## 🚀 Submission Process
+## 📜 Pull Request Guidelines
+- **Keep PRs focused**: Solve only one issue per pull request.
+- **Maintain Diffs**: Ensure your code changes do not alter unrelated lines or delete necessary architectural scaffolding.
+- **Reference Issues**: Include the mapped issue number in your pull request description (e.g., `closes #M1`).
 
-1. **Fork & Branch:** Clone and create a feature branch (`git checkout -b feature/issue-12`).
-2. **Verify Tests:** Ensure all tests pass locally:
-   - For Rust contracts: `cargo test`
-   - For packages/apps: `pnpm test`
-3. **Open PR:** Target the `main` branch. Include the issue number in the PR title (e.g., `feat: resolve #12 - StreamVault claim`).
-
-Thank you for contributing to PayFlow!
+Thank you for helping us build the future of real-time decentralized payment systems on Stellar!

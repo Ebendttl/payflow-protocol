@@ -1,9 +1,11 @@
 "use client";
 
+// TODO(issue): #M1 — Build stream creation wizard UI
+
 import React from 'react';
 import Link from 'next/link';
-import CreateStreamForm from '../../../components/CreateStreamForm.js';
-import WalletButton from '../../../components/WalletButton.js';
+import CreateStreamForm from '../../../components/CreateStreamForm';
+import WalletButton from '../../../components/WalletButton';
 import { ArrowLeft, Home } from 'lucide-react';
 
 export default function CreateStreamPage() {

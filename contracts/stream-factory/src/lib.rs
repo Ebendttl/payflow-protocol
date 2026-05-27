@@ -1,31 +1,26 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, Address, BytesN, Env, Vec};
+// TODO(issue): #H3 — Implement StreamFactory registry contract
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env, Vec};
+
+#[contracttype]
+pub enum DataKey {
+    Admin,
+    StreamVault,
+    MilestoneEscrow,
+}
+
+#[soroban_sdk::contractclient(name = "VaultClient")]
+pub trait VaultInterface {
+    fn get_streams_by_sender(env: Env, sender: Address) -> Vec<u64>;
+}
 
 pub trait StreamFactoryTrait {
-    fn initialize(env: Env, vault_wasm_hash: BytesN<32>, escrow_wasm_hash: BytesN<32>);
-
-    fn deploy_stream_vault(
-        env: Env,
-        sender: Address,
-        recipient: Address,
-        token: Address,
-        total_amount: i128,
-        duration_seconds: u64,
-    ) -> Address;
-
-    fn deploy_milestone_escrow(
-        env: Env,
-        sender: Address,
-        recipient: Address,
-        token: Address,
-        total_amount: i128,
-        milestones_titles: Vec<soroban_sdk::String>,
-        milestones_amounts: Vec<i128>,
-        approvers: Vec<Address>,
-        threshold: u32,
-    ) -> Address;
-
-    fn list_streams_by_sender(env: Env, sender: Address) -> Vec<u64>;
+    fn init(env: Env, admin: Address, stream_vault_id: Address, milestone_escrow_id: Address);
+    fn get_stream_vault(env: Env) -> Address;
+    fn get_milestone_escrow(env: Env) -> Address;
+    fn list_all_stream_ids(env: Env, sender: Address) -> Vec<u64>;
+    fn update_stream_vault(env: Env, new_address: Address);
+    fn update_milestone_escrow(env: Env, new_address: Address);
 }
 
 #[contract]
@@ -33,42 +28,56 @@ pub struct StreamFactory;
 
 #[contractimpl]
 impl StreamFactoryTrait for StreamFactory {
-    fn initialize(env: Env, vault_wasm_hash: BytesN<32>, escrow_wasm_hash: BytesN<32>) {
-        // TODO(issue): #14 — Restrict initialization to contract owner/deployer. Store the WASM hashes in storage.
-        unimplemented!("Initialization is not implemented yet");
+    fn init(env: Env, admin: Address, stream_vault_id: Address, milestone_escrow_id: Address) {
+        assert!(
+            !env.storage().persistent().has(&DataKey::Admin),
+            "factory is already initialized"
+        );
+        env.storage().persistent().set(&DataKey::Admin, &admin);
+        env.storage().persistent().set(&DataKey::StreamVault, &stream_vault_id);
+        env.storage().persistent().set(&DataKey::MilestoneEscrow, &milestone_escrow_id);
     }
 
-    fn deploy_stream_vault(
-        env: Env,
-        sender: Address,
-        recipient: Address,
-        token: Address,
-        total_amount: i128,
-        duration_seconds: u64,
-    ) -> Address {
-        sender.require_auth();
-        // TODO(issue): #15 — Deploy a new instance of StreamVault using stored WASM hash. Call create_stream on the deployed contract, register it to the sender's index list, and return the new contract's address.
-        unimplemented!("Stream vault deployment is not implemented yet");
+    fn get_stream_vault(env: Env) -> Address {
+        env.storage()
+            .persistent()
+            .get(&DataKey::StreamVault)
+            .expect("stream vault address not registered")
     }
 
-    fn deploy_milestone_escrow(
-        env: Env,
-        sender: Address,
-        recipient: Address,
-        token: Address,
-        total_amount: i128,
-        milestones_titles: Vec<soroban_sdk::String>,
-        milestones_amounts: Vec<i128>,
-        approvers: Vec<Address>,
-        threshold: u32,
-    ) -> Address {
-        sender.require_auth();
-        // TODO(issue): #16 — Deploy a new instance of MilestoneEscrow using stored WASM hash. Call create_escrow on the deployed contract, register it to the sender's index list, and return the contract's address.
-        unimplemented!("Milestone escrow deployment is not implemented yet");
+    fn get_milestone_escrow(env: Env) -> Address {
+        env.storage()
+            .persistent()
+            .get(&DataKey::MilestoneEscrow)
+            .expect("milestone escrow address not registered")
     }
 
-    fn list_streams_by_sender(env: Env, sender: Address) -> Vec<u64> {
-        // TODO(issue): #17 — Query the registry for all stream IDs associated with the sender.
-        unimplemented!("Listing streams by sender is not implemented yet");
+    fn list_all_stream_ids(env: Env, sender: Address) -> Vec<u64> {
+        // Factory delegates to StreamVault's get_streams_by_sender
+        let vault_addr = Self::get_stream_vault(env.clone());
+        let client = VaultClient::new(&env, &vault_addr);
+        client.get_streams_by_sender(&sender)
+    }
+
+    fn update_stream_vault(env: Env, new_address: Address) {
+        let admin: Address = env
+            .storage()
+            .persistent()
+            .get(&DataKey::Admin)
+            .expect("admin not configured");
+        admin.require_auth();
+
+        env.storage().persistent().set(&DataKey::StreamVault, &new_address);
+    }
+
+    fn update_milestone_escrow(env: Env, new_address: Address) {
+        let admin: Address = env
+            .storage()
+            .persistent()
+            .get(&DataKey::Admin)
+            .expect("admin not configured");
+        admin.require_auth();
+
+        env.storage().persistent().set(&DataKey::MilestoneEscrow, &new_address);
     }
 }

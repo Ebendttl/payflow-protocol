@@ -1,25 +1,27 @@
 import { Command } from 'commander';
 import ora from 'ora';
-import chalk from 'chalk';
-import { loadConfig } from '../utils/config.js';
+import { printError, printSuccess } from '../utils/display.js';
 
+// TODO(issue): #M6 — Implement create-stream CLI command
 export function registerCreateStream(program: Command) {
   program
     .command('create-stream')
-    .description('Initialize a new real-time token stream on-chain')
-    .requiredOption('-r, --recipient <address>', 'Stellar address of the recipient')
-    .requiredOption('-t, --token <address>', 'Asset token contract ID')
-    .requiredOption('-a, --amount <number>', 'Total stream amount')
-    .requiredOption('-d, --duration <seconds>', 'Stream duration in seconds')
-    .action(async (options) => {
-      const spinner = ora('Preparing stream proposal transaction...').start();
+    .description('Create a new real-time token payment stream on-chain')
+    .requiredOption('-r, --recipient <address>', 'Stellar address of the stream recipient')
+    .requiredOption('-t, --token <address>',     'Asset/token contract ID (C-address)')
+    .requiredOption('-a, --amount <number>',     'Total stream amount in base units')
+    .requiredOption('-d, --duration-days <days>','Stream duration in days')
+    .action(async (opts) => {
+      const spinner = ora('Building create-stream transaction…').start();
       try {
-        const config = loadConfig();
-        // TODO(issue): #67 — Instantiate @payflow/sdk, sign transaction with private key from local config, and execute deployment.
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        spinner.succeed(chalk.green(`Stream created successfully! Recipient: ${options.recipient}`));
+        // TODO(issue): #M6 — Load config, instantiate PayFlowClient with secret key,
+        // call streams.createStream(), sign and submit to network.
+        spinner.stop();
+        printError('create-stream not implemented — see issue #M6');
       } catch (err: any) {
-        spinner.fail(chalk.red(`Failed to create stream: ${err.message}`));
+        spinner.stop();
+        printError(err.message);
+        process.exit(1);
       }
     });
 }

@@ -1,14 +1,23 @@
 #![cfg(test)]
-use soroban_sdk::{testutils::Address as _, Address, BytesN, Env};
+use soroban_sdk::{testutils::Address as _, Address, Env};
 use stream_factory::{StreamFactory, StreamFactoryClient};
 
-#[test]
-#[should_panic(expected = "Initialization is not implemented yet")]
-fn test_initialize_stub() {
-    let env = Env::default();
-    let contract_id = env.register_contract(None, StreamFactory);
-    let client = StreamFactoryClient::new(&env, &contract_id);
+// TODO(issue): #T1 — Implement comprehensive test suite for StreamFactory
 
-    let dummy_hash = BytesN::from_array(&env, &[0u8; 32]);
-    client.initialize(&dummy_hash, &dummy_hash);
+#[test]
+fn test_initialize() {
+    // TODO: Verify that calling init() registers the admin and contract addresses correctly in persistent storage.
+    todo!("Test verify stream factory initialization registers correct addresses");
+}
+
+#[test]
+fn test_admin_updates() {
+    // TODO: Verify that only the admin is authorized to update vault and escrow contract addresses.
+    todo!("Test verify that admin-only authorization filters updates");
+}
+
+#[test]
+fn test_delegated_query() {
+    // TODO: Verify that list_all_stream_ids correctly delegates the query call to StreamVault client and returns the stream list.
+    todo!("Test verify delegated list queries fetch successfully");
 }
