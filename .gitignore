@@ -1,0 +1,38 @@
+# Node.js
+node_modules/
+dist/
+.next/
+.turbo/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Rust / Cargo
+target/
+Cargo.lock
+contracts/**/target/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# SQLite
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+coverage/
+test_snapshots/

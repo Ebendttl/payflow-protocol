@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "contracts/stream-vault",
+    "contracts/milestone-escrow",
+    "contracts/stream-factory",
+]
+resolver = "2"

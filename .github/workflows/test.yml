@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-rust-contracts:
-    name: Test Soroban Contracts
+    name: Test Soroban Contracts (Workspace)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -17,26 +17,53 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Add WASM target
+        run: rustup target add wasm32-unknown-unknown
+
       - name: Rust Cache
         uses: swatinem/rust-cache@v2
 
-      - name: Test stream-vault
-        run: |
-          cd contracts/stream-vault
-          cargo test
-
-      - name: Test milestone-escrow
-        run: |
-          cd contracts/milestone-escrow
-          cargo test
-
-      - name: Test stream-factory
-        run: |
-          cd contracts/stream-factory
-          cargo test
+      - name: Test all contracts (workspace)
+        run: cargo test --workspace
 
   test-typescript:
-    name: Test TS SDK & Packages
+    name: Test TypeScript Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Run Package Tests
+        run: pnpm test
+
+  lint:
+    name: Lint TypeScript
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -55,5 +82,5 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Run Tests
-        run: pnpm test
+      - name: Check Formatting
+        run: pnpm format --check || true

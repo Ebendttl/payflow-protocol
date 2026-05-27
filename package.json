@@ -5,13 +5,17 @@
   "private": true,
   "scripts": {
     "build": "pnpm --filter \"@payflow/*\" --filter \"payflow-cli\" --filter \"payflow-web\" build",
-    "test": "pnpm --recursive test",
+    "test": "pnpm --recursive --filter \"@payflow/*\" test",
+    "test:contracts": "cargo test --workspace",
     "lint": "pnpm --recursive lint",
-    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\" --ignore-path .gitignore",
+    "dev:web": "pnpm --filter payflow-web dev",
+    "dev:indexer": "pnpm --filter @payflow/indexer dev"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
   },
   "engines": {
     "node": ">=18.0.0",

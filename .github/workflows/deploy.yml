@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/web/**'
+      - 'packages/sdk/**'
+
+jobs:
+  deploy-web:
+    name: Deploy Web App (Vercel)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build SDK
+        run: pnpm --filter @payflow/sdk build
+
+      - name: Build Web App
+        run: pnpm --filter payflow-web build
+        env:
+          NEXT_PUBLIC_NETWORK: ${{ vars.NEXT_PUBLIC_NETWORK }}
+          NEXT_PUBLIC_INDEXER_URL: ${{ vars.NEXT_PUBLIC_INDEXER_URL }}
+          NEXT_PUBLIC_STREAM_VAULT_CONTRACT: ${{ vars.NEXT_PUBLIC_STREAM_VAULT_CONTRACT }}
+          NEXT_PUBLIC_MILESTONE_ESCROW_CONTRACT: ${{ vars.NEXT_PUBLIC_MILESTONE_ESCROW_CONTRACT }}
+          NEXT_PUBLIC_STREAM_FACTORY_CONTRACT: ${{ vars.NEXT_PUBLIC_STREAM_FACTORY_CONTRACT }}
+
+      # TODO(issue): #72 — Add Vercel CLI deploy step using VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID secrets.
+      # - name: Deploy to Vercel
+      #   run: pnpm dlx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
