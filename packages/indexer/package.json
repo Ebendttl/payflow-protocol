@@ -1,0 +1,29 @@
+{
+  "name": "@payflow/indexer",
+  "version": "1.0.0",
+  "description": "Event indexer and REST API for PayFlow Protocol",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^11.3.0",
+    "better-sqlite3": "^9.4.3",
+    "drizzle-orm": "^0.30.7",
+    "hono": "^4.2.4",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.9",
+    "@types/node": "^20.11.30",
+    "@types/pg": "^8.11.4",
+    "tsup": "^8.0.2",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
+  }
+}

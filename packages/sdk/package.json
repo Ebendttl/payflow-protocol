@@ -1,0 +1,32 @@
+{
+  "name": "@payflow/sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for interacting with PayFlow Protocol Soroban contracts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "vitest run",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^11.3.0"
+  },
+  "peerDependencies": {
+    "@stellar/freighter-api": "^2.0.0"
+  },
+  "devDependencies": {
+    "@stellar/freighter-api": "^2.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.4.0"
+  }
+}
