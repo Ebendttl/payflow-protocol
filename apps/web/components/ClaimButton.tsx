@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { createPayFlowClient } from '../lib/stellar';
-import { FreighterWalletAdapter } from '@payflow/sdk';
+import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
+import { useWalletStore } from '../lib/store/walletStore';
 import { Loader2 } from 'lucide-react';
 
 interface ClaimButtonProps {
@@ -13,12 +13,13 @@ interface ClaimButtonProps {
 export default function ClaimButton({ streamId, onSuccess }: ClaimButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { walletType } = useWalletStore();
 
   const handleClaim = async () => {
     setLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.claim({ streamId });
       if (onSuccess) {

@@ -63,7 +63,7 @@ export default function Home() {
         ) : (
           <div className="space-y-4">
             <div className="inline-block glass px-4 py-2 rounded-full text-xs font-semibold text-accent-amber border border-accent-amber/20 animate-pulse">
-              Connect Freighter Wallet to Access App
+              Connect Wallet to Access App
             </div>
           </div>
         )}

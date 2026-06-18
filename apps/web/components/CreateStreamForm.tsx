@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useWalletStore } from '../lib/store/walletStore';
-import { createPayFlowClient } from '../lib/stellar';
-import { FreighterWalletAdapter } from '@payflow/sdk';
+import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
 import { Loader2, CheckCircle2, AlertCircle, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -39,7 +38,7 @@ export default function CreateStreamForm() {
   const [error, setError] = useState<string | null>(null);
   const [successTx, setSuccessTx] = useState<string | null>(null);
 
-  const { publicKey, isConnected, connect } = useWalletStore();
+  const { publicKey, isConnected, connect, walletType } = useWalletStore();
 
   const form1 = useForm<Step1>({ resolver: zodResolver(Step1Schema) });
   const form2 = useForm<Step2>({ resolver: zodResolver(Step2Schema), defaultValues: { startNow: true } });
@@ -50,13 +49,13 @@ export default function CreateStreamForm() {
   
   const onStep3 = form3.handleSubmit(async () => {
     if (!isConnected || !publicKey) {
-      setError('Please connect your Freighter wallet first.');
+      setError('Please connect your wallet first.');
       return;
     }
     setLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
 
       const val1 = form1.getValues();

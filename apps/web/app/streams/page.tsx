@@ -76,17 +76,27 @@ export default function StreamsDashboard() {
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-white">Connect Your Wallet</h3>
               <p className="text-sm text-dark-400 leading-relaxed">
-                Connect your Freighter wallet to view your outgoing streams, manage paused streams, or establish new real-time payment channels.
+                Connect your Stellar wallet to view your outgoing streams, manage paused streams, or establish new real-time payment channels.
               </p>
             </div>
-            <button
-              onClick={connect}
-              disabled={isConnecting}
-              className="mx-auto flex items-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 px-6 py-3 rounded-xl text-sm font-semibold text-white transition disabled:opacity-50"
-            >
-              {isConnecting ? <Loader2 size={16} className="animate-spin" /> : <Wallet size={16} />}
-              {isConnecting ? 'Connecting Wallet…' : 'Connect Freighter Wallet'}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => connect('freighter')}
+                disabled={isConnecting}
+                className="flex items-center justify-center gap-2 bg-dark-700 hover:bg-dark-600 border border-white/10 px-6 py-3 rounded-xl text-sm font-semibold text-white transition disabled:opacity-50"
+              >
+                {isConnecting ? <Loader2 size={16} className="animate-spin" /> : <Wallet size={16} />}
+                Freighter
+              </button>
+              <button
+                onClick={() => connect('lobstr')}
+                disabled={isConnecting}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 px-6 py-3 rounded-xl text-sm font-semibold text-white transition disabled:opacity-50"
+              >
+                {isConnecting ? <Loader2 size={16} className="animate-spin" /> : <Wallet size={16} />}
+                LOBSTR
+              </button>
+            </div>
           </div>
         ) : error ? (
           /* Error State */

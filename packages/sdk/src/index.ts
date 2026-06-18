@@ -8,8 +8,10 @@ export { StreamClient } from './stream.js';
 export { EscrowClient } from './escrow.js';
 export { FactoryClient } from './factory.js';
 export { FreighterWalletAdapter } from './wallet/freighter.js';
+export { LobstrWalletAdapter } from './wallet/lobstr.js';
 export { AxelarBridgeAdapter } from './bridge/axelar.js';
 export { PathPaymentRouter } from './payments/path-payment.js';
+
 
 export class PayFlowClient {
   public readonly streams: StreamClient;

@@ -48,3 +48,16 @@ export function createPayFlowClient(wallet: PayFlowConfig['wallet']) {
     wallet,
   }) as InstanceType<typeof import('@payflow/sdk').PayFlowClient>;
 }
+
+/**
+ * Returns the appropriate SDK wallet adapter based on the active connection type
+ */
+export async function getActiveWalletAdapter(walletType: 'freighter' | 'lobstr' | null): Promise<PayFlowConfig['wallet']> {
+  if (walletType === 'lobstr') {
+    const { LobstrWalletAdapter } = await import('@payflow/sdk');
+    return new LobstrWalletAdapter() as any;
+  }
+  const { FreighterWalletAdapter } = await import('@payflow/sdk');
+  return new FreighterWalletAdapter() as any;
+}
+

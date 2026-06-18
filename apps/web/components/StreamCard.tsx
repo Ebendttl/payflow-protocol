@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import type { Stream } from '@payflow/sdk';
 import ClaimButton from './ClaimButton';
 import { useWalletStore } from '../lib/store/walletStore';
-import { createPayFlowClient } from '../lib/stellar';
-import { FreighterWalletAdapter } from '@payflow/sdk';
+import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
 import { Loader2, Pause, Play, XOctagon } from 'lucide-react';
 
 interface StreamCardProps {
@@ -64,7 +63,7 @@ function calculateAccrued(now: number, stream: Stream): bigint {
 }
 
 export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
-  const { publicKey } = useWalletStore();
+  const { publicKey, walletType } = useWalletStore();
   const [now, setNow] = useState<number>(Math.floor(Date.now() / 1000));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -95,7 +94,7 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
     setLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.pauseStream({ streamId: stream.id });
       if (onRefetch) onRefetch();
@@ -110,7 +109,7 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
     setLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.resumeStream({ streamId: stream.id });
       if (onRefetch) onRefetch();
@@ -125,7 +124,7 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
     setLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.cancelStream({ streamId: stream.id });
       if (onRefetch) onRefetch();
@@ -197,7 +196,7 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
 
       {/* Actions */}
       <div className="flex flex-col gap-2 mt-auto">
-        {actionLoading || loading ? (
+        {loading ? (
           <div className="flex justify-center items-center py-2.5">
             <Loader2 size={18} className="animate-spin text-primary" />
           </div>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
+    "@lobstrco/signer-extension-api": "^2.0.0",
     "@payflow/sdk": "workspace:*",
     "@stellar/freighter-api": "^2.0.0",
     "@stellar/stellar-sdk": "^11.3.0",
