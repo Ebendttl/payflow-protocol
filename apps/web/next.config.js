@@ -23,6 +23,14 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/rpc',
+        destination: process.env.NEXT_PUBLIC_HORIZON_RPC_URL || 'https://soroban-testnet.stellar.org',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

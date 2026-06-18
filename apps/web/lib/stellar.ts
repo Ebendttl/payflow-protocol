@@ -5,12 +5,12 @@ import type { PayFlowConfig, NetworkConfig } from '@payflow/sdk';
 
 export const NETWORK_CONFIG: Record<'testnet' | 'mainnet', NetworkConfig> = {
   testnet: {
-    rpcUrl: 'https://soroban-testnet.stellar.org',
+    rpcUrl: typeof window !== 'undefined' ? '/api/rpc' : (process.env.NEXT_PUBLIC_HORIZON_RPC_URL || 'https://soroban-rpc.testnet.stellar.gateway.fm'),
     networkPassphrase: Networks.TESTNET,
     horizonUrl: 'https://horizon-testnet.stellar.org',
   },
   mainnet: {
-    rpcUrl: 'https://mainnet.stellar.validationcloud.io/v1/soroban/rpc',
+    rpcUrl: process.env.NEXT_PUBLIC_MAINNET_RPC_URL || 'https://mainnet.stellar.validationcloud.io/v1/soroban/rpc',
     networkPassphrase: Networks.PUBLIC,
     horizonUrl: 'https://horizon.stellar.org',
   },

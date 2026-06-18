@@ -29,7 +29,7 @@ export class StreamClient {
     const rpcUrl = this.config.rpcUrl || (this.config.network === 'mainnet'
       ? 'https://soroban-mainnet.stellar.org'
       : 'https://soroban-testnet.stellar.org');
-    return new rpc.Server(rpcUrl);
+    return new rpc.Server(rpcUrl, { allowHttp: true });
   }
 
   private getNetworkPassphrase(): string {
