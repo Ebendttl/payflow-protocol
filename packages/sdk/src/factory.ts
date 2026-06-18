@@ -1,4 +1,6 @@
 // TODO(issue): #H4 — Implement FactoryClient methods using @stellar/stellar-sdk contract invocation builders
+// NOTE: StreamClient was implemented as part of MVP. The remaining scope
+// of #H4 is EscrowClient and FactoryClient implementation only.
 import type { PayFlowConfig } from './types.js';
 
 export class FactoryClient {
