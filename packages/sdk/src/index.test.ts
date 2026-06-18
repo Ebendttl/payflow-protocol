@@ -17,7 +17,7 @@ describe('PayFlowClient SDK Stubs', () => {
     expect(client.factory).toBeDefined();
   });
 
-  it('streams.createStream rejects with not-implemented message', async () => {
+  it('streams.createStream validates address and throws on invalid inputs', async () => {
     await expect(
       client.streams.createStream({
         sender: 'GBAAAA',
@@ -26,7 +26,7 @@ describe('PayFlowClient SDK Stubs', () => {
         totalAmount: 1_000_000_000n,
         durationSeconds: 2_592_000n,
       })
-    ).rejects.toThrow('not implemented — see issue #H4');
+    ).rejects.toThrow('Unsupported address type');
   });
 
   it('escrow.createEscrow rejects with not-implemented message', async () => {

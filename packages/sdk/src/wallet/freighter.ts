@@ -1,34 +1,46 @@
-// TODO(issue): #M7 — Implement Freighter wallet adapter
-// Install peer dep: pnpm add -D @stellar/freighter-api
-
-/** Shape of the Freighter browser extension API */
-interface FreighterAPI {
-  isConnected: () => Promise<{ isConnected: boolean }>;
-  getPublicKey: () => Promise<string>;
-  signTransaction: (xdr: string, opts?: { networkPassphrase?: string }) => Promise<string>;
-  getNetwork: () => Promise<{ network: string; networkPassphrase: string }>;
-}
-
-declare const window: { freighter?: FreighterAPI } & Window;
+import {
+  isConnected,
+  getPublicKey,
+  signTransaction,
+  getNetworkDetails,
+} from '@stellar/freighter-api';
 
 export class FreighterWalletAdapter {
-  private api(): FreighterAPI {
-    if (typeof window === 'undefined' || !window.freighter) {
-      throw new Error('Freighter wallet extension is not installed or not available in this environment');
+  private checkInstallation() {
+    if (typeof window === 'undefined' || !(window as any).freighter) {
+      throw new Error('Freighter extension is not installed. Please install Freighter from freighter.app.');
     }
-    return window.freighter;
   }
 
   /** Returns true when the Freighter extension is available and the user has granted access. */
   async isConnected(): Promise<boolean> {
-    // TODO(issue): #M7 — Call freighter API and return connection state
-    throw new Error('not implemented — see issue #M7');
+    try {
+      if (typeof window === 'undefined' || !(window as any).freighter) {
+        return false;
+      }
+      const connected = await isConnected();
+      return !!connected;
+    } catch (err: any) {
+      return false;
+    }
   }
 
   /** Returns the user's active Stellar public key (G-address). */
   async getPublicKey(): Promise<string> {
-    // TODO(issue): #M7 — Retrieve public key from Freighter
-    throw new Error('not implemented — see issue #M7');
+    try {
+      this.checkInstallation();
+      const publicKey = await getPublicKey();
+      if (!publicKey) {
+        throw new Error('No active Stellar account found. Please unlock your Freighter wallet.');
+      }
+      return publicKey;
+    } catch (err: any) {
+      const msg = err.message || String(err);
+      if (msg.includes('User rejected') || msg.includes('declined')) {
+        throw new Error('Freighter connection request was rejected by the user.');
+      }
+      throw new Error(msg || 'Failed to retrieve public key from Freighter wallet.');
+    }
   }
 
   /**
@@ -37,13 +49,52 @@ export class FreighterWalletAdapter {
    * @param networkPassphrase The Stellar network passphrase
    */
   async signTransaction(xdr: string, networkPassphrase?: string): Promise<string> {
-    // TODO(issue): #M7 — Pass XDR to Freighter for signing and return the signed envelope
-    throw new Error('not implemented — see issue #M7');
+    try {
+      this.checkInstallation();
+      
+      let details;
+      try {
+        details = await getNetworkDetails();
+      } catch (e) {
+        // Ignore network details query failure and proceed
+      }
+
+      if (details && networkPassphrase && details.networkPassphrase !== networkPassphrase) {
+        throw new Error(`Freighter is configured for a different network. Please switch Freighter to the network with passphrase: ${networkPassphrase}`);
+      }
+
+      const signedXdr = await signTransaction(xdr, {
+        networkPassphrase,
+      });
+
+      if (!signedXdr) {
+        throw new Error('Freighter returned an empty signature.');
+      }
+      return signedXdr;
+    } catch (err: any) {
+      const msg = err.message || String(err);
+      if (msg.includes('User rejected') || msg.includes('declined')) {
+        throw new Error('Transaction signing was rejected by the user.');
+      }
+      throw new Error(msg || 'Failed to sign transaction with Freighter wallet.');
+    }
   }
 
   /** Returns the currently selected network name and passphrase from Freighter. */
   async getNetwork(): Promise<{ network: string; networkPassphrase: string }> {
-    // TODO(issue): #M7 — Query Freighter for active network
-    throw new Error('not implemented — see issue #M7');
+    try {
+      this.checkInstallation();
+      const details = await getNetworkDetails();
+      if (!details) {
+        throw new Error('Could not retrieve network details from Freighter.');
+      }
+      return {
+        network: details.network,
+        networkPassphrase: details.networkPassphrase,
+      };
+    } catch (err: any) {
+      const msg = err.message || String(err);
+      throw new Error(msg || 'Failed to retrieve selected network from Freighter.');
+    }
   }
 }

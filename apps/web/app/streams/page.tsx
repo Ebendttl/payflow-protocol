@@ -5,45 +5,17 @@ import Link from 'next/link';
 import StreamCard from '../../components/StreamCard';
 import WalletButton from '../../components/WalletButton';
 import { useWalletStore } from '../../lib/store/walletStore';
-import { Plus, LayoutGrid, SlidersHorizontal, Home } from 'lucide-react';
-import { Stream } from '@payflow/sdk';
+import { useStreams } from '../../lib/hooks/useStream';
+import { Plus, LayoutGrid, SlidersHorizontal, Home, Wallet, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 
 export default function StreamsDashboard() {
-  const { publicKey } = useWalletStore();
+  const { publicKey, connect, isConnecting } = useWalletStore();
   const [filter, setFilter] = useState<'All' | 'Active' | 'Paused' | 'Cancelled'>('All');
 
-  // TODO(issue): #M2 — Connect to indexer REST API `GET /streams?sender={publicKey}` to load active streams list.
-  // Mock streams list:
-  const mockStreams: Stream[] = [
-    {
-      id: 1n,
-      sender: publicKey || "GBX...",
-      recipient: "GDYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      token: "USDC",
-      totalAmount: 10000000000n, // 1000 USDC
-      startTime: BigInt(Math.floor(Date.now() / 1000) - 86400 * 5), // 5 days ago
-      endTime: BigInt(Math.floor(Date.now() / 1000) + 86400 * 10), // 10 days left
-      claimedAmount: 2000000000n,
-      pausedAt: null,
-      totalPausedDuration: 0n,
-      status: "Active",
-    },
-    {
-      id: 2n,
-      sender: publicKey || "GBX...",
-      recipient: "GDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      token: "XLM",
-      totalAmount: 5000000000n, // 500 XLM
-      startTime: BigInt(Math.floor(Date.now() / 1000) - 3600),
-      endTime: BigInt(Math.floor(Date.now() / 1000) + 3600 * 4),
-      claimedAmount: 0n,
-      pausedAt: BigInt(Math.floor(Date.now() / 1000) - 300),
-      totalPausedDuration: 300n,
-      status: "Paused",
-    }
-  ];
+  // Fetch live streams from the blockchain via StreamClient
+  const { streams, isLoading, error, refetch } = useStreams(publicKey);
 
-  const filteredStreams = mockStreams.filter(s => filter === 'All' || s.status === filter);
+  const filteredStreams = streams.filter(s => filter === 'All' || s.status === filter);
 
   return (
     <div className="min-h-screen bg-dark-900 flex flex-col justify-between relative overflow-hidden">
@@ -69,53 +41,127 @@ export default function StreamsDashboard() {
       <main className="max-w-6xl w-full mx-auto px-6 py-12 flex-grow space-y-8 z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-3xl font-extrabold tracking-tight">Active Streams</h2>
-            <p className="text-xs text-dark-600">Track and manage your continuous real-time payouts</p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+              Active Streams
+              {publicKey && (
+                <button
+                  onClick={refetch}
+                  disabled={isLoading}
+                  className="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-dark-400 hover:text-white transition disabled:opacity-50"
+                  title="Refresh streams"
+                >
+                  <RefreshCw size={14} className={isLoading ? 'animate-spin text-primary' : ''} />
+                </button>
+              )}
+            </h2>
+            <p className="text-xs text-dark-500">Track and manage your continuous real-time payouts</p>
           </div>
-          <Link
-            href="/streams/create"
-            className="flex items-center gap-2 bg-primary hover:bg-primary-light text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition duration-200"
-          >
-            <Plus size={16} />
-            New Stream
-          </Link>
+          {publicKey && (
+            <Link
+              href="/streams/create"
+              className="flex items-center gap-2 bg-primary hover:bg-primary-light text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition duration-200"
+            >
+              <Plus size={16} />
+              New Stream
+            </Link>
+          )}
         </div>
 
-        {/* Filters */}
-        <div className="flex justify-between items-center border-b border-white/5 pb-4">
-          <div className="flex gap-2">
-            {(['All', 'Active', 'Paused', 'Cancelled'] as const).map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilter(status)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition ${
-                  filter === status
-                    ? "bg-dark-700 text-white border border-white/10"
-                    : "text-dark-600 hover:text-white"
-                }`}
-              >
-                {status}
-              </button>
-            ))}
+        {!publicKey ? (
+          /* Wallet Not Connected CTA */
+          <div className="glass p-12 rounded-3xl text-center border border-white/5 max-w-lg mx-auto my-12 space-y-6 animate-in fade-in duration-300">
+            <div className="h-16 w-16 bg-gradient-to-tr from-primary to-accent rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-primary/10">
+              <Wallet className="text-white" size={32} />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">Connect Your Wallet</h3>
+              <p className="text-sm text-dark-400 leading-relaxed">
+                Connect your Freighter wallet to view your outgoing streams, manage paused streams, or establish new real-time payment channels.
+              </p>
+            </div>
+            <button
+              onClick={connect}
+              disabled={isConnecting}
+              className="mx-auto flex items-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 px-6 py-3 rounded-xl text-sm font-semibold text-white transition disabled:opacity-50"
+            >
+              {isConnecting ? <Loader2 size={16} className="animate-spin" /> : <Wallet size={16} />}
+              {isConnecting ? 'Connecting Wallet…' : 'Connect Freighter Wallet'}
+            </button>
           </div>
-          <div className="text-xs text-dark-600 font-semibold flex items-center gap-1.5">
-            <SlidersHorizontal size={14} />
-            <span>Showing {filteredStreams.length} streams</span>
+        ) : error ? (
+          /* Error State */
+          <div className="glass p-8 rounded-2xl border border-rose-500/20 max-w-lg mx-auto text-center space-y-4">
+            <AlertCircle className="mx-auto text-rose-400" size={36} />
+            <div className="space-y-1">
+              <h3 className="text-md font-bold text-white">Failed to Load Streams</h3>
+              <p className="text-xs text-dark-400 break-all">{error}</p>
+            </div>
+            <button
+              onClick={refetch}
+              className="bg-dark-800 hover:bg-dark-700 text-white border border-white/5 px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 mx-auto"
+            >
+              <RefreshCw size={12} />
+              Retry
+            </button>
           </div>
-        </div>
-
-        {/* Streams Grid */}
-        {filteredStreams.length > 0 ? (
+        ) : isLoading && streams.length === 0 ? (
+          /* Loading State */
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredStreams.map((stream) => (
-              <StreamCard key={stream.id.toString()} stream={stream} />
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="glass p-6 rounded-2xl h-72 w-full border border-white/5 animate-pulse flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="h-3 w-16 bg-dark-700 rounded" />
+                  <div className="h-4 w-32 bg-dark-700 rounded" />
+                </div>
+                <div className="h-8 w-24 bg-dark-700 rounded" />
+                <div className="space-y-2">
+                  <div className="h-3 w-12 bg-dark-700 rounded" />
+                  <div className="h-2 w-full bg-dark-700 rounded" />
+                </div>
+                <div className="h-8 w-full bg-dark-700 rounded-xl" />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="glass p-12 rounded-2xl text-center border border-white/5">
-            <LayoutGrid className="mx-auto text-dark-600 mb-4" size={40} />
-            <h3 className="text-lg font-bold mb-1">No Streams Found</h3>
-            <p className="text-xs text-dark-600">Get started by creating your first token stream.</p>
+          /* Dashboard Content */
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Filters */}
+            <div className="flex justify-between items-center border-b border-white/5 pb-4">
+              <div className="flex gap-2">
+                {(['All', 'Active', 'Paused', 'Cancelled'] as const).map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setFilter(status)}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition ${
+                      filter === status
+                        ? "bg-dark-700 text-white border border-white/10"
+                        : "text-dark-600 hover:text-white"
+                    }`}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+              <div className="text-xs text-dark-500 font-semibold flex items-center gap-1.5">
+                <SlidersHorizontal size={14} />
+                <span>Showing {filteredStreams.length} streams</span>
+              </div>
+            </div>
+
+            {/* Streams Grid */}
+            {filteredStreams.length > 0 ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredStreams.map((stream) => (
+                  <StreamCard key={stream.id.toString()} stream={stream} onRefetch={refetch} />
+                ))}
+              </div>
+            ) : (
+              <div className="glass p-12 rounded-2xl text-center border border-white/5">
+                <LayoutGrid className="mx-auto text-dark-600 mb-4" size={40} />
+                <h3 className="text-lg font-bold mb-1 text-white">No Streams Found</h3>
+                <p className="text-xs text-dark-500">Get started by creating your first token stream.</p>
+              </div>
+            )}
           </div>
         )}
       </main>
