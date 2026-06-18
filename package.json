@@ -4,6 +4,7 @@
   "description": "Soroban-native payment streaming, escrow, and milestone-based disbursement platform built on Stellar.",
   "private": true,
   "scripts": {
+    "dev": "pnpm dev:web",
     "build": "pnpm --filter \"@payflow/*\" --filter \"payflow-cli\" --filter \"payflow-web\" build",
     "test": "pnpm --recursive --filter \"@payflow/*\" test",
     "test:contracts": "cargo test --workspace",
