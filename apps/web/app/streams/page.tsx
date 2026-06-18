@@ -9,8 +9,12 @@ import { useStreams } from '../../lib/hooks/useStream';
 import { Plus, LayoutGrid, SlidersHorizontal, Home, Wallet, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 
 export default function StreamsDashboard() {
-  const { publicKey, connect, isConnecting } = useWalletStore();
+  const { publicKey, connect, isConnecting, connectionError } = useWalletStore();
   const [filter, setFilter] = useState<'All' | 'Active' | 'Paused' | 'Cancelled'>('All');
+
+  const handleConnect = async (type: 'freighter' | 'lobstr') => {
+    try { await connect(type); } catch (_) { /* error is in connectionError state */ }
+  };
 
   // Fetch live streams from the blockchain via StreamClient
   const { streams, isLoading, error, refetch } = useStreams(publicKey);
@@ -81,7 +85,7 @@ export default function StreamsDashboard() {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={() => connect('freighter')}
+                onClick={() => handleConnect('freighter')}
                 disabled={isConnecting}
                 className="flex items-center justify-center gap-2 bg-dark-700 hover:bg-dark-600 border border-white/10 px-6 py-3 rounded-xl text-sm font-semibold text-white transition disabled:opacity-50"
               >
@@ -89,7 +93,7 @@ export default function StreamsDashboard() {
                 Freighter
               </button>
               <button
-                onClick={() => connect('lobstr')}
+                onClick={() => handleConnect('lobstr')}
                 disabled={isConnecting}
                 className="flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 px-6 py-3 rounded-xl text-sm font-semibold text-white transition disabled:opacity-50"
               >
@@ -97,6 +101,11 @@ export default function StreamsDashboard() {
                 LOBSTR
               </button>
             </div>
+            {connectionError && (
+              <p className="text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg px-4 py-2 max-w-md mx-auto">
+                {connectionError}
+              </p>
+            )}
           </div>
         ) : error ? (
           /* Error State */

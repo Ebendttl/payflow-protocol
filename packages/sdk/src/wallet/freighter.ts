@@ -18,8 +18,13 @@ export class FreighterWalletAdapter {
       if (typeof window === 'undefined' || !(window as any).freighter) {
         return false;
       }
-      const connected = await isConnected();
-      return !!connected;
+      const result = await isConnected();
+      // Freighter v2 may return the window.freighter object or { isConnected: boolean }
+      if (typeof result === 'boolean') return result;
+      if (result && typeof result === 'object') {
+        return (result as any).isConnected !== false;
+      }
+      return !!result;
     } catch (err: any) {
       return false;
     }
