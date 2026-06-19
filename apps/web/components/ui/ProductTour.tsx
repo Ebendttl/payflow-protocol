@@ -163,55 +163,66 @@ export default function ProductTour() {
     }
 
     const padding = 16;
-    const placement = steps[currentStep].placement;
+    let placement = steps[currentStep].placement;
+    const cardWidth = 360;
+    const cardHeight = 220; // Estimated height for boundary math
 
-    switch (placement) {
-      case 'top':
-        return {
-          position: 'fixed',
-          top: `${coords.top - padding}px`,
-          left: `${coords.left + coords.width / 2}px`,
-          transform: 'translate(-50%, -100%)',
-          zIndex: 10000,
-          width: 'min(90vw, 360px)',
-        };
-      case 'bottom':
-        return {
-          position: 'fixed',
-          top: `${coords.top + coords.height + padding}px`,
-          left: `${coords.left + coords.width / 2}px`,
-          transform: 'translateX(-50%)',
-          zIndex: 10000,
-          width: 'min(90vw, 360px)',
-        };
-      case 'left':
-        return {
-          position: 'fixed',
-          top: `${coords.top + coords.height / 2}px`,
-          left: `${coords.left - padding}px`,
-          transform: 'translate(-100%, -50%)',
-          zIndex: 10000,
-          width: 'min(90vw, 360px)',
-        };
-      case 'right':
-        return {
-          position: 'fixed',
-          top: `${coords.top + coords.height / 2}px`,
-          left: `${coords.left + coords.width + padding}px`,
-          transform: 'translateY(-50%)',
-          zIndex: 10000,
-          width: 'min(90vw, 360px)',
-        };
-      default:
-        return {
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 10000,
-          width: 'min(90vw, 360px)',
-        };
+    // Get viewport width and height
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+    
+    let left = coords.left + coords.width / 2;
+    let top = coords.top + coords.height + padding;
+    let transform = 'translateX(-50%)';
+
+    // Auto-adjust vertical placement if it overflows bottom
+    if (placement === 'bottom' && top + cardHeight > vh - 16) {
+      placement = 'top';
+    } else if (placement === 'top' && coords.top - padding - cardHeight < 16) {
+      placement = 'bottom';
     }
+
+    if (placement === 'top') {
+      top = coords.top - padding;
+      transform = 'translate(-50%, -100%)';
+    } else if (placement === 'bottom') {
+      top = coords.top + coords.height + padding;
+      transform = 'translateX(-50%)';
+    } else if (placement === 'left') {
+      top = coords.top + coords.height / 2;
+      left = coords.left - padding;
+      transform = 'translate(-100%, -50%)';
+    } else if (placement === 'right') {
+      top = coords.top + coords.height / 2;
+      left = coords.left + coords.width + padding;
+      transform = 'translateY(-50%)';
+    }
+
+    // Horizontal boundary safety
+    const halfWidth = Math.min(vw * 0.9, cardWidth) / 2;
+    const margin = 16;
+    
+    if (left - halfWidth < margin) {
+      left = halfWidth + margin;
+    } else if (left + halfWidth > vw - margin) {
+      left = vw - halfWidth - margin;
+    }
+
+    // Vertical boundary safety
+    if (placement === 'top' && top - cardHeight < margin) {
+      top = cardHeight + margin;
+    } else if (placement === 'bottom' && top + cardHeight > vh - margin) {
+      top = vh - cardHeight - margin;
+    }
+
+    return {
+      position: 'fixed',
+      top: `${top}px`,
+      left: `${left}px`,
+      transform,
+      zIndex: 10000,
+      width: 'min(90vw, 360px)',
+    };
   };
 
   return (
@@ -226,7 +237,7 @@ export default function ProductTour() {
         aria-label="Start product tour"
       >
         <HelpCircle size={22} className="group-hover:rotate-12 transition-transform duration-300" />
-        <span className="absolute right-14 scale-0 group-hover:scale-100 origin-right transition-all duration-200 bg-dark-850 border border-white/5 text-xxs font-semibold uppercase tracking-wider text-white px-3 py-1.5 rounded-lg shadow-md whitespace-nowrap">
+        <span className="absolute right-14 scale-0 group-hover:scale-100 origin-right transition-all duration-200 bg-dark-800 border border-white/5 text-xxs font-semibold uppercase tracking-wider text-white px-3 py-1.5 rounded-lg shadow-md whitespace-nowrap">
           Product Tour
         </span>
       </button>
@@ -271,7 +282,7 @@ export default function ProductTour() {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
               style={getCardStyle()}
-              className="bg-dark-850 border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 text-left max-w-sm"
+              className="bg-dark-800 border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 text-left max-w-sm"
             >
               {/* Header */}
               <div className="flex justify-between items-center">
