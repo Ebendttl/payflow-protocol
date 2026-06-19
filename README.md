@@ -178,6 +178,7 @@ For detailed submission flow guidelines, read the [Contribution Guide](./docs/co
 Explore the docs folder for more specialized information:
 *   [**System Architecture**](./docs/architecture.md): Visual diagrams, sequence flows, and database schemas.
 *   [**Memory Ledger**](./docs/memory.md): Design rules, styling tokens, and details on deferred client stubs.
+*   [**Deployment Guide**](./docs/DEPLOYMENT.md): Step-by-step setup for Vercel (Frontend) and Render (Backend).
 *   [**Mathematical Specification**](./docs/mathematical-specification.md): Formula definitions for time-accrued stream calculations.
 *   [**Security Threat Model**](./docs/security-threat-model.md): Smart contract threat vectors and mitigations.
 *   [**SDK Reference**](./docs/sdk-reference.md): Detailed API endpoints and integration snippets for developers.

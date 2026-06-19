@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
 import { StellarEventListener } from './listener.js';
 import { EventProcessor } from './processor.js';
 
@@ -40,6 +41,12 @@ app.get('/escrows/:id', async (c) => {
 
 // ─── Server bootstrap ─────────────────────────────────────────────────────────
 const port = Number(process.env.PORT ?? 3001);
+
+serve({
+  fetch: app.fetch,
+  port,
+});
+
 console.log(`Indexer REST API running on port ${port}`);
 
 const listener = new StellarEventListener(
