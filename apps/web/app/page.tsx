@@ -110,7 +110,7 @@ export default function Home() {
                 </Link>
               </div>
             ) : (
-              <div className="mt-5 relative">
+              <div id="tour-connect-btn" className="mt-5 relative">
                 <Button
                   type="button"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -142,6 +142,7 @@ export default function Home() {
 
           {/* Stats strip */}
           <motion.div
+            id="tour-stats"
             variants={itemVariants}
             className="flex flex-wrap justify-center gap-8 md:gap-16 py-6 px-10 rounded-2xl bg-dark-800/40 border border-white/5 backdrop-blur-sm w-full max-w-3xl mt-12"
           >

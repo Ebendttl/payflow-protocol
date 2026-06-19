@@ -42,7 +42,7 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex justify-between items-center">
           {/* Logo / Wordmark */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" id="tour-logo" className="flex items-center gap-2 group">
             <div className="relative h-9 w-9 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-md shadow-primary/10">
               <Image
                 src="/icon.png"
@@ -68,6 +68,7 @@ export default function Navbar() {
                 <Link
                   key={link.path}
                   href={link.path}
+                  id={`tour-nav-${link.label.toLowerCase()}`}
                   className={`relative py-2 text-sm font-semibold transition-colors duration-200 ${
                     isActive ? 'text-primary-light font-bold' : 'text-dark-500 hover:text-[#F0EEE9]'
                   }`}
@@ -87,7 +88,7 @@ export default function Navbar() {
 
           {/* Action / Wallet button & mobile toggle */}
           <div className="flex items-center gap-3">
-            <div className="hidden sm:block">
+            <div id="tour-wallet-btn" className="hidden sm:block">
               <WalletButton />
             </div>
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
+import ProductTour from "../components/ui/ProductTour";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <ProductTour />
       </body>
     </html>
   );
