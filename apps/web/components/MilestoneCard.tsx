@@ -59,7 +59,7 @@ export default function MilestoneCard({
           id={`approve-milestone-${escrowId}-${milestoneIndex}`}
           onClick={handleApprove}
           disabled={!isApprover}
-          className="w-full py-2.5 bg-gradient-to-r from-primary to-accent text-white rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition"
+          className="w-full py-2.5 bg-primary hover:bg-primary-light text-white rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition"
         >
           {isApprover ? 'Approve Milestone' : 'Not an Approver'}
         </button>

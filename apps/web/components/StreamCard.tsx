@@ -6,6 +6,8 @@ import ClaimButton from './ClaimButton';
 import { useWalletStore } from '../lib/store/walletStore';
 import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
 import { Loader2, Pause, Play, XOctagon } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 
 interface StreamCardProps {
   stream: Stream;
@@ -93,13 +95,17 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
   const handlePause = async () => {
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Pausing continuous token flow...");
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.pauseStream({ streamId: stream.id });
+      toast.success("Stream paused successfully!", { id: toastId });
       if (onRefetch) onRefetch();
     } catch (err: any) {
-      setError(err.message || String(err));
+      const msg = err.message || String(err);
+      setError(msg);
+      toast.error(`Pause failed: ${msg}`, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -108,13 +114,17 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
   const handleResume = async () => {
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Resuming continuous token flow...");
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.resumeStream({ streamId: stream.id });
+      toast.success("Stream resumed successfully!", { id: toastId });
       if (onRefetch) onRefetch();
     } catch (err: any) {
-      setError(err.message || String(err));
+      const msg = err.message || String(err);
+      setError(msg);
+      toast.error(`Resume failed: ${msg}`, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -123,20 +133,30 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
   const handleCancel = async () => {
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Cancelling stream & returning unspent balance...");
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.cancelStream({ streamId: stream.id });
+      toast.success("Stream cancelled successfully!", { id: toastId });
       if (onRefetch) onRefetch();
     } catch (err: any) {
-      setError(err.message || String(err));
+      const msg = err.message || String(err);
+      setError(msg);
+      toast.error(`Cancellation failed: ${msg}`, { id: toastId });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="glass px-6 py-6 rounded-2xl flex flex-col justify-between min-h-[320px] w-full relative overflow-hidden transition-all duration-350 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(20,241,149,0.05)] border border-white/5">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      className="glass px-6 py-6 rounded-2xl flex flex-col justify-between min-h-[320px] w-full relative overflow-hidden transition-all duration-350 hover:scale-[1.01] hover:shadow-lg hover:shadow-black/20 border border-white/5"
+    >
       <div className="absolute top-0 right-0 h-32 w-32 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
 
       {/* Header */}
@@ -184,14 +204,14 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
         </div>
         <div className="w-full h-2 bg-dark-800 rounded-full overflow-hidden border border-white/5">
           <div
-            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300"
+            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-350"
             style={{ width: `${progressPct}%` }}
           />
         </div>
       </div>
 
       {error && (
-        <p className="text-xxs text-rose-400 bg-rose-500/10 p-2 rounded mb-2 border border-rose-500/20 break-all">{error}</p>
+        <p className="text-xxs text-accent-rose bg-rose-500/10 p-2 rounded-xl mb-2 border border-accent-rose/20 break-all">{error}</p>
       )}
 
       {/* Actions */}
@@ -226,7 +246,7 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
                 {(stream.status === 'Active' || stream.status === 'Paused') && (
                   <button
                     onClick={handleCancel}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-350 py-2 rounded-xl text-xs font-bold transition border border-rose-550/20"
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-accent-rose py-2 rounded-xl text-xs font-bold transition border border-accent-rose/20"
                   >
                     <XOctagon size={12} />
                     Cancel
@@ -242,6 +262,6 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

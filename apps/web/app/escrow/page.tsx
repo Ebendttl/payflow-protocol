@@ -2,9 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import WalletButton from '../../components/WalletButton';
 import { useWalletStore } from '../../lib/store/walletStore';
-import { ShieldAlert, ArrowRight, Home, Plus } from 'lucide-react';
+import { ShieldAlert, ArrowRight, Plus } from 'lucide-react';
 import { Escrow } from '@payflow/sdk';
 
 export default function EscrowDashboard() {
@@ -32,39 +31,23 @@ export default function EscrowDashboard() {
   const truncate = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
   return (
-    <div className="min-h-screen bg-dark-900 flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-[calc(100vh-160px)] bg-dark-900 flex flex-col justify-between relative overflow-hidden">
       <div className="absolute top-[-10%] left-[-10%] h-[50%] w-[50%] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Header */}
-      <header className="w-full glass py-4 px-6 md:px-12 flex justify-between items-center border-b border-white/5 z-10">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2 text-white hover:text-teal-300 transition">
-            <Home size={18} />
-            <span className="font-bold tracking-wider hidden md:inline">PayFlow</span>
-          </Link>
-          <div className="h-4 w-[1px] bg-dark-700 hidden md:block" />
-          <nav className="flex gap-4 text-sm font-semibold">
-            <Link href="/streams" className="text-dark-600 hover:text-white transition">Streams</Link>
-            <Link href="/escrow" className="text-primary-light font-bold">Escrows</Link>
-          </nav>
-        </div>
-        <WalletButton />
-      </header>
 
       {/* Main Content */}
       <main className="max-w-6xl w-full mx-auto px-6 py-12 flex-grow space-y-8 z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-3xl font-extrabold tracking-tight">Milestone Escrows</h2>
-            <p className="text-xs text-dark-600">Secure funds held in smart contracts and release on milestone approvals</p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-white">Milestone Escrows</h2>
+            <p className="text-xs text-dark-500">Secure funds held in smart contracts and release on milestone approvals</p>
           </div>
-          <button
-            onClick={() => alert("Escrow creation wizard is an issue for future developers!")}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-light text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition duration-200"
+          <Link
+            href="/escrow/create"
+            className="flex items-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition duration-200 hover:scale-[1.02]"
           >
             <Plus size={16} />
             New Escrow
-          </button>
+          </Link>
         </div>
 
         {/* Escrow Cards List */}
@@ -119,10 +102,7 @@ export default function EscrowDashboard() {
           </div>
         )}
       </main>
-
-      <footer className="w-full glass py-6 text-center border-t border-white/5 text-xs text-dark-600 z-10">
-        &copy; {new Date().getFullYear()} PayFlow Protocol.
-      </footer>
     </div>
   );
 }
+

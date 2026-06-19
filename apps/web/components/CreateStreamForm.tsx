@@ -8,6 +8,7 @@ import { useWalletStore } from '../lib/store/walletStore';
 import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
 import { Loader2, CheckCircle2, AlertCircle, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast';
 
 // ─── Zod schemas for each wizard step ────────────────────────────────────────
 
@@ -50,10 +51,12 @@ export default function CreateStreamForm() {
   const onStep3 = form3.handleSubmit(async () => {
     if (!isConnected || !publicKey) {
       setError('Please connect your wallet first.');
+      toast.error('Please connect your wallet first.');
       return;
     }
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("Deploying stream contract and locking tokens...");
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
@@ -74,8 +77,11 @@ export default function CreateStreamForm() {
       });
 
       setSuccessTx(txHash);
+      toast.success("Stream created successfully!", { id: toastId });
     } catch (err: any) {
-      setError(err.message || String(err));
+      const msg = err.message || String(err);
+      setError(msg);
+      toast.error(`Transaction failed: ${msg}`, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -137,13 +143,13 @@ export default function CreateStreamForm() {
           <div className="flex gap-3">
             <button
               onClick={resetForm}
-              className="flex-1 bg-gradient-to-r from-primary to-accent text-white py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition"
+              className="flex-1 bg-primary hover:bg-primary-light text-white py-3 rounded-xl text-sm font-semibold transition"
             >
               Create Another
             </button>
             <Link
               href="/streams"
-              className="flex-1 flex items-center justify-center bg-dark-800 hover:bg-dark-750 text-white py-3 rounded-xl text-sm font-semibold border border-white/5 transition"
+              className="flex-1 flex items-center justify-center bg-dark-800 hover:bg-dark-700 text-white py-3 rounded-xl text-sm font-semibold border border-white/5 transition"
             >
               Dashboard
             </Link>
@@ -221,7 +227,7 @@ export default function CreateStreamForm() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary-light hover:to-accent-purple text-white py-3.5 rounded-xl text-sm font-semibold transition mt-6"
+            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-light text-white py-3.5 rounded-xl text-sm font-semibold transition mt-6"
           >
             Next Step
             <ArrowRight size={16} />
@@ -274,7 +280,7 @@ export default function CreateStreamForm() {
             </button>
             <button
               type="submit"
-              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary-light hover:to-accent-purple text-white py-3.5 rounded-xl text-sm font-semibold transition"
+              className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary-light text-white py-3.5 rounded-xl text-sm font-semibold transition"
             >
               Next Step
               <ArrowRight size={16} />
@@ -342,7 +348,7 @@ export default function CreateStreamForm() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary-light hover:to-accent-purple text-white py-3.5 rounded-xl text-sm font-semibold transition disabled:opacity-55"
+              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white py-3.5 rounded-xl text-sm font-semibold transition disabled:opacity-55"
             >
               {loading ? (
                 <>

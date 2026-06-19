@@ -31,7 +31,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           <h2 className="text-xl font-bold">Something went wrong.</h2>
           <button
             onClick={() => this.setState({ hasError: false })}
-            className="mt-4 px-4 py-2 bg-primary rounded-lg text-sm font-semibold"
+            className="mt-4 px-4 py-2 bg-primary rounded-xl text-sm font-semibold"
           >
             Try again
           </button>

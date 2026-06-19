@@ -3,6 +3,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useWalletStore } from '../lib/store/walletStore';
 import { Wallet, LogOut, Loader2, ChevronDown, Check, AlertTriangle } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import WalletOptionButton from './ui/WalletOptionButton';
 
 export default function WalletButton() {
   const { publicKey, isConnected, isConnecting, walletType, connectionError, connect, disconnect } = useWalletStore();
@@ -31,31 +33,38 @@ export default function WalletButton() {
   const handleConnect = async (type: 'freighter' | 'lobstr') => {
     setDropdownOpen(false);
     setLocalError(null);
+    const toastId = toast.loading(`Connecting to ${type === 'lobstr' ? 'LOBSTR' : 'Freighter'}...`);
     try {
       await connect(type);
+      toast.success(`Wallet connected successfully!`, { id: toastId });
     } catch (err: any) {
-      setLocalError(err?.message || String(err));
+      const msg = err?.message || String(err);
+      setLocalError(msg);
+      toast.error(`Connection failed: ${msg}`, { id: toastId });
     }
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
+    toast.success("Wallet disconnected");
   };
 
   if (isConnected && publicKey) {
     return (
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 bg-dark-700/80 border border-dark-600 px-3 py-1.5 rounded-lg">
-          <span style={{ height: '6px', width: '6px', borderRadius: '50%', background: '#10B981' }} />
-          <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700, color: '#6B7280' }}>
+        <div className="flex items-center gap-1.5 bg-dark-700/80 border border-white/10 px-3 py-1.5 rounded-xl">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="text-[10px] uppercase tracking-wider font-bold text-dark-400">
             {walletType === 'lobstr' ? 'LOBSTR' : 'Freighter'}
           </span>
-          <span style={{ height: '12px', width: '1px', background: '#374151' }} />
-          <span className="font-mono" style={{ fontSize: '12px', color: '#0D9488', fontWeight: 600 }}>
+          <span className="h-3 w-[1px] bg-dark-600" />
+          <span className="font-mono text-xs text-primary font-semibold">
             {truncate(publicKey)}
           </span>
         </div>
         <button
-          onClick={disconnect}
-          style={{ cursor: 'pointer', padding: '8px', borderRadius: '8px', color: '#F43F5E', background: 'transparent', border: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.15s' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+          onClick={handleDisconnect}
+          className="p-2.5 rounded-xl border border-white/5 bg-transparent hover:bg-white/5 text-rose-500 transition duration-150"
           title="Disconnect wallet"
           aria-label="Disconnect wallet"
         >
@@ -66,102 +75,51 @@ export default function WalletButton() {
   }
 
   return (
-    <div style={{ position: 'relative' }} ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef}>
       <button
         id="wallet-connect-btn"
         type="button"
         onClick={() => { setLocalError(null); setDropdownOpen(!dropdownOpen); }}
         disabled={isConnecting}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px 20px',
-          fontSize: '13px',
-          fontWeight: 600,
-          color: '#F0EEE9',
-          background: 'transparent',
-          border: '1px solid rgba(255,255,255,0.15)',
-          borderRadius: '10px',
-          transition: 'border-color 0.15s, background 0.15s',
-          opacity: isConnecting ? 0.5 : 1,
-        }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.background = 'transparent'; }}
+        className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-dark-800 hover:bg-dark-700 border border-white/10 rounded-xl transition duration-150 disabled:opacity-50"
       >
-        {isConnecting ? <Loader2 size={15} className="animate-spin" /> : <Wallet size={15} />}
+        {isConnecting ? <Loader2 size={14} className="animate-spin text-primary" /> : <Wallet size={14} className="text-primary" />}
         {isConnecting ? 'Connecting…' : 'Connect Wallet'}
-        {!isConnecting && <ChevronDown size={13} style={{ transition: 'transform 0.15s', transform: dropdownOpen ? 'rotate(180deg)' : 'none' }} />}
+        {!isConnecting && <ChevronDown size={12} className={`transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`} />}
       </button>
 
       {dropdownOpen && !isConnecting && (
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            marginTop: '8px',
-            width: '220px',
-            background: '#111827',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '12px',
-            padding: '6px',
-            zIndex: 9999,
-          }}
-        >
-          <p style={{ fontSize: '10px', fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '8px 12px 4px' }}>Select Wallet</p>
-          <button
-            type="button"
-            onClick={() => handleConnect('freighter')}
-            style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', fontSize: '13px', fontWeight: 500, color: '#fff', background: 'transparent', border: 'none', borderRadius: '8px', textAlign: 'left' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ height: '8px', width: '8px', borderRadius: '50%', background: '#0D9488', flexShrink: 0 }} />
-              <span>Freighter Wallet</span>
+        <div className="absolute right-0 mt-2 w-[220px] bg-dark-900 border border-white/10 rounded-xl p-2 z-[9999] shadow-lg shadow-black/40">
+          <p className="text-[10px] font-bold text-dark-500 uppercase tracking-wider px-3 py-1.5">Select Wallet</p>
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between px-1">
+              <WalletOptionButton
+                onClick={() => handleConnect('freighter')}
+                label="Freighter Wallet"
+                isConnecting={false}
+              />
+              {walletType === 'freighter' && <Check size={14} className="text-primary shrink-0 ml-1.5" />}
             </div>
-            {walletType === 'freighter' && <Check size={12} style={{ color: '#0D9488' }} />}
-          </button>
-          <button
-            type="button"
-            onClick={() => handleConnect('lobstr')}
-            style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', fontSize: '13px', fontWeight: 500, color: '#fff', background: 'transparent', border: 'none', borderRadius: '8px', textAlign: 'left' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ height: '8px', width: '8px', borderRadius: '50%', background: '#0D9488', flexShrink: 0 }} />
-              <span>LOBSTR Wallet</span>
+            <div className="flex items-center justify-between px-1">
+              <WalletOptionButton
+                onClick={() => handleConnect('lobstr')}
+                label="LOBSTR Wallet"
+                isConnecting={false}
+              />
+              {walletType === 'lobstr' && <Check size={14} className="text-primary shrink-0 ml-1.5" />}
             </div>
-            {walletType === 'lobstr' && <Check size={12} style={{ color: '#0D9488' }} />}
-          </button>
+          </div>
         </div>
       )}
 
       {localError && !isConnecting && (
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            marginTop: '8px',
-            width: '288px',
-            background: 'rgba(76, 5, 25, 0.9)',
-            border: '1px solid rgba(244, 63, 94, 0.3)',
-            borderRadius: '12px',
-            padding: '12px',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '8px',
-            zIndex: 9999,
-          }}
-        >
-          <AlertTriangle size={14} style={{ color: '#fb7185', marginTop: '2px', flexShrink: 0 }} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: '11px', color: '#fda4af', lineHeight: 1.4, wordBreak: 'break-word' }}>{localError}</p>
+        <div className="absolute right-0 mt-2 w-[288px] bg-rose-950/90 border border-rose-500/30 rounded-xl p-3 flex gap-2.5 z-[9999]">
+          <AlertTriangle size={14} className="text-rose-400 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-rose-300 leading-relaxed break-words">{localError}</p>
             <button
               onClick={() => setLocalError(null)}
-              style={{ cursor: 'pointer', fontSize: '10px', color: '#fb7185', background: 'none', border: 'none', textDecoration: 'underline', marginTop: '4px', padding: 0 }}
+              className="text-[10px] text-rose-400 hover:text-rose-300 underline mt-1.5"
             >
               Dismiss
             </button>
