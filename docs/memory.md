@@ -86,3 +86,33 @@ The frontend app (`apps/web/`) has been systematically refactored under strict s
     - Created the shared, reusable `Button` component under `apps/web/components/ui/Button.tsx` to handle flat primary, secondary, and danger styles.
     - Performed an exhaustive, app-wide gradient removal pass, replacing all gradient CTAs and progress bars with flat `bg-primary` styles.
     - Configured ESLint with compatible versions and resolved unescaped quotes to ensure `pnpm lint` and `pnpm build` compile with zero errors.
+
+---
+
+## 🚀 Production Deployment & Hosting
+
+The PayFlow Protocol monorepo is fully deployed to production with the following architecture:
+
+### 1. Frontend Web App (Vercel)
+*   **Live URL**: `https://payflow-protocol-web.vercel.app`
+*   **Build command override**: `pnpm --filter @payflow/sdk build && next build` (compiles the shared SDK before compiling Next.js).
+*   **Environment Variables**:
+    *   `NEXT_PUBLIC_NETWORK`: `testnet`
+    *   `NEXT_PUBLIC_HORIZON_RPC_URL`: `https://soroban-rpc.testnet.stellar.gateway.fm`
+    *   `NEXT_PUBLIC_STREAM_FACTORY_CONTRACT_ID`: `CARYVEW3UGDWVTF6DXG2PJ4AMGLTXS377HGMJQI7QWVSXWSZIUO4XHZZ`
+    *   `NEXT_PUBLIC_MILESTONE_ESCROW_CONTRACT_ID`: `CATLNHGZPOCUVKZQXAXMJO46Z5A44XN3TBOGU7JTRIN6R4CO7SHGUWBZ`
+    *   `NEXT_PUBLIC_STREAM_VAULT_CONTRACT_ID`: `CDAFGGCUE4VQPXY5SIZ3SENQK4VXAOQMW5L6NWPRX2JTO5IERRPKPQ2D`
+    *   `NEXT_PUBLIC_INDEXER_URL`: `https://payflow-indexer.onrender.com`
+
+### 2. Event Indexer Backend (Render)
+*   **Live Web Service URL**: `https://payflow-indexer.onrender.com`
+*   **Build command**: `pnpm install && pnpm --filter @payflow/indexer build`
+*   **Start command**: `node packages/indexer/dist/index.js`
+*   **Instance Type**: Free Web Service (restarted and bound to the port using `@hono/node-server`).
+*   **Database**: Persistent Render Postgres (`codesync-db` in region `Oregon`).
+*   **Environment Variables**:
+    *   `NODE_ENV`: `production`
+    *   `DATABASE_URL`: Connection string to active Render Postgres.
+    *   `HORIZON_URL`: `https://horizon-testnet.stellar.org`
+    *   `CONTRACT_IDS`: `CARYVEW3UGDWVTF6DXG2PJ4AMGLTXS377HGMJQI7QWVSXWSZIUO4XHZZ,CATLNHGZPOCUVKZQXAXMJO46Z5A44XN3TBOGU7JTRIN6R4CO7SHGUWBZ,CDAFGGCUE4VQPXY5SIZ3SENQK4VXAOQMW5L6NWPRX2JTO5IERRPKPQ2D`
+    *   `PORT`: `10000` (Assigned dynamically by Render)
