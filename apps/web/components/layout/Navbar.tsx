@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, Activity, ShieldCheck } from 'lucide-react';
@@ -42,8 +43,14 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex justify-between items-center">
           {/* Logo / Wordmark */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-9 w-9 bg-primary rounded-xl flex items-center justify-center font-bold text-white text-lg transition-transform duration-300 group-hover:scale-105 shadow-md shadow-primary/20">
-              P
+            <div className="relative h-9 w-9 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-md shadow-primary/10">
+              <Image
+                src="/icon.png"
+                alt="PayFlow Logo"
+                fill
+                priority
+                className="object-cover"
+              />
             </div>
             <span 
               className="font-bold text-lg tracking-tight text-[#F0EEE9] group-hover:text-primary-light transition-colors duration-200"
@@ -121,8 +128,13 @@ export default function Navbar() {
                 {/* Header inside drawer */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 bg-primary rounded-xl flex items-center justify-center font-bold text-white text-md">
-                      P
+                    <div className="relative h-8 w-8 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center">
+                      <Image
+                        src="/icon.png"
+                        alt="PayFlow Logo"
+                        fill
+                        className="object-cover"
+                      />
                     </div>
                     <span className="font-bold text-md text-[#F0EEE9]">PayFlow</span>
                   </div>

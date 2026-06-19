@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useWalletStore } from '../lib/store/walletStore';
 import { ArrowRight, Activity, ShieldCheck, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -47,6 +48,20 @@ export default function Home() {
           animate="show"
           className="space-y-8 flex flex-col items-center"
         >
+          {/* Floating Brand Logo */}
+          <motion.div
+            variants={itemVariants}
+            className="relative h-16 w-16 overflow-hidden rounded-2xl bg-dark-800 border border-white/5 flex items-center justify-center shadow-lg shadow-primary/10 mb-2"
+          >
+            <Image
+              src="/icon.png"
+              alt="PayFlow Logo"
+              fill
+              priority
+              className="object-cover"
+            />
+          </motion.div>
+
           {/* Tagline / Subtitle */}
           <motion.div 
             variants={itemVariants} 

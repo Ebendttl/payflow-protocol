@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -10,8 +11,13 @@ export default function Footer() {
         {/* Logo and Tagline */}
         <div className="text-center md:text-left space-y-2">
           <div className="flex items-center justify-center md:justify-start gap-2">
-            <div className="h-6 w-6 bg-primary rounded flex items-center justify-center font-bold text-white text-xs">
-              P
+            <div className="relative h-6 w-6 overflow-hidden rounded bg-dark-800 border border-white/5 flex items-center justify-center">
+              <Image
+                src="/icon.png"
+                alt="PayFlow Logo"
+                fill
+                className="object-cover"
+              />
             </div>
             <span className="font-bold text-[#F0EEE9] tracking-tight" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
               PayFlow Protocol
