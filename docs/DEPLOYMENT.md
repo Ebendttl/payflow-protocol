@@ -18,7 +18,7 @@ On the project configuration screen, set the following parameters:
 *   **Framework Preset**: `Next.js`
 *   **Root Directory**: Click *Edit* and select **`apps/web`**.
 *   **Build & Development Settings**:
-    *   Toggle *Override* for **Build Command**: Set to `next build` (or leave default since the root is set to `apps/web`).
+    *   Toggle *Override* for **Build Command**: Set to **`pnpm --filter @payflow/sdk build && next build`** (This builds the shared SDK package before compiling the Next.js app).
     *   Toggle *Override* for **Output Directory**: Set to `.next` (default).
     *   Toggle *Override* for **Install Command**: Set to `pnpm install` (Vercel automatically detects the lockfile at the workspace root and installs all workspace dependencies).
 
