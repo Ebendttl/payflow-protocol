@@ -25,7 +25,7 @@ export default function Footer() {
         {/* Links */}
         <div className="flex gap-8 text-xs font-semibold text-dark-550">
           <a
-            href="https://github.com"
+            href="https://github.com/Ebendttl/payflow-protocol"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-primary-light transition-colors"
@@ -33,7 +33,9 @@ export default function Footer() {
             GitHub
           </a>
           <a
-            href="/docs"
+            href="https://github.com/Ebendttl/payflow-protocol/tree/main/docs"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:text-primary-light transition-colors"
           >
             Documentation

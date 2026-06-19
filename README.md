@@ -10,15 +10,15 @@
 ---
 
 ## 📖 Table of Contents
-1. [Core Features & Primitives](#core-features--primitives)
-2. [Monorepo Architecture](#monorepo-architecture)
-3. [Visual & Design System Discipline](#visual--design-system-discipline)
-4. [Getting Started & Local Environment Setup](#getting-started--local-environment-setup)
-5. [Smart Contract Compiling & Testing](#smart-contract-compiling--testing)
-6. [Local Indexer & Web Dashboard Orchestration](#local-indexer--web-dashboard-orchestration)
-7. [Drips Wave Contribution Guidelines](#drips-wave-contribution-guidelines)
-8. [Documentation Directory](#documentation-directory)
-9. [License](#license)
+1. Core Features & Primitives
+2. Monorepo Architecture
+3. Visual & Design System Discipline
+4. Getting Started & Local Environment Setup
+5. Smart Contract Compiling & Testing
+6. Local Indexer & Web Dashboard Orchestration
+7. Drips Wave Contribution Guidelines
+8. Documentation Directory
+9. License
 
 ---
 
