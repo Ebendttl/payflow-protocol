@@ -151,67 +151,58 @@ export default function ProductTour() {
 
   // Determine tooltip style based on coordinates and placement
   const getCardStyle = (): React.CSSProperties => {
+    // Get viewport width and height safely
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+    
+    const cardWidth = Math.min(vw * 0.9, 360);
+    const cardHeight = 220; // Estimated height for boundary math
+    const margin = 16;
+
     if (!coords) {
+      // Center placement (welcome/finish steps)
+      const left = (vw - cardWidth) / 2;
+      const top = (vh - cardHeight) / 2;
       return {
         position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        top: `${top}px`,
+        left: `${left}px`,
         zIndex: 10000,
-        width: 'min(90vw, 360px)',
+        width: `${cardWidth}px`,
       };
     }
 
     const padding = 16;
     let placement = steps[currentStep].placement;
-    const cardWidth = 360;
-    const cardHeight = 220; // Estimated height for boundary math
-
-    // Get viewport width and height
-    const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
-    const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
     
-    let left = coords.left + coords.width / 2;
+    // Center card horizontally relative to the target
+    let left = coords.left + coords.width / 2 - cardWidth / 2;
     let top = coords.top + coords.height + padding;
-    let transform = 'translateX(-50%)';
 
     // Auto-adjust vertical placement if it overflows bottom
-    if (placement === 'bottom' && top + cardHeight > vh - 16) {
+    if (placement === 'bottom' && top + cardHeight > vh - margin) {
       placement = 'top';
-    } else if (placement === 'top' && coords.top - padding - cardHeight < 16) {
+    } else if (placement === 'top' && coords.top - padding - cardHeight < margin) {
       placement = 'bottom';
     }
 
     if (placement === 'top') {
-      top = coords.top - padding;
-      transform = 'translate(-50%, -100%)';
+      top = coords.top - padding - cardHeight;
     } else if (placement === 'bottom') {
       top = coords.top + coords.height + padding;
-      transform = 'translateX(-50%)';
-    } else if (placement === 'left') {
-      top = coords.top + coords.height / 2;
-      left = coords.left - padding;
-      transform = 'translate(-100%, -50%)';
-    } else if (placement === 'right') {
-      top = coords.top + coords.height / 2;
-      left = coords.left + coords.width + padding;
-      transform = 'translateY(-50%)';
     }
 
     // Horizontal boundary safety
-    const halfWidth = Math.min(vw * 0.9, cardWidth) / 2;
-    const margin = 16;
-    
-    if (left - halfWidth < margin) {
-      left = halfWidth + margin;
-    } else if (left + halfWidth > vw - margin) {
-      left = vw - halfWidth - margin;
+    if (left < margin) {
+      left = margin;
+    } else if (left + cardWidth > vw - margin) {
+      left = vw - cardWidth - margin;
     }
 
     // Vertical boundary safety
-    if (placement === 'top' && top - cardHeight < margin) {
-      top = cardHeight + margin;
-    } else if (placement === 'bottom' && top + cardHeight > vh - margin) {
+    if (top < margin) {
+      top = margin;
+    } else if (top + cardHeight > vh - margin) {
       top = vh - cardHeight - margin;
     }
 
@@ -219,9 +210,8 @@ export default function ProductTour() {
       position: 'fixed',
       top: `${top}px`,
       left: `${left}px`,
-      transform,
       zIndex: 10000,
-      width: 'min(90vw, 360px)',
+      width: `${cardWidth}px`,
     };
   };
 
@@ -275,84 +265,88 @@ export default function ProductTour() {
               />
             )}
 
-            {/* Walkthrough Tooltip / Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+            {/* Walkthrough Tooltip / Card Wrapper */}
+            <div
               style={getCardStyle()}
-              className="bg-dark-800 border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 text-left max-w-sm"
+              className="pointer-events-auto"
             >
-              {/* Header */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="relative h-6 w-6 overflow-hidden rounded bg-dark-800 border border-white/5 flex items-center justify-center">
-                    <Image
-                      src="/icon.png"
-                      alt="PayFlow Logo"
-                      fill
-                      className="object-cover"
-                    />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="bg-dark-800 border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 text-left w-full"
+              >
+                {/* Header */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <div className="relative h-6 w-6 overflow-hidden rounded bg-dark-800 border border-white/5 flex items-center justify-center">
+                      <Image
+                        src="/icon.png"
+                        alt="PayFlow Logo"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">PayFlow Guide</span>
                   </div>
-                  <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">PayFlow Guide</span>
-                </div>
-                <button
-                  onClick={handleClose}
-                  className="p-1 rounded-lg text-dark-500 hover:text-white transition"
-                  aria-label="Skip tour"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="space-y-2">
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  {steps[currentStep].title}
-                </h3>
-                <p className="text-xs text-dark-400 leading-relaxed">
-                  {steps[currentStep].content}
-                </p>
-              </div>
-
-              {/* Progress & Actions */}
-              <div className="flex justify-between items-center mt-2 pt-3 border-t border-white/5">
-                {/* Step Indicators / Dots */}
-                <div className="flex gap-1.5">
-                  {steps.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        idx === currentStep ? 'w-4 bg-primary shadow-sm shadow-primary/40' : 'w-1.5 bg-dark-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                {/* Navigation Buttons */}
-                <div className="flex gap-2">
-                  {currentStep > 0 && (
-                    <Button
-                      onClick={handleBack}
-                      variant="secondary"
-                      className="px-2.5 py-1.5 text-xxs font-bold flex items-center gap-1 rounded-xl"
-                    >
-                      <ChevronLeft size={12} />
-                      Back
-                    </Button>
-                  )}
-                  <Button
-                    onClick={handleNext}
-                    variant="primary"
-                    className="px-3 py-1.5 text-xxs font-bold flex items-center gap-1 rounded-xl shadow-md shadow-primary/20"
+                  <button
+                    onClick={handleClose}
+                    className="p-1 rounded-lg text-dark-500 hover:text-white transition"
+                    aria-label="Skip tour"
                   >
-                    {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    {currentStep < steps.length - 1 && <ChevronRight size={12} />}
-                  </Button>
+                    <X size={16} />
+                  </button>
                 </div>
-              </div>
-            </motion.div>
+
+                {/* Content */}
+                <div className="space-y-2">
+                  <h3 className="text-base font-bold text-white tracking-tight">
+                    {steps[currentStep].title}
+                  </h3>
+                  <p className="text-xs text-dark-400 leading-relaxed">
+                    {steps[currentStep].content}
+                  </p>
+                </div>
+
+                {/* Progress & Actions */}
+                <div className="flex justify-between items-center mt-2 pt-3 border-t border-white/5">
+                  {/* Step Indicators / Dots */}
+                  <div className="flex gap-1.5">
+                    {steps.map((_, idx) => (
+                      <div
+                        key={idx}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          idx === currentStep ? 'w-4 bg-primary shadow-sm shadow-primary/40' : 'w-1.5 bg-dark-600'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex gap-2">
+                    {currentStep > 0 && (
+                      <Button
+                        onClick={handleBack}
+                        variant="secondary"
+                        className="px-2.5 py-1.5 text-xxs font-bold flex items-center gap-1 rounded-xl"
+                      >
+                        <ChevronLeft size={12} />
+                        Back
+                      </Button>
+                    )}
+                    <Button
+                      onClick={handleNext}
+                      variant="primary"
+                      className="px-3 py-1.5 text-xxs font-bold flex items-center gap-1 rounded-xl shadow-md shadow-primary/20"
+                    >
+                      {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
+                      {currentStep < steps.length - 1 && <ChevronRight size={12} />}
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>
