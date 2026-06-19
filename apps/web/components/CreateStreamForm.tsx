@@ -9,6 +9,7 @@ import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
 import { Loader2, CheckCircle2, AlertCircle, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
+import Button from './ui/Button';
 
 // ─── Zod schemas for each wizard step ────────────────────────────────────────
 
@@ -337,18 +338,19 @@ export default function CreateStreamForm() {
           {form3.formState.errors.confirmation && <p className="text-xs text-rose-400">{form3.formState.errors.confirmation.message}</p>}
 
           <div className="flex gap-3 mt-6">
-            <button
+            <Button
               type="button"
               onClick={() => setStep(2)}
               disabled={loading}
-              className="flex-1 bg-dark-700 hover:bg-dark-600 text-white py-3.5 rounded-xl text-sm font-semibold transition disabled:opacity-55"
+              variant="secondary"
+              className="flex-1 py-3.5"
             >
               Back
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white py-3.5 rounded-xl text-sm font-semibold transition disabled:opacity-55"
+              className="flex-1 py-3.5"
             >
               {loading ? (
                 <>
@@ -358,7 +360,7 @@ export default function CreateStreamForm() {
               ) : (
                 'Sign & Create'
               )}
-            </button>
+            </Button>
           </div>
         </form>
       )}

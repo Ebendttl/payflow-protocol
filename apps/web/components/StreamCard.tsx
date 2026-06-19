@@ -204,7 +204,7 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
         </div>
         <div className="w-full h-2 bg-dark-800 rounded-full overflow-hidden border border-white/5">
           <div
-            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-350"
+            className="h-full bg-primary transition-all duration-350"
             style={{ width: `${progressPct}%` }}
           />
         </div>

@@ -7,6 +7,7 @@ import { useWalletStore } from '../../../lib/store/walletStore';
 import { createPayFlowClient, getActiveWalletAdapter } from '../../../lib/stellar';
 import { ArrowLeft, Plus, Trash2, ShieldAlert, Sparkles, Check } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import Button from '../../../components/ui/Button';
 
 interface MilestoneForm {
   title: string;
@@ -350,13 +351,14 @@ export default function CreateEscrowPage() {
             </div>
 
             {/* Submission */}
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 disabled:opacity-50 text-white font-bold py-4 rounded-xl text-sm transition shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:scale-[1.01]"
+              fullWidth
+              className="font-bold py-4 text-sm hover:scale-[1.01]"
             >
               {loading ? "Deploying Escrow..." : "Sign & Deploy Escrow"}
-            </button>
+            </Button>
           </div>
         </form>
       </main>

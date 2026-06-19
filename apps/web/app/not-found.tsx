@@ -13,11 +13,11 @@ export default function NotFound() {
         </div>
         <h1 className="text-2xl font-bold text-white">Page Not Found</h1>
         <p className="text-sm text-dark-500">
-          This stream has already been fully claimed — or this page doesn't exist.
+          This stream has already been fully claimed — or this page doesn&apos;t exist.
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-6 py-3 rounded-xl font-semibold transition duration-200 shadow-lg shadow-primary/20"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg shadow-primary/20"
         >
           Return to Dashboard
         </Link>

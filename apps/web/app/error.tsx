@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
+import Button from "../components/ui/Button";
 
 export default function Error({
   error,
@@ -28,12 +29,12 @@ export default function Error({
           {error.message || "An unexpected error occurred. Please try again."}
         </p>
         <div className="flex gap-3">
-          <button
+          <Button
             onClick={reset}
-            className="flex-1 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-5 py-3 rounded-xl font-semibold transition duration-200 shadow-lg shadow-primary/20"
+            className="flex-1 py-3"
           >
             Try Again
-          </button>
+          </Button>
           <Link
             href="/"
             className="flex-1 glass glass-hover text-white px-5 py-3 rounded-xl font-semibold transition duration-200 text-center"

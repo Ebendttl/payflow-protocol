@@ -12,7 +12,7 @@ export default function Skeleton({ width, height, className, style, ...props }: 
   return (
     <div
       className={clsx(
-        "relative overflow-hidden rounded-2xl bg-dark-800/80 border border-white/5 shimmer",
+        "relative rounded-2xl bg-dark-800/80 border border-white/5 animate-pulse",
         className
       )}
       style={{

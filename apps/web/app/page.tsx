@@ -6,6 +6,7 @@ import { useWalletStore } from '../lib/store/walletStore';
 import { ArrowRight, Activity, ShieldCheck, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import WalletOptionButton from '../components/ui/WalletOptionButton';
+import Button from '../components/ui/Button';
 
 export default function Home() {
   const { publicKey, connect, isConnecting } = useWalletStore();
@@ -34,8 +35,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-[calc(100vh-160px)] bg-dark-900 overflow-hidden flex flex-col justify-between">
-      {/* Animated background grid & radial mesh */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+      {/* Animated background radial mesh */}
       <div className="absolute top-[-10%] left-[-10%] h-[50%] w-[50%] bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[8000ms]" />
       <div className="absolute bottom-[-10%] right-[-10%] h-[50%] w-[50%] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -81,7 +81,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-5">
                 <Link
                   href="/streams"
-                  className="px-8 py-4 bg-primary hover:bg-primary-light text-white font-semibold rounded-xl transition duration-200 flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02]"
+                  className="px-8 py-4 bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl transition duration-200 flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02]"
                 >
                   Streams Dashboard
                   <ArrowRight size={18} />
@@ -96,14 +96,14 @@ export default function Home() {
               </div>
             ) : (
               <div className="mt-5 relative">
-                <button
+                <Button
                   type="button"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   disabled={isConnecting}
-                  className="px-8 py-4 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-bold rounded-xl transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-primary/25"
+                  className="px-8 py-4 font-bold hover:scale-[1.02]"
                 >
                   {isConnecting ? 'Connecting…' : 'Connect Wallet to Get Started'}
-                </button>
+                </Button>
                 {dropdownOpen && !isConnecting && (
                   <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-[220px] bg-dark-900 border border-white/10 rounded-xl p-2 z-[9999] shadow-lg shadow-black/40">
                     <p className="text-[10px] font-bold text-dark-500 uppercase tracking-wider px-3 py-1.5 text-left">Select Wallet</p>

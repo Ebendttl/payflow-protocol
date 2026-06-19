@@ -60,7 +60,7 @@ export default function StreamsDashboard() {
           {publicKey && (
             <Link
               href="/streams/create"
-              className="flex items-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition duration-200 hover:scale-[1.02]"
+              className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-[1.02]"
             >
               <Plus size={16} />
               New Stream

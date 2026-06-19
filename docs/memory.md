@@ -24,12 +24,11 @@ The frontend app (`apps/web/`) has been systematically refactored under strict s
 *   **Accent Purple**: `#A78BFA`
 
 ### 2. Gradient Usage Rule
-**The teal-to-violet gradient (`bg-gradient-to-r from-primary to-accent`) has exactly ONE job.**
+**ZERO GRADIENTS, NO EXCEPTIONS.**
 *   **Allowed Locations**:
-    1. The hero headline's emphasized text span on the landing page (`/`).
-    2. The single primary CTA button per view (e.g. "Connect Wallet to Get Started", "Sign & Create" / "Sign & Deploy Escrow", "New Stream" / "New Escrow").
+    1. The hero headline's emphasized text span on the landing page (`/`): `bg-gradient-to-r from-primary-light to-accent-purple bg-clip-text text-transparent` (the "Built on Stellar Soroban" text). That is the single remaining gradient in the whole app.
 *   **Forbidden Locations**:
-    - Intermediate next/back steps, status badges, secondary buttons, sidebar elements, cards, and text fills (other than hero) must use flat solid colors.
+    - Absolutely all buttons, badges, progress bars, icon containers, cards, borders, shadows, backgrounds, and text elements must use flat solid colors. No gradients allowed anywhere else.
 
 ### 3. Unified Border Radius Scale
 *   **Small (Badges, tags, status elements)**: `rounded-full` or `rounded-md`
@@ -83,3 +82,7 @@ The frontend app (`apps/web/`) has been systematically refactored under strict s
     - Cleaned up custom buttons inside `MilestoneCard.tsx` and `ClaimButton.tsx` to use flat primary/secondary properties.
     - Refactored `CreateStreamForm.tsx` and `escrow/create/page.tsx` inputs/buttons to comply with border-radius (`rounded-xl`) and color codes.
     - Verified Next.js compiler execution (compilation completed with exit code 0).
+4.  **Flat Button Component & Absolute Gradient Pass**:
+    - Created the shared, reusable `Button` component under `apps/web/components/ui/Button.tsx` to handle flat primary, secondary, and danger styles.
+    - Performed an exhaustive, app-wide gradient removal pass, replacing all gradient CTAs and progress bars with flat `bg-primary` styles.
+    - Configured ESLint with compatible versions and resolved unescaped quotes to ensure `pnpm lint` and `pnpm build` compile with zero errors.

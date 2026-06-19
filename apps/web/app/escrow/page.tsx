@@ -43,7 +43,7 @@ export default function EscrowDashboard() {
           </div>
           <Link
             href="/escrow/create"
-            className="flex items-center gap-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition duration-200 hover:scale-[1.02]"
+            className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-[1.02]"
           >
             <Plus size={16} />
             New Escrow
@@ -74,7 +74,7 @@ export default function EscrowDashboard() {
                       <span>{progress}% Completed</span>
                     </div>
                     <div className="w-full h-2 bg-dark-700 rounded-full overflow-hidden border border-white/5">
-                      <div className="h-full bg-gradient-to-r from-primary to-accent" style={{ width: `${progress}%` }} />
+                      <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
                     </div>
                   </div>
 
@@ -98,7 +98,7 @@ export default function EscrowDashboard() {
           <div className="glass p-12 rounded-2xl text-center border border-white/5">
             <ShieldAlert className="mx-auto text-dark-600 mb-4" size={40} />
             <h3 className="text-lg font-bold mb-1">No Escrows Found</h3>
-            <p className="text-xs text-dark-600">You haven't setup any milestone escrows yet.</p>
+            <p className="text-xs text-dark-600">You haven&apos;t setup any milestone escrows yet.</p>
           </div>
         )}
       </main>
