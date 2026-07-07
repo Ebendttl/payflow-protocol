@@ -8,6 +8,8 @@ import { ArrowRight, Activity, ShieldCheck, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import WalletOptionButton from '../components/ui/WalletOptionButton';
 import Button from '../components/ui/Button';
+import StreamSimulator from '../components/StreamSimulator';
+
 
 export default function Home() {
   const { publicKey, connect, isConnecting } = useWalletStore();
