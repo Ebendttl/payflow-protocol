@@ -165,6 +165,9 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
+        {/* Interactive Stream Simulator & Cost Calculator */}
+        <StreamSimulator />
+
         {/* Features grid with motion */}
         <div className="grid md:grid-cols-3 w-full gap-6 pt-24 pb-16">
           <motion.div 
