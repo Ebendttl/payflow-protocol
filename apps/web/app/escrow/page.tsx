@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useWalletStore } from '../../lib/store/walletStore';
 import { ShieldAlert, ArrowRight, Plus } from 'lucide-react';
 import { Escrow } from '@payflow/sdk';
+import EscrowSandbox from '../../components/EscrowSandbox';
 
 export default function EscrowDashboard() {
   const { publicKey } = useWalletStore();
@@ -101,6 +102,10 @@ export default function EscrowDashboard() {
             <p className="text-xs text-dark-600">You haven&apos;t setup any milestone escrows yet.</p>
           </div>
         )}
+
+        <div className="pt-8">
+          <EscrowSandbox />
+        </div>
       </main>
     </div>
   );
