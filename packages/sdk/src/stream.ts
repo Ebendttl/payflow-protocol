@@ -26,9 +26,11 @@ export class StreamClient {
   constructor(private config: PayFlowConfig) {}
 
   private async getRpcServer(): Promise<rpc.Server> {
-    const rpcUrl = this.config.rpcUrl || (this.config.network === 'mainnet'
-      ? 'https://soroban-mainnet.stellar.org'
-      : 'https://soroban-testnet.stellar.org');
+    const rpcUrl =
+      this.config.rpcUrl ||
+      (this.config.network === 'mainnet'
+        ? 'https://soroban-mainnet.stellar.org'
+        : 'https://soroban-testnet.stellar.org');
     return new rpc.Server(rpcUrl, { allowHttp: true });
   }
 
@@ -46,12 +48,14 @@ export class StreamClient {
     const server = await this.getRpcServer();
     const contractId = this.config.contractIds.streamVault;
     const contract = new Contract(contractId);
-    
+
     let sourceAccount;
     try {
       sourceAccount = await server.getAccount(sourceAddress);
     } catch (e) {
-      throw new Error(`Failed to fetch source account details for ${sourceAddress}. Make sure the account exists and is funded.`);
+      throw new Error(
+        `Failed to fetch source account details for ${sourceAddress}. Make sure the account exists and is funded.`
+      );
     }
 
     const callOp = contract.call(method, ...args);
@@ -77,14 +81,14 @@ export class StreamClient {
   private async submitTx(signedTx: Transaction): Promise<string> {
     const server = await this.getRpcServer();
     const sendRes = await server.sendTransaction(signedTx);
-    
+
     if (sendRes.status === 'ERROR') {
       throw new Error(`Failed to submit transaction: ${JSON.stringify(sendRes)}`);
     }
 
     const txHash = sendRes.hash;
     let attempts = 0;
-    
+
     while (attempts < 15) {
       const statusRes = await server.getTransaction(txHash);
       const status = statusRes.status as string;
@@ -109,28 +113,27 @@ export class StreamClient {
     autoSubmit: boolean = true
   ): Promise<string> {
     const assembledTx = await this.prepareTx(sourceAddress, method, args);
-    
+
     if (!this.config.wallet) {
       throw new Error('No wallet adapter configured for transaction signing');
     }
 
-    const signedXdr = await this.config.wallet.signTransaction(
-      assembledTx.toXDR(),
-      { network: this.getNetworkPassphrase() }
-    );
+    const signedXdr = await this.config.wallet.signTransaction(assembledTx.toXDR(), {
+      network: this.getNetworkPassphrase(),
+    });
 
     if (autoSubmit === false) {
       return signedXdr;
     }
 
-    const signedTx = TransactionBuilder.fromXDR(signedXdr, this.getNetworkPassphrase()) as unknown as Transaction;
+    const signedTx = TransactionBuilder.fromXDR(
+      signedXdr,
+      this.getNetworkPassphrase()
+    ) as unknown as Transaction;
     return this.submitTx(signedTx);
   }
 
-  private async callReadOnly(
-    method: string,
-    args: xdr.ScVal[]
-  ): Promise<any> {
+  private async callReadOnly(method: string, args: xdr.ScVal[]): Promise<any> {
     const server = await this.getRpcServer();
     const contractId = this.config.contractIds.streamVault;
     const contract = new Contract(contractId);
@@ -188,55 +191,35 @@ export class StreamClient {
   async claim(params: ClaimParams): Promise<string> {
     const stream = await this.getStream(params.streamId);
     const streamIdVal = new ScInt(params.streamId).toU64();
-    return this.executeTx(
-      stream.recipient,
-      'claim',
-      [streamIdVal],
-      params.autoSubmit ?? true
-    );
+    return this.executeTx(stream.recipient, 'claim', [streamIdVal], params.autoSubmit ?? true);
   }
 
   /** Build and optionally submit a cancel_stream transaction (sender only). */
   async cancelStream(params: CancelStreamParams): Promise<string> {
     const stream = await this.getStream(params.streamId);
     const streamIdVal = new ScInt(params.streamId).toU64();
-    return this.executeTx(
-      stream.sender,
-      'cancel_stream',
-      [streamIdVal],
-      params.autoSubmit ?? true
-    );
+    return this.executeTx(stream.sender, 'cancel_stream', [streamIdVal], params.autoSubmit ?? true);
   }
 
   /** Build and optionally submit a pause_stream transaction (sender only). */
   async pauseStream(params: PauseStreamParams): Promise<string> {
     const stream = await this.getStream(params.streamId);
     const streamIdVal = new ScInt(params.streamId).toU64();
-    return this.executeTx(
-      stream.sender,
-      'pause_stream',
-      [streamIdVal],
-      params.autoSubmit ?? true
-    );
+    return this.executeTx(stream.sender, 'pause_stream', [streamIdVal], params.autoSubmit ?? true);
   }
 
   /** Build and optionally submit a resume_stream transaction (sender only). */
   async resumeStream(params: ResumeStreamParams): Promise<string> {
     const stream = await this.getStream(params.streamId);
     const streamIdVal = new ScInt(params.streamId).toU64();
-    return this.executeTx(
-      stream.sender,
-      'resume_stream',
-      [streamIdVal],
-      params.autoSubmit ?? true
-    );
+    return this.executeTx(stream.sender, 'resume_stream', [streamIdVal], params.autoSubmit ?? true);
   }
 
   /** Query on-chain state for a single stream by ID. */
   async getStream(streamId: bigint): Promise<Stream> {
     const streamIdVal = new ScInt(streamId).toU64();
     const res = await this.callReadOnly('get_stream', [streamIdVal]);
-    
+
     return {
       id: BigInt(res.id),
       sender: typeof res.sender === 'string' ? res.sender : res.sender.toString(),

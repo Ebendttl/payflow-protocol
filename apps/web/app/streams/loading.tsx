@@ -21,7 +21,10 @@ export default function StreamsLoading() {
         {/* Stream card skeletons */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="glass h-72 rounded-2xl border border-white/5 p-6 space-y-4 animate-pulse">
+            <div
+              key={i}
+              className="glass h-72 rounded-2xl border border-white/5 p-6 space-y-4 animate-pulse"
+            >
               <div className="flex justify-between">
                 <div className="h-4 w-32 bg-dark-700 rounded-md" />
                 <div className="h-5 w-16 bg-dark-700 rounded-full" />

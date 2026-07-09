@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -16,49 +16,61 @@ interface TourStep {
 export default function ProductTour() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [coords, setCoords] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const [coords, setCoords] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
   const steps: TourStep[] = [
     {
-      title: "Welcome to PayFlow! 👋",
-      content: "Let's take a quick 1-minute tour of how to stream tokens and manage escrows on Stellar Soroban.",
-      placement: "center"
+      title: 'Welcome to PayFlow! 👋',
+      content:
+        "Let's take a quick 1-minute tour of how to stream tokens and manage escrows on Stellar Soroban.",
+      placement: 'center',
     },
     {
-      title: "The PayFlow Hub",
-      content: "Clicking the PayFlow logo at any time will bring you back to this home landing page.",
-      target: "#tour-logo",
-      placement: "bottom"
+      title: 'The PayFlow Hub',
+      content:
+        'Clicking the PayFlow logo at any time will bring you back to this home landing page.',
+      target: '#tour-logo',
+      placement: 'bottom',
     },
     {
-      title: "Real-time Streams",
-      content: "Go here to set up continuous, second-by-second token payments, claim accrued balances, or cancel active streams.",
-      target: "#tour-nav-streams",
-      placement: "bottom"
+      title: 'Real-time Streams',
+      content:
+        'Go here to set up continuous, second-by-second token payments, claim accrued balances, or cancel active streams.',
+      target: '#tour-nav-streams',
+      placement: 'bottom',
     },
     {
-      title: "Milestone Escrows",
-      content: "Create and govern secure escrow contracts. Funds are locked and disbursed incrementally as milestones are approved.",
-      target: "#tour-nav-escrow",
-      placement: "bottom"
+      title: 'Milestone Escrows',
+      content:
+        'Create and govern secure escrow contracts. Funds are locked and disbursed incrementally as milestones are approved.',
+      target: '#tour-nav-escrow',
+      placement: 'bottom',
     },
     {
-      title: "Connect Your Wallet",
-      content: "Connect your Freighter or LOBSTR wallet here to start authorizing on-chain stream actions.",
-      target: "#tour-connect-btn, #tour-wallet-btn",
-      placement: "bottom"
+      title: 'Connect Your Wallet',
+      content:
+        'Connect your Freighter or LOBSTR wallet here to start authorizing on-chain stream actions.',
+      target: '#tour-connect-btn, #tour-wallet-btn',
+      placement: 'bottom',
     },
     {
-      title: "On-Chain Infrastructure",
-      content: "All contracts run securely on the Stellar Testnet with fast settlement times and very low fees.",
-      target: "#tour-stats",
-      placement: "top"
+      title: 'On-Chain Infrastructure',
+      content:
+        'All contracts run securely on the Stellar Testnet with fast settlement times and very low fees.',
+      target: '#tour-stats',
+      placement: 'top',
     },
     {
       title: "You're All Set! 🎉",
-      content: "You have completed the walk-through. You can launch this guide again at any time by clicking the floating help icon in the bottom corner.",
-      placement: "center"
-    }
+      content:
+        'You have completed the walk-through. You can launch this guide again at any time by clicking the floating help icon in the bottom corner.',
+      placement: 'center',
+    },
   ];
 
   // Listen to manual start trigger
@@ -69,7 +81,7 @@ export default function ProductTour() {
     };
 
     window.addEventListener('start-payflow-tour', handleStartTour);
-    
+
     // Automatically trigger for first-time visitors after 1.5 seconds
     const hasSeenTour = localStorage.getItem('payflow-tour-completed');
     if (!hasSeenTour) {
@@ -154,7 +166,7 @@ export default function ProductTour() {
     // Get viewport width and height safely
     const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
     const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
-    
+
     const cardWidth = Math.min(vw * 0.9, 360);
     const cardHeight = 220; // Estimated height for boundary math
     const margin = 16;
@@ -174,7 +186,7 @@ export default function ProductTour() {
 
     const padding = 16;
     let placement = steps[currentStep].placement;
-    
+
     // Center card horizontally relative to the target
     let left = coords.left + coords.width / 2 - cardWidth / 2;
     let top = coords.top + coords.height + padding;
@@ -266,29 +278,23 @@ export default function ProductTour() {
             )}
 
             {/* Walkthrough Tooltip / Card Wrapper */}
-            <div
-              style={getCardStyle()}
-              className="pointer-events-auto"
-            >
+            <div style={getCardStyle()} className="pointer-events-auto">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 className="bg-dark-800 border border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 text-left w-full"
               >
                 {/* Header */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <div className="relative h-6 w-6 overflow-hidden rounded bg-dark-800 border border-white/5 flex items-center justify-center">
-                      <Image
-                        src="/icon.png"
-                        alt="PayFlow Logo"
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src="/icon.png" alt="PayFlow Logo" fill className="object-cover" />
                     </div>
-                    <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">PayFlow Guide</span>
+                    <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">
+                      PayFlow Guide
+                    </span>
                   </div>
                   <button
                     onClick={handleClose}
@@ -317,7 +323,9 @@ export default function ProductTour() {
                       <div
                         key={idx}
                         className={`h-1.5 rounded-full transition-all duration-300 ${
-                          idx === currentStep ? 'w-4 bg-primary shadow-sm shadow-primary/40' : 'w-1.5 bg-dark-600'
+                          idx === currentStep
+                            ? 'w-4 bg-primary shadow-sm shadow-primary/40'
+                            : 'w-1.5 bg-dark-600'
                         }`}
                       />
                     ))}

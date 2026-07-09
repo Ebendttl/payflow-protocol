@@ -1,13 +1,11 @@
-import {
-  isConnected,
-  getPublicKey,
-  signTransaction,
-} from '@lobstrco/signer-extension-api';
+import { isConnected, getPublicKey, signTransaction } from '@lobstrco/signer-extension-api';
 
 export class LobstrWalletAdapter {
   private checkInstallation() {
     if (typeof window === 'undefined' || !(window as any).lobstrSignerExtensionApi) {
-      throw new Error('LOBSTR extension is not installed. Please install the LOBSTR Signer extension.');
+      throw new Error(
+        'LOBSTR extension is not installed. Please install the LOBSTR Signer extension.'
+      );
     }
   }
 

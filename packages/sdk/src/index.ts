@@ -12,7 +12,6 @@ export { LobstrWalletAdapter } from './wallet/lobstr.js';
 export { AxelarBridgeAdapter } from './bridge/axelar.js';
 export { PathPaymentRouter } from './payments/path-payment.js';
 
-
 export class PayFlowClient {
   public readonly streams: StreamClient;
   public readonly escrow: EscrowClient;

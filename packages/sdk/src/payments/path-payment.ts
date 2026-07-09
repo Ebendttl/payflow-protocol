@@ -9,7 +9,9 @@ export class PathPaymentRouter {
     amount: bigint,
     recipient: string
   ): Promise<string> {
-    console.log(`Routing path payment from ${sourceAsset} to ${destinationAsset} — not implemented`);
-    throw new Error("not implemented");
+    console.log(
+      `Routing path payment from ${sourceAsset} to ${destinationAsset} — not implemented`
+    );
+    throw new Error('not implemented');
   }
 }

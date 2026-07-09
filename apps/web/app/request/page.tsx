@@ -1,11 +1,19 @@
-"use client";
+'use client';
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import {
-  Link2, Coins, Clock, User, Copy, Check,
-  ArrowRight, ExternalLink, Sparkles, QrCode,
+  Link2,
+  Coins,
+  Clock,
+  User,
+  Copy,
+  Check,
+  ArrowRight,
+  ExternalLink,
+  Sparkles,
+  QrCode,
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -20,7 +28,7 @@ interface LinkConfig {
 
 const TOKEN_OPTIONS = [
   { symbol: 'USDC', label: 'USDC (Stellar)', color: '#2775CA' },
-  { symbol: 'XLM',  label: 'XLM (Lumens)',   color: '#08B5E5' },
+  { symbol: 'XLM', label: 'XLM (Lumens)', color: '#08B5E5' },
 ];
 
 const DURATION_PRESETS = [7, 14, 30, 60, 90];
@@ -52,8 +60,8 @@ export default function CreateRequestPage() {
     return `${base}/request/pay?${params.toString()}`;
   }, [config]);
 
-  const ratePerDay = config.durationDays > 0
-    ? (config.amount / config.durationDays).toFixed(2) : '0.00';
+  const ratePerDay =
+    config.durationDays > 0 ? (config.amount / config.durationDays).toFixed(2) : '0.00';
 
   const handleGenerate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +80,7 @@ export default function CreateRequestPage() {
     setCopied(false);
   };
 
-  const selectedToken = TOKEN_OPTIONS.find(t => t.symbol === config.token)!;
+  const selectedToken = TOKEN_OPTIONS.find((t) => t.symbol === config.token)!;
 
   return (
     <div className="min-h-[calc(100vh-160px)] bg-dark-900 relative overflow-hidden">
@@ -91,7 +99,8 @@ export default function CreateRequestPage() {
             PayFlow Link
           </h1>
           <p className="text-sm text-dark-500 max-w-xl">
-            Create shareable payment request links. Recipients can fund your stream with one click — no setup required.
+            Create shareable payment request links. Recipients can fund your stream with one click —
+            no setup required.
           </p>
         </motion.div>
 
@@ -103,10 +112,15 @@ export default function CreateRequestPage() {
             transition={{ delay: 0.1 }}
             className="lg:col-span-3"
           >
-            <form onSubmit={handleGenerate} className="glass p-8 rounded-2xl border border-white/5 space-y-6">
+            <form
+              onSubmit={handleGenerate}
+              className="glass p-8 rounded-2xl border border-white/5 space-y-6"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles size={16} className="text-accent" />
-                <span className="text-xs font-bold text-dark-500 uppercase tracking-widest">Configure Payment Request</span>
+                <span className="text-xs font-bold text-dark-500 uppercase tracking-widest">
+                  Configure Payment Request
+                </span>
               </div>
 
               {/* Recipient */}
@@ -121,7 +135,10 @@ export default function CreateRequestPage() {
                   minLength={56}
                   maxLength={56}
                   value={config.recipient}
-                  onChange={(e) => { setConfig(c => ({ ...c, recipient: e.target.value })); setGenerated(false); }}
+                  onChange={(e) => {
+                    setConfig((c) => ({ ...c, recipient: e.target.value }));
+                    setGenerated(false);
+                  }}
                   placeholder="G..."
                   className="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-dark-600 focus:outline-none focus:border-accent transition"
                 />
@@ -140,18 +157,26 @@ export default function CreateRequestPage() {
                     min={1}
                     step="any"
                     value={config.amount}
-                    onChange={(e) => { setConfig(c => ({ ...c, amount: Number(e.target.value) })); setGenerated(false); }}
+                    onChange={(e) => {
+                      setConfig((c) => ({ ...c, amount: Number(e.target.value) }));
+                      setGenerated(false);
+                    }}
                     className="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-dark-600 focus:outline-none focus:border-accent transition"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Token</label>
+                  <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                    Token
+                  </label>
                   <div className="flex gap-2">
-                    {TOKEN_OPTIONS.map(t => (
+                    {TOKEN_OPTIONS.map((t) => (
                       <button
                         key={t.symbol}
                         type="button"
-                        onClick={() => { setConfig(c => ({ ...c, token: t.symbol })); setGenerated(false); }}
+                        onClick={() => {
+                          setConfig((c) => ({ ...c, token: t.symbol }));
+                          setGenerated(false);
+                        }}
                         className={`flex-1 py-3 rounded-xl text-xs font-bold border transition ${
                           config.token === t.symbol
                             ? 'border-accent bg-accent/10 text-white'
@@ -171,11 +196,14 @@ export default function CreateRequestPage() {
                   <Clock size={12} /> Stream Duration (days)
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {DURATION_PRESETS.map(d => (
+                  {DURATION_PRESETS.map((d) => (
                     <button
                       key={d}
                       type="button"
-                      onClick={() => { setConfig(c => ({ ...c, durationDays: d })); setGenerated(false); }}
+                      onClick={() => {
+                        setConfig((c) => ({ ...c, durationDays: d }));
+                        setGenerated(false);
+                      }}
                       className={`px-4 py-2 rounded-xl text-xs font-bold border transition ${
                         config.durationDays === d
                           ? 'border-primary bg-primary/10 text-primary-light'
@@ -191,7 +219,10 @@ export default function CreateRequestPage() {
                     min={1}
                     max={365}
                     value={config.durationDays}
-                    onChange={(e) => { setConfig(c => ({ ...c, durationDays: Number(e.target.value) })); setGenerated(false); }}
+                    onChange={(e) => {
+                      setConfig((c) => ({ ...c, durationDays: Number(e.target.value) }));
+                      setGenerated(false);
+                    }}
                     className="w-20 bg-dark-800 border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-primary transition text-center"
                   />
                 </div>
@@ -199,13 +230,18 @@ export default function CreateRequestPage() {
 
               {/* Memo */}
               <div className="space-y-1.5">
-                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Memo (optional)</label>
+                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                  Memo (optional)
+                </label>
                 <input
                   id="request-memo"
                   type="text"
                   maxLength={80}
                   value={config.memo}
-                  onChange={(e) => { setConfig(c => ({ ...c, memo: e.target.value })); setGenerated(false); }}
+                  onChange={(e) => {
+                    setConfig((c) => ({ ...c, memo: e.target.value }));
+                    setGenerated(false);
+                  }}
                   placeholder="e.g. Monthly retainer, Grant payment..."
                   className="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-dark-600 focus:outline-none focus:border-accent transition"
                 />
@@ -231,21 +267,32 @@ export default function CreateRequestPage() {
             className="lg:col-span-2 lg:sticky lg:top-28"
           >
             <div className="space-y-4">
-              <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">Live Preview</span>
+              <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">
+                Live Preview
+              </span>
 
               {/* Preview card */}
               <div className="rounded-2xl border border-white/10 bg-dark-800/60 backdrop-blur-sm overflow-hidden shadow-xl shadow-black/20">
                 {/* Gradient header */}
-                <div className="h-20 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${selectedToken.color}30, #8B5CF620, #0D948820)` }}>
+                <div
+                  className="h-20 relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${selectedToken.color}30, #8B5CF620, #0D948820)`,
+                  }}
+                >
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.08),transparent_60%)]" />
                   <div className="absolute top-4 left-5 flex items-center gap-2">
                     <div className="h-8 w-8 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                       <Link2 size={14} className="text-white" />
                     </div>
                     <div>
-                      <p className="text-[9px] text-white/60 font-bold uppercase tracking-widest">PayFlow Link</p>
+                      <p className="text-[9px] text-white/60 font-bold uppercase tracking-widest">
+                        PayFlow Link
+                      </p>
                       <p className="text-[10px] text-white/80 font-mono">
-                        {config.recipient ? `${config.recipient.slice(0,8)}…${config.recipient.slice(-4)}` : 'G...'}
+                        {config.recipient
+                          ? `${config.recipient.slice(0, 8)}…${config.recipient.slice(-4)}`
+                          : 'G...'}
                       </p>
                     </div>
                   </div>
@@ -259,18 +306,24 @@ export default function CreateRequestPage() {
                       <span className="text-sm text-dark-400 font-bold ml-2">{config.token}</span>
                     </p>
                     {config.memo && (
-                      <p className="text-xs text-dark-400 mt-1 italic">&ldquo;{config.memo}&rdquo;</p>
+                      <p className="text-xs text-dark-400 mt-1 italic">
+                        &ldquo;{config.memo}&rdquo;
+                      </p>
                     )}
                   </div>
 
                   {/* Details row */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-dark-900/40 rounded-xl p-3 text-center border border-white/5">
-                      <span className="text-[9px] text-dark-500 font-bold uppercase block">Duration</span>
+                      <span className="text-[9px] text-dark-500 font-bold uppercase block">
+                        Duration
+                      </span>
                       <span className="text-sm font-bold text-white">{config.durationDays}d</span>
                     </div>
                     <div className="bg-dark-900/40 rounded-xl p-3 text-center border border-white/5">
-                      <span className="text-[9px] text-dark-500 font-bold uppercase block">Rate</span>
+                      <span className="text-[9px] text-dark-500 font-bold uppercase block">
+                        Rate
+                      </span>
                       <span className="text-sm font-bold text-white">{ratePerDay}/day</span>
                     </div>
                   </div>
@@ -327,7 +380,10 @@ export default function CreateRequestPage() {
                     {/* Actions */}
                     <div className="flex gap-2">
                       <Link
-                        href={shareableUrl.replace(typeof window !== 'undefined' ? window.location.origin : '', '')}
+                        href={shareableUrl.replace(
+                          typeof window !== 'undefined' ? window.location.origin : '',
+                          ''
+                        )}
                         className="flex-1 flex items-center justify-center gap-1.5 bg-accent hover:bg-accent-purple text-white py-2.5 rounded-xl text-xs font-bold transition"
                       >
                         Preview Link <ExternalLink size={12} />
@@ -335,7 +391,10 @@ export default function CreateRequestPage() {
                       <button
                         onClick={() => {
                           if (navigator.share) {
-                            navigator.share({ title: 'PayFlow Payment Request', url: shareableUrl });
+                            navigator.share({
+                              title: 'PayFlow Payment Request',
+                              url: shareableUrl,
+                            });
                           } else {
                             handleCopy();
                           }

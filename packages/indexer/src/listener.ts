@@ -18,7 +18,7 @@ export class StellarEventListener {
    * Starts the polling mechanism to watch for Stellar contract events.
    */
   start() {
-    console.log("Stellar Event Listener starting...");
+    console.log('Stellar Event Listener starting...');
     if (this.intervalId) return;
 
     this.intervalId = setInterval(async () => {
@@ -28,7 +28,7 @@ export class StellarEventListener {
           await this.onEventsReceived(events);
         }
       } catch (err: any) {
-        console.error("Error in Stellar event listener polling:", err.message);
+        console.error('Error in Stellar event listener polling:', err.message);
       }
     }, this.config.pollIntervalMs);
   }
@@ -41,7 +41,7 @@ export class StellarEventListener {
       clearInterval(this.intervalId);
       this.intervalId = undefined;
     }
-    console.log("Stellar Event Listener stopped.");
+    console.log('Stellar Event Listener stopped.');
   }
 
   /**

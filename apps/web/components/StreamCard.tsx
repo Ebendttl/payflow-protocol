@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import type { Stream } from '@payflow/sdk';
@@ -15,8 +15,8 @@ interface StreamCardProps {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  Active:    'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
-  Paused:    'bg-amber-500/10  text-amber-300  border-amber-500/20',
+  Active: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
+  Paused: 'bg-amber-500/10  text-amber-300  border-amber-500/20',
   Cancelled: 'bg-rose-500/10   text-rose-300   border-rose-500/20',
   Completed: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
 };
@@ -85,22 +85,23 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
 
   const accrued = calculateAccrued(now, stream);
   const claimable = accrued > stream.claimedAmount ? accrued - stream.claimedAmount : 0n;
-  
-  const totalNum = Number(stream.totalAmount);
-  const progressPct = totalNum > 0 ? Math.min(100, Math.max(0, Math.round((Number(accrued) / totalNum) * 100))) : 0;
 
-  const isOwner = publicKey !== null && (publicKey === stream.sender);
-  const isRecipient = publicKey !== null && (publicKey === stream.recipient);
+  const totalNum = Number(stream.totalAmount);
+  const progressPct =
+    totalNum > 0 ? Math.min(100, Math.max(0, Math.round((Number(accrued) / totalNum) * 100))) : 0;
+
+  const isOwner = publicKey !== null && publicKey === stream.sender;
+  const isRecipient = publicKey !== null && publicKey === stream.recipient;
 
   const handlePause = async () => {
     setLoading(true);
     setError(null);
-    const toastId = toast.loading("Pausing continuous token flow...");
+    const toastId = toast.loading('Pausing continuous token flow...');
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.pauseStream({ streamId: stream.id });
-      toast.success("Stream paused successfully!", { id: toastId });
+      toast.success('Stream paused successfully!', { id: toastId });
       if (onRefetch) onRefetch();
     } catch (err: any) {
       const msg = err.message || String(err);
@@ -114,12 +115,12 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
   const handleResume = async () => {
     setLoading(true);
     setError(null);
-    const toastId = toast.loading("Resuming continuous token flow...");
+    const toastId = toast.loading('Resuming continuous token flow...');
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.resumeStream({ streamId: stream.id });
-      toast.success("Stream resumed successfully!", { id: toastId });
+      toast.success('Stream resumed successfully!', { id: toastId });
       if (onRefetch) onRefetch();
     } catch (err: any) {
       const msg = err.message || String(err);
@@ -133,12 +134,12 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
   const handleCancel = async () => {
     setLoading(true);
     setError(null);
-    const toastId = toast.loading("Cancelling stream & returning unspent balance...");
+    const toastId = toast.loading('Cancelling stream & returning unspent balance...');
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.cancelStream({ streamId: stream.id });
-      toast.success("Stream cancelled successfully!", { id: toastId });
+      toast.success('Stream cancelled successfully!', { id: toastId });
       if (onRefetch) onRefetch();
     } catch (err: any) {
       const msg = err.message || String(err);
@@ -163,9 +164,13 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
           <p className="text-xxs uppercase tracking-wider font-bold text-dark-500">Recipient</p>
-          <p className="font-mono text-xs text-teal-300 font-semibold">{truncate(stream.recipient)}</p>
+          <p className="font-mono text-xs text-teal-300 font-semibold">
+            {truncate(stream.recipient)}
+          </p>
         </div>
-        <span className={`text-xxs px-2.5 py-1 rounded-full font-bold uppercase border ${STATUS_STYLES[stream.status] ?? STATUS_STYLES.Active}`}>
+        <span
+          className={`text-xxs px-2.5 py-1 rounded-full font-bold uppercase border ${STATUS_STYLES[stream.status] ?? STATUS_STYLES.Active}`}
+        >
           {stream.status}
         </span>
       </div>
@@ -173,7 +178,9 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
       {/* Main Stats */}
       <div className="my-4 space-y-3">
         <div>
-          <p className="text-xxs text-dark-500 font-bold uppercase tracking-wider">Accrued / Total</p>
+          <p className="text-xxs text-dark-500 font-bold uppercase tracking-wider">
+            Accrued / Total
+          </p>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-black text-white">
               {(Number(accrued) / 1e7).toFixed(4)}
@@ -191,7 +198,9 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
           </div>
           <div className="text-right">
             <span className="text-dark-500 block">CLAIMABLE</span>
-            <span className="text-emerald-400 font-bold">{(Number(claimable) / 1e7).toFixed(4)}</span>
+            <span className="text-emerald-400 font-bold">
+              {(Number(claimable) / 1e7).toFixed(4)}
+            </span>
           </div>
         </div>
       </div>
@@ -211,7 +220,9 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
       </div>
 
       {error && (
-        <p className="text-xxs text-accent-rose bg-rose-500/10 p-2 rounded-xl mb-2 border border-accent-rose/20 break-all">{error}</p>
+        <p className="text-xxs text-accent-rose bg-rose-500/10 p-2 rounded-xl mb-2 border border-accent-rose/20 break-all">
+          {error}
+        </p>
       )}
 
       {/* Actions */}
@@ -256,9 +267,11 @@ export default function StreamCard({ stream, onRefetch }: StreamCardProps) {
             )}
 
             {/* Recipient Action */}
-            {isRecipient && (stream.status === 'Active' || stream.status === 'Paused' || stream.status === 'Completed') && claimable > 0n && (
-              <ClaimButton streamId={stream.id} onSuccess={onRefetch} />
-            )}
+            {isRecipient &&
+              (stream.status === 'Active' ||
+                stream.status === 'Paused' ||
+                stream.status === 'Completed') &&
+              claimable > 0n && <ClaimButton streamId={stream.id} onSuccess={onRefetch} />}
           </>
         )}
       </div>

@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
-import ProductTour from "../components/ui/ProductTour";
-import { Toaster } from "react-hot-toast";
+import type { Metadata } from 'next';
+import './globals.css';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import ProductTour from '../components/ui/ProductTour';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-  title: "PayFlow Protocol | Decentralized Streaming & Escrows",
-  description: "Real-time payment streaming and milestone escrow platform built on Stellar Soroban.",
+  title: 'PayFlow Protocol | Decentralized Streaming & Escrows',
+  description:
+    'Real-time payment streaming and milestone escrow platform built on Stellar Soroban.',
 };
 
 export default function RootLayout({
@@ -20,7 +21,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className="antialiased min-h-screen flex flex-col bg-dark-900 text-white">
         <Toaster
@@ -43,4 +47,3 @@ export default function RootLayout({
     </html>
   );
 }
-

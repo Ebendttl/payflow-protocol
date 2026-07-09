@@ -1,16 +1,42 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Coins, Sparkles, HelpCircle, ArrowRight, Zap, Shield, HelpCircle as HelpIcon } from 'lucide-react';
+import {
+  Coins,
+  Sparkles,
+  HelpCircle,
+  ArrowRight,
+  Zap,
+  Shield,
+  HelpCircle as HelpIcon,
+} from 'lucide-react';
 
 type TokenOption = 'USDC' | 'XLM' | 'EURC';
 type FrequencyOption = 'second' | 'minute' | 'hour' | 'day' | 'month' | 'year';
 
-const TOKEN_COLORS: Record<TokenOption, { primary: string; light: string; bg: string; text: string }> = {
-  USDC: { primary: '#0D9488', light: '#2DD4BF', bg: 'rgba(13, 148, 136, 0.1)', text: 'text-primary-light' },
-  XLM: { primary: '#8B5CF6', light: '#A78BFA', bg: 'rgba(139, 92, 246, 0.1)', text: 'text-accent-purple' },
-  EURC: { primary: '#10B981', light: '#34D399', bg: 'rgba(16, 185, 129, 0.1)', text: 'text-emerald-400' },
+const TOKEN_COLORS: Record<
+  TokenOption,
+  { primary: string; light: string; bg: string; text: string }
+> = {
+  USDC: {
+    primary: '#0D9488',
+    light: '#2DD4BF',
+    bg: 'rgba(13, 148, 136, 0.1)',
+    text: 'text-primary-light',
+  },
+  XLM: {
+    primary: '#8B5CF6',
+    light: '#A78BFA',
+    bg: 'rgba(139, 92, 246, 0.1)',
+    text: 'text-accent-purple',
+  },
+  EURC: {
+    primary: '#10B981',
+    light: '#34D399',
+    bg: 'rgba(16, 185, 129, 0.1)',
+    text: 'text-emerald-400',
+  },
 };
 
 const FREQUENCY_SECONDS: Record<FrequencyOption, number> = {
@@ -36,11 +62,11 @@ export default function StreamSimulator() {
   const [token, setToken] = useState<TokenOption>('USDC');
   const [amount, setAmount] = useState<number>(1000);
   const [frequency, setFrequency] = useState<FrequencyOption>('month');
-  
+
   // Real-time Accumulation State
   const [accrued, setAccrued] = useState<number>(0);
   const [totalClaimed, setTotalClaimed] = useState<number>(0);
-  
+
   // Animation/Claim State
   const [isClaiming, setIsClaiming] = useState(false);
   const [claimsCount, setClaimsCount] = useState<number>(0);
@@ -49,7 +75,7 @@ export default function StreamSimulator() {
   // References for continuous tick calculations
   const lastResetTimeRef = useRef<number>(Date.now());
   const flowRateRef = useRef<number>(0);
-  
+
   // Calculate flow rate per second whenever amount or frequency changes
   useEffect(() => {
     const seconds = FREQUENCY_SECONDS[frequency];
@@ -62,7 +88,7 @@ export default function StreamSimulator() {
   // requestAnimationFrame hook for high-frequency tick update
   useEffect(() => {
     let animationId: number;
-    
+
     const updateTick = () => {
       const now = Date.now();
       const elapsedSeconds = (now - lastResetTimeRef.current) / 1000;
@@ -70,7 +96,7 @@ export default function StreamSimulator() {
       setAccrued(accumulated);
       animationId = requestAnimationFrame(updateTick);
     };
-    
+
     animationId = requestAnimationFrame(updateTick);
     return () => cancelAnimationFrame(animationId);
   }, []);
@@ -78,16 +104,16 @@ export default function StreamSimulator() {
   // Claim handler
   const handleClaim = () => {
     if (accrued <= 0.000001) return;
-    
+
     setIsClaiming(true);
     const claimedValue = accrued;
-    setTotalClaimed(prev => prev + claimedValue);
+    setTotalClaimed((prev) => prev + claimedValue);
     setClaimNotification(`+${claimedValue.toFixed(6)} ${token}`);
-    
+
     // Reset accrued counter
     lastResetTimeRef.current = Date.now();
     setAccrued(0);
-    setClaimsCount(c => c + 1);
+    setClaimsCount((c) => c + 1);
 
     setTimeout(() => {
       setIsClaiming(false);
@@ -100,9 +126,9 @@ export default function StreamSimulator() {
 
   // Cost calculator metrics
   const hourlyDisbursementFeeStellar = 0.0001; // $0.0001 in XLM flat fee
-  const hourlyDisbursementFeeEthL1 = 2.50; // Average Eth L1 execution
+  const hourlyDisbursementFeeEthL1 = 2.5; // Average Eth L1 execution
   const hourlyDisbursementFeeL2 = 0.05; // Average Arbitrum/Optimism execution
-  
+
   const claimsPerMonth = 24 * 30; // Claim hourly for 1 month
   const monthlyStellarFees = claimsPerMonth * hourlyDisbursementFeeStellar;
   const monthlyEthL1Fees = claimsPerMonth * hourlyDisbursementFeeEthL1;
@@ -128,13 +154,13 @@ export default function StreamSimulator() {
           Experience Continuous Flow in Real Time
         </h2>
         <p className="text-sm text-dark-500 max-w-2xl mx-auto">
-          Adjust the parameters below to see tokens stream directly into your simulation wallet. Watch how Soroban&apos;s sub-cent fees make micro-claims highly practical.
+          Adjust the parameters below to see tokens stream directly into your simulation wallet.
+          Watch how Soroban&apos;s sub-cent fees make micro-claims highly practical.
         </p>
       </div>
 
       {/* Simulator Layout */}
       <div className="grid lg:grid-cols-12 gap-8 items-stretch relative z-10">
-        
         {/* Left Column: Interactive Controls */}
         <div className="lg:col-span-5 flex flex-col justify-between p-6 md:p-8 rounded-2xl bg-dark-800/40 border border-white/5 backdrop-blur-sm space-y-8">
           <div className="space-y-6">
@@ -145,7 +171,9 @@ export default function StreamSimulator() {
 
             {/* Token Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-dark-500 uppercase tracking-wider">Select Token</label>
+              <label className="text-xs font-bold text-dark-500 uppercase tracking-wider">
+                Select Token
+              </label>
               <div className="grid grid-cols-3 gap-3">
                 {(['USDC', 'XLM', 'EURC'] as TokenOption[]).map((t) => {
                   const active = token === t;
@@ -173,7 +201,9 @@ export default function StreamSimulator() {
             {/* Flow Amount Slider */}
             <div className="space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-dark-500 uppercase tracking-wider">Flow Rate Amount</span>
+                <span className="font-bold text-dark-500 uppercase tracking-wider">
+                  Flow Rate Amount
+                </span>
                 <span className="text-white font-mono text-sm font-bold bg-dark-700/50 px-2 py-0.5 rounded border border-white/5">
                   {amount.toLocaleString()} {token}
                 </span>
@@ -196,24 +226,28 @@ export default function StreamSimulator() {
 
             {/* Frequency Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-dark-500 uppercase tracking-wider">Flow Time-Frequency</label>
+              <label className="text-xs font-bold text-dark-500 uppercase tracking-wider">
+                Flow Time-Frequency
+              </label>
               <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                {(['second', 'minute', 'hour', 'day', 'month', 'year'] as FrequencyOption[]).map((freq) => {
-                  const active = frequency === freq;
-                  return (
-                    <button
-                      key={freq}
-                      onClick={() => setFrequency(freq)}
-                      className={`py-2 px-1 rounded-lg border text-xs font-bold transition uppercase tracking-wider ${
-                        active
-                          ? 'border-primary bg-primary/10 text-primary-light'
-                          : 'border-white/5 bg-transparent text-dark-500 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      /{FREQUENCY_LABELS[freq]}
-                    </button>
-                  );
-                })}
+                {(['second', 'minute', 'hour', 'day', 'month', 'year'] as FrequencyOption[]).map(
+                  (freq) => {
+                    const active = frequency === freq;
+                    return (
+                      <button
+                        key={freq}
+                        onClick={() => setFrequency(freq)}
+                        className={`py-2 px-1 rounded-lg border text-xs font-bold transition uppercase tracking-wider ${
+                          active
+                            ? 'border-primary bg-primary/10 text-primary-light'
+                            : 'border-white/5 bg-transparent text-dark-500 hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        /{FREQUENCY_LABELS[freq]}
+                      </button>
+                    );
+                  }
+                )}
               </div>
             </div>
           </div>
@@ -222,27 +256,33 @@ export default function StreamSimulator() {
           <div className="pt-6 border-t border-white/5 space-y-2">
             <div className="flex justify-between items-center text-xs">
               <span className="text-dark-500 font-medium">Flow per second:</span>
-              <span className="text-white font-mono font-bold">{(flowRateRef.current).toFixed(6)} {token}</span>
+              <span className="text-white font-mono font-bold">
+                {flowRateRef.current.toFixed(6)} {token}
+              </span>
             </div>
             <div className="flex justify-between items-center text-xs">
               <span className="text-dark-500 font-medium">Flow per day:</span>
-              <span className="text-white font-mono font-bold">{(flowRateRef.current * 86400).toLocaleString(undefined, { maximumFractionDigits: 4 })} {token}</span>
+              <span className="text-white font-mono font-bold">
+                {(flowRateRef.current * 86400).toLocaleString(undefined, {
+                  maximumFractionDigits: 4,
+                })}{' '}
+                {token}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Right Column: Visual Flow & Live Ticker */}
         <div className="lg:col-span-7 flex flex-col justify-between p-6 md:p-8 rounded-2xl bg-dark-800/40 border border-white/5 backdrop-blur-sm space-y-8 relative overflow-hidden">
-          
           {/* Top visual representation */}
           <div className="relative w-full h-24 bg-dark-900/60 rounded-xl border border-white/5 flex items-center justify-between px-6 md:px-10 overflow-hidden">
             {/* Simulated flow connection path */}
             <div className="absolute left-[80px] right-[80px] top-1/2 -translate-y-1/2 h-[2px] bg-dark-700 z-0">
-              <div 
-                style={{ 
-                  background: `linear-gradient(to right, transparent, ${currentColors.primary}, transparent)` 
-                }} 
-                className="w-full h-full animate-[pulse_2s_infinite]" 
+              <div
+                style={{
+                  background: `linear-gradient(to right, transparent, ${currentColors.primary}, transparent)`,
+                }}
+                className="w-full h-full animate-[pulse_2s_infinite]"
               />
             </div>
 
@@ -251,58 +291,62 @@ export default function StreamSimulator() {
               <motion.div
                 initial={{ x: '-10%' }}
                 animate={{ x: '110%' }}
-                transition={{ repeat: Infinity, duration: 1.8, ease: "linear" }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: 'linear' }}
                 className="w-2.5 h-2.5 rounded-full blur-[1px] shadow-lg"
-                style={{ 
+                style={{
                   backgroundColor: currentColors.light,
-                  boxShadow: `0 0 8px ${currentColors.light}`
+                  boxShadow: `0 0 8px ${currentColors.light}`,
                 }}
               />
               <motion.div
                 initial={{ x: '-10%' }}
                 animate={{ x: '110%' }}
-                transition={{ repeat: Infinity, duration: 1.8, ease: "linear", delay: 0.6 }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: 'linear', delay: 0.6 }}
                 className="w-2 h-2 rounded-full blur-[1px] shadow-lg"
-                style={{ 
+                style={{
                   backgroundColor: currentColors.light,
-                  boxShadow: `0 0 6px ${currentColors.light}`
+                  boxShadow: `0 0 6px ${currentColors.light}`,
                 }}
               />
               <motion.div
                 initial={{ x: '-10%' }}
                 animate={{ x: '110%' }}
-                transition={{ repeat: Infinity, duration: 1.8, ease: "linear", delay: 1.2 }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: 'linear', delay: 1.2 }}
                 className="w-2.5 h-2.5 rounded-full blur-[1px] shadow-lg"
-                style={{ 
+                style={{
                   backgroundColor: currentColors.light,
-                  boxShadow: `0 0 8px ${currentColors.light}`
+                  boxShadow: `0 0 8px ${currentColors.light}`,
                 }}
               />
             </div>
 
             {/* Sender Node */}
             <div className="z-20 flex flex-col items-center space-y-1.5">
-              <div 
+              <div
                 style={{ borderColor: currentColors.primary }}
                 className="h-12 w-12 rounded-xl bg-dark-800 border flex items-center justify-center text-white shadow-md"
               >
                 <Shield size={20} className="text-dark-500" />
               </div>
-              <span className="text-[10px] font-mono text-dark-500 uppercase tracking-wider">Vault</span>
+              <span className="text-[10px] font-mono text-dark-500 uppercase tracking-wider">
+                Vault
+              </span>
             </div>
 
             <div className="z-10 flex flex-col items-center pt-2">
-              <span className="text-[10px] text-teal-400 font-bold tracking-wider uppercase animate-pulse">Streaming</span>
+              <span className="text-[10px] text-teal-400 font-bold tracking-wider uppercase animate-pulse">
+                Streaming
+              </span>
             </div>
 
             {/* Recipient Node */}
             <div className="z-20 flex flex-col items-center space-y-1.5">
-              <div 
+              <div
                 style={{ borderColor: currentColors.primary }}
                 className="h-12 w-12 rounded-xl bg-dark-800 border flex items-center justify-center text-white shadow-md relative"
               >
                 <Coins size={20} style={{ color: currentColors.light }} />
-                
+
                 {/* Floating Claim feedback inside the target wallet icon */}
                 <AnimatePresence>
                   {isClaiming && (
@@ -318,13 +362,17 @@ export default function StreamSimulator() {
                   )}
                 </AnimatePresence>
               </div>
-              <span className="text-[10px] font-mono text-dark-500 uppercase tracking-wider">Recipient</span>
+              <span className="text-[10px] font-mono text-dark-500 uppercase tracking-wider">
+                Recipient
+              </span>
             </div>
           </div>
 
           {/* Real-time Ticker Counter */}
           <div className="text-center py-4 bg-dark-900/40 rounded-2xl border border-white/5 shadow-inner">
-            <span className="text-xs font-bold text-dark-500 uppercase tracking-wider">Accrued Flow Balance</span>
+            <span className="text-xs font-bold text-dark-500 uppercase tracking-wider">
+              Accrued Flow Balance
+            </span>
             <div className="flex justify-center items-baseline mt-2 mb-1">
               {/* Ticker Integer */}
               <span className="text-4xl md:text-5xl font-black text-white tracking-tight">
@@ -336,9 +384,7 @@ export default function StreamSimulator() {
               <span className="text-3xl md:text-4xl font-mono font-bold text-white/80 tabular-nums">
                 {decimalPart}
               </span>
-              <span className="ml-2 text-md font-extrabold text-dark-500 uppercase">
-                {token}
-              </span>
+              <span className="ml-2 text-md font-extrabold text-dark-500 uppercase">{token}</span>
             </div>
             <p className="text-[10px] text-dark-600">Simulated real-time ledger tracking</p>
           </div>
@@ -346,7 +392,9 @@ export default function StreamSimulator() {
           {/* Claim Action Row */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-dark-900/20 p-4 rounded-xl border border-white/5">
             <div className="text-center sm:text-left">
-              <span className="text-xxs text-dark-500 font-bold uppercase tracking-wider block">Total Sim-Wallet Balance</span>
+              <span className="text-xxs text-dark-500 font-bold uppercase tracking-wider block">
+                Total Sim-Wallet Balance
+              </span>
               <span className="text-md font-bold text-white font-mono">
                 {totalClaimed.toFixed(6)} <span className="text-xs text-dark-600">{token}</span>
               </span>
@@ -379,7 +427,6 @@ export default function StreamSimulator() {
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Cost Calculator Section */}
@@ -391,7 +438,8 @@ export default function StreamSimulator() {
               Stellar Soroban Cost Efficiency Analysis
             </h3>
             <p className="text-xs text-dark-500">
-              Comparing network transaction fees for claiming continuous streams hourly (720 times / month).
+              Comparing network transaction fees for claiming continuous streams hourly (720 times /
+              month).
             </p>
           </div>
           <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded-full text-xs font-bold text-primary-light">
@@ -407,14 +455,20 @@ export default function StreamSimulator() {
               <Zap size={24} className="opacity-20" />
             </div>
             <div>
-              <span className="text-xxs text-primary font-bold uppercase tracking-wider">Engine: Soroban</span>
+              <span className="text-xxs text-primary font-bold uppercase tracking-wider">
+                Engine: Soroban
+              </span>
               <h4 className="text-md font-bold text-white mt-1">Stellar Testnet</h4>
               <p className="text-xxs text-dark-500 mt-0.5">Sub-cent micro transaction fees</p>
             </div>
             <div className="mt-8 space-y-1">
-              <span className="text-[10px] text-dark-500 font-bold block uppercase tracking-wider">Monthly Claim Cost</span>
+              <span className="text-[10px] text-dark-500 font-bold block uppercase tracking-wider">
+                Monthly Claim Cost
+              </span>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black text-primary-light">${monthlyStellarFees.toFixed(4)}</span>
+                <span className="text-2xl font-black text-primary-light">
+                  ${monthlyStellarFees.toFixed(4)}
+                </span>
                 <span className="text-xxs text-dark-500">USD</span>
               </div>
               <div className="w-full h-1 bg-dark-700 rounded-full mt-2">
@@ -426,12 +480,16 @@ export default function StreamSimulator() {
           {/* Ethereum L2 Card */}
           <div className="glass p-5 rounded-xl border border-white/5 flex flex-col justify-between">
             <div>
-              <span className="text-xxs text-accent-purple font-bold uppercase tracking-wider">Traditional Layer 2</span>
+              <span className="text-xxs text-accent-purple font-bold uppercase tracking-wider">
+                Traditional Layer 2
+              </span>
               <h4 className="text-md font-bold text-white mt-1">Arbitrum / Optimism</h4>
               <p className="text-xxs text-dark-500 mt-0.5">Low-cost rollups with variable gas</p>
             </div>
             <div className="mt-8 space-y-1">
-              <span className="text-[10px] text-dark-500 font-bold block uppercase tracking-wider">Monthly Claim Cost</span>
+              <span className="text-[10px] text-dark-500 font-bold block uppercase tracking-wider">
+                Monthly Claim Cost
+              </span>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-black text-white">${monthlyL2Fees.toFixed(2)}</span>
                 <span className="text-xxs text-dark-500">USD</span>
@@ -445,14 +503,22 @@ export default function StreamSimulator() {
           {/* Ethereum L1 Card */}
           <div className="glass p-5 rounded-xl border border-white/5 flex flex-col justify-between">
             <div>
-              <span className="text-xxs text-accent-rose font-bold uppercase tracking-wider">Layer 1</span>
+              <span className="text-xxs text-accent-rose font-bold uppercase tracking-wider">
+                Layer 1
+              </span>
               <h4 className="text-md font-bold text-white mt-1">Ethereum Mainnet</h4>
-              <p className="text-xxs text-dark-500 mt-0.5">High base fees, prohibitive for micro-claims</p>
+              <p className="text-xxs text-dark-500 mt-0.5">
+                High base fees, prohibitive for micro-claims
+              </p>
             </div>
             <div className="mt-8 space-y-1">
-              <span className="text-[10px] text-dark-500 font-bold block uppercase tracking-wider">Monthly Claim Cost</span>
+              <span className="text-[10px] text-dark-500 font-bold block uppercase tracking-wider">
+                Monthly Claim Cost
+              </span>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black text-accent-rose">${monthlyEthL1Fees.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                <span className="text-2xl font-black text-accent-rose">
+                  ${monthlyEthL1Fees.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                </span>
                 <span className="text-xxs text-dark-500">USD</span>
               </div>
               <div className="w-full h-1 bg-dark-700 rounded-full mt-2">
@@ -464,10 +530,11 @@ export default function StreamSimulator() {
 
         {/* Explainers */}
         <p className="text-xxs text-dark-600 text-center leading-relaxed">
-          * Calculation assumes flat network fees: Soroban: $0.0001 (0.00002 XLM), Ethereum L2: $0.05, Ethereum L1: $2.50. Continuous streaming is only viable on platforms where frequent micro-claims do not erode the principal value transferred.
+          * Calculation assumes flat network fees: Soroban: $0.0001 (0.00002 XLM), Ethereum L2:
+          $0.05, Ethereum L1: $2.50. Continuous streaming is only viable on platforms where frequent
+          micro-claims do not erode the principal value transferred.
         </p>
       </div>
-
     </section>
   );
 }
@@ -475,16 +542,16 @@ export default function StreamSimulator() {
 // Inline replacement for slider icon to prevent build failures
 function SlidersIcon({ className, size }: { className?: string; size?: number }) {
   return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size || 24} 
-      height={size || 24} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size || 24}
+      height={size || 24}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={className}
     >
       <line x1="4" x2="4" y1="21" y2="14" />

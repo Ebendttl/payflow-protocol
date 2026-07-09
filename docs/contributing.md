@@ -13,6 +13,7 @@ To keep the codebase clean and accessible for first-time open-source contributor
 ```
 
 ### How to contribute in 3 simple steps:
+
 1. **Search**: Search the workspace for `TODO(issue): #<your-assigned-issue-number>`.
 2. **Implement**: Implement the requested logic, keeping all other codebase elements intact.
 3. **Verify**: Run the local test runner (`cargo test` or `pnpm test`) to ensure your implementation compiles and passes all test specifications.
@@ -42,7 +43,9 @@ The monorepo workspace is split logically into five distinct packages:
 ## 🚀 Setting Up the Development Workspace
 
 ### Prerequisites
+
 Ensure you have the following installed locally:
+
 - Node.js (v18+) & `pnpm` (v8+)
 - Rust (1.75+) and the wasm32 target:
   ```bash
@@ -51,19 +54,25 @@ Ensure you have the following installed locally:
 - Soroban CLI (recommended for contract deployment)
 
 ### 1. Install Workspace Dependencies
+
 From the root of the monorepo, run:
+
 ```bash
 pnpm install
 ```
 
 ### 2. Compile Soroban Contracts
+
 Compile all smart contracts in the workspace:
+
 ```bash
 cargo build --target wasm32-unknown-unknown --release
 ```
 
 ### 3. Run the Monorepo Test Suites
+
 Run the entire monorepo test suite (Rust and TypeScript):
+
 ```bash
 # Run Rust smart contract unit tests
 cargo test --workspace
@@ -75,6 +84,7 @@ pnpm test
 ---
 
 ## 📜 Pull Request Guidelines
+
 - **Keep PRs focused**: Solve only one issue per pull request.
 - **Maintain Diffs**: Ensure your code changes do not alter unrelated lines or delete necessary architectural scaffolding.
 - **Reference Issues**: Include the mapped issue number in your pull request description (e.g., `closes #M1`).

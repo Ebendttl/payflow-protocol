@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
@@ -19,12 +19,12 @@ export default function ClaimButton({ streamId, onSuccess }: ClaimButtonProps) {
   const handleClaim = async () => {
     setLoading(true);
     setError(null);
-    const toastId = toast.loading("Submitting claim transaction...");
+    const toastId = toast.loading('Submitting claim transaction...');
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
       await client.streams.claim({ streamId });
-      toast.success("Tokens claimed successfully!", { id: toastId });
+      toast.success('Tokens claimed successfully!', { id: toastId });
       if (onSuccess) {
         onSuccess();
       }
@@ -62,4 +62,3 @@ export default function ClaimButton({ streamId, onSuccess }: ClaimButtonProps) {
     </div>
   );
 }
-

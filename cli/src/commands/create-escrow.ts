@@ -7,9 +7,9 @@ export function registerCreateEscrow(program: Command) {
   program
     .command('create-escrow')
     .description('Create a multi-milestone escrow vault on-chain')
-    .requiredOption('-r, --recipient <address>',  'Stellar address of the recipient')
-    .requiredOption('-t, --token <address>',       'Asset/token contract ID (C-address)')
-    .requiredOption('-m, --milestones <json>',     'JSON array of milestone objects: [{title,amount}]')
+    .requiredOption('-r, --recipient <address>', 'Stellar address of the recipient')
+    .requiredOption('-t, --token <address>', 'Asset/token contract ID (C-address)')
+    .requiredOption('-m, --milestones <json>', 'JSON array of milestone objects: [{title,amount}]')
     .action(async (opts) => {
       const spinner = ora('Building create-escrow transaction…').start();
       try {

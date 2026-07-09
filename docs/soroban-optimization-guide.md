@@ -9,11 +9,14 @@ This document outlines the professional-grade techniques, compiler settings, and
 In Soroban, storage fees are charged based on the ledger footprint (keys read and written). We optimize footprint sizes through the following strategies:
 
 ### Struct Packing
+
 Instead of storing redundant fields, we pack state attributes to minimize the serialized size in storage. For example:
+
 - Timestamps are stored as `u64` (seconds elapsed) rather than higher-precision `u128` integers.
 - Unnecessary string metadata is omitted from the contract storage; instead, metadata is emitted during creation events to be indexed off-chain by the event listener.
 
 ### Decoupled Data Mapping
+
 Rather than maintaining a massive dynamic list of streams inside a single contract storage key (which would lead to quadratic reading costs as the user base grows), every stream is assigned a unique key:
 
 ```rust
@@ -24,6 +27,7 @@ pub enum DataKey {
     Counter,     // Monotonically increasing ID counter
 }
 ```
+
 This ensures that the cost of reading or updating a stream remains **O(1)**, completely independent of the total active users.
 
 ---
@@ -33,6 +37,7 @@ This ensures that the cost of reading or updating a stream remains **O(1)**, com
 Smart contract deployment cost on Stellar scales linearly with the size of the compiled `.wasm` file. We implement a strict binary optimization pipeline to keep contract size under 50KB:
 
 ### Optimization Compiler Flags
+
 All production builds employ optimal `Cargo.toml` profiles:
 
 ```toml
@@ -45,6 +50,7 @@ strip = true               # Strip debug symbols and name sections
 ```
 
 ### Avoiding Heavy Macro Dependencies
+
 We avoid importing heavy third-party parsing libraries inside the smart contracts. Standard serialization and formatting operations are delegated to off-chain indexer processors and the TypeScript SDK.
 
 ---
@@ -64,5 +70,6 @@ All persistent ledger entries on Stellar must pay rent to stay active. To preven
 ## 4. CPU & Memory Resource Limits
 
 Soroban transactions have strict CPU instruction and RAM limits. Our algorithms are designed for deterministic execution times:
+
 1. **Accrual Calculations**: The math for calculating real-time accrued tokens uses a direct linear formula (O(1) CPU complexity) rather than loops or iterative steps.
 2. **Quorum Verification**: When verifying multi-sig approvals for milestones, we use simple linear searches on pre-sorted vectors of size `<= 10` to avoid gas-heavy lookup loops.

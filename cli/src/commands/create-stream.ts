@@ -8,9 +8,9 @@ export function registerCreateStream(program: Command) {
     .command('create-stream')
     .description('Create a new real-time token payment stream on-chain')
     .requiredOption('-r, --recipient <address>', 'Stellar address of the stream recipient')
-    .requiredOption('-t, --token <address>',     'Asset/token contract ID (C-address)')
-    .requiredOption('-a, --amount <number>',     'Total stream amount in base units')
-    .requiredOption('-d, --duration-days <days>','Stream duration in days')
+    .requiredOption('-t, --token <address>', 'Asset/token contract ID (C-address)')
+    .requiredOption('-a, --amount <number>', 'Total stream amount in base units')
+    .requiredOption('-d, --duration-days <days>', 'Stream duration in days')
     .action(async (opts) => {
       const spinner = ora('Building create-stream transaction…').start();
       try {

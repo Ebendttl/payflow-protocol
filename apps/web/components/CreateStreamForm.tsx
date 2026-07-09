@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -6,7 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState, useEffect } from 'react';
 import { useWalletStore } from '../lib/store/walletStore';
 import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
-import { Loader2, CheckCircle2, AlertCircle, ExternalLink, ArrowRight, Sparkles } from 'lucide-react';
+import {
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  ExternalLink,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
@@ -16,13 +23,13 @@ import Button from './ui/Button';
 
 export const Step1Schema = z.object({
   recipient: z.string().min(56, 'Must be a valid Stellar address (G...)').max(56),
-  asset:     z.string().min(56, 'Must be a valid asset contract address (C...)').max(56),
-  amount:    z.number({ invalid_type_error: 'Must be a number' }).positive('Amount must be > 0'),
+  asset: z.string().min(56, 'Must be a valid asset contract address (C...)').max(56),
+  amount: z.number({ invalid_type_error: 'Must be a number' }).positive('Amount must be > 0'),
 });
 
 export const Step2Schema = z.object({
   durationDays: z.number().int().positive('Duration must be at least 1 day'),
-  startNow:     z.boolean(),
+  startNow: z.boolean(),
 });
 
 export const Step3Schema = z.object({
@@ -45,7 +52,10 @@ export default function CreateStreamForm() {
   const { publicKey, isConnected, connect, walletType } = useWalletStore();
 
   const form1 = useForm<Step1>({ resolver: zodResolver(Step1Schema) });
-  const form2 = useForm<Step2>({ resolver: zodResolver(Step2Schema), defaultValues: { startNow: true } });
+  const form2 = useForm<Step2>({
+    resolver: zodResolver(Step2Schema),
+    defaultValues: { startNow: true },
+  });
   const form3 = useForm<Step3>({ resolver: zodResolver(Step3Schema) });
 
   const searchParams = useSearchParams();
@@ -62,11 +72,11 @@ export default function CreateStreamForm() {
       if (recipient) {
         form1.setValue('recipient', recipient);
       }
-      
+
       if (token) {
         const tokenMap: Record<string, string> = {
-          'XLM': 'CDLZFC3SYJ3RYXP7OUGDN274YDXJW6K5UG326BBONYFAA2ZJGIP57ARE',
-          'USDC': 'CCW6KG642HZD75SU7E5YEOK3R72JAEG7H2Q4FB3NPF3JHU4W4K357ARE'
+          XLM: 'CDLZFC3SYJ3RYXP7OUGDN274YDXJW6K5UG326BBONYFAA2ZJGIP57ARE',
+          USDC: 'CCW6KG642HZD75SU7E5YEOK3R72JAEG7H2Q4FB3NPF3JHU4W4K357ARE',
         };
         const tokenValue = tokenMap[token.toUpperCase()] || token;
         form1.setValue('asset', tokenValue);
@@ -90,7 +100,7 @@ export default function CreateStreamForm() {
 
   const onStep1 = form1.handleSubmit(() => setStep(2));
   const onStep2 = form2.handleSubmit(() => setStep(3));
-  
+
   const onStep3 = form3.handleSubmit(async () => {
     if (!isConnected || !publicKey) {
       setError('Please connect your wallet first.');
@@ -99,7 +109,7 @@ export default function CreateStreamForm() {
     }
     setLoading(true);
     setError(null);
-    const toastId = toast.loading("Deploying stream contract and locking tokens...");
+    const toastId = toast.loading('Deploying stream contract and locking tokens...');
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
@@ -120,7 +130,7 @@ export default function CreateStreamForm() {
       });
 
       setSuccessTx(txHash);
-      toast.success("Stream created successfully!", { id: toastId });
+      toast.success('Stream created successfully!', { id: toastId });
     } catch (err: any) {
       const msg = err.message || String(err);
       setError(msg);
@@ -208,10 +218,16 @@ export default function CreateStreamForm() {
       <div className="flex items-center justify-between mb-8 px-2">
         {([1, 2, 3] as const).map((s) => (
           <div key={s} className="flex items-center gap-2 flex-1 last:flex-none">
-            <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300 ${step === s ? 'border-primary bg-primary/20 text-primary shadow-[0_0_15px_rgba(20,241,149,0.3)]' : step > s ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300' : 'border-white/10 bg-white/5 text-dark-500'}`}>
+            <div
+              className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300 ${step === s ? 'border-primary bg-primary/20 text-primary shadow-[0_0_15px_rgba(20,241,149,0.3)]' : step > s ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300' : 'border-white/10 bg-white/5 text-dark-500'}`}
+            >
               {s}
             </div>
-            {s < 3 && <div className={`flex-1 h-0.5 min-w-[40px] transition-all duration-300 ${step > s ? 'bg-emerald-500' : 'bg-white/10'}`} />}
+            {s < 3 && (
+              <div
+                className={`flex-1 h-0.5 min-w-[40px] transition-all duration-300 ${step > s ? 'bg-emerald-500' : 'bg-white/10'}`}
+              />
+            )}
           </div>
         ))}
       </div>
@@ -235,11 +251,15 @@ export default function CreateStreamForm() {
         <form onSubmit={onStep1} className="space-y-5 animate-in fade-in duration-300">
           <div>
             <h3 className="text-xl font-bold text-white">Recipient & Asset</h3>
-            <p className="text-xs text-dark-400 mt-1">Configure the destination address and the asset you want to stream.</p>
+            <p className="text-xs text-dark-400 mt-1">
+              Configure the destination address and the asset you want to stream.
+            </p>
           </div>
 
           <div>
-            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Recipient Address</label>
+            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+              Recipient Address
+            </label>
             <input
               id="stream-recipient"
               type="text"
@@ -247,11 +267,17 @@ export default function CreateStreamForm() {
               placeholder="e.g. GB..."
               className="w-full mt-1.5 bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-dark-600 focus:outline-none focus:border-primary transition"
             />
-            {form1.formState.errors.recipient && <p className="text-xs text-rose-400 mt-1.5">{form1.formState.errors.recipient.message}</p>}
+            {form1.formState.errors.recipient && (
+              <p className="text-xs text-rose-400 mt-1.5">
+                {form1.formState.errors.recipient.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Asset Contract ID</label>
+            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+              Asset Contract ID
+            </label>
             <input
               id="stream-asset"
               type="text"
@@ -259,11 +285,15 @@ export default function CreateStreamForm() {
               placeholder="e.g. CC..."
               className="w-full mt-1.5 bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-dark-600 focus:outline-none focus:border-primary transition"
             />
-            {form1.formState.errors.asset && <p className="text-xs text-rose-400 mt-1.5">{form1.formState.errors.asset.message}</p>}
+            {form1.formState.errors.asset && (
+              <p className="text-xs text-rose-400 mt-1.5">{form1.formState.errors.asset.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Total Amount</label>
+            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+              Total Amount
+            </label>
             <input
               id="stream-amount"
               type="number"
@@ -272,7 +302,11 @@ export default function CreateStreamForm() {
               placeholder="0.0"
               className="w-full mt-1.5 bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
             />
-            {form1.formState.errors.amount && <p className="text-xs text-rose-400 mt-1.5">{form1.formState.errors.amount.message}</p>}
+            {form1.formState.errors.amount && (
+              <p className="text-xs text-rose-400 mt-1.5">
+                {form1.formState.errors.amount.message}
+              </p>
+            )}
           </div>
 
           <button
@@ -290,11 +324,15 @@ export default function CreateStreamForm() {
         <form onSubmit={onStep2} className="space-y-5 animate-in fade-in duration-300">
           <div>
             <h3 className="text-xl font-bold text-white">Streaming Duration</h3>
-            <p className="text-xs text-dark-400 mt-1">Specify how long the tokens will be streamed continuously.</p>
+            <p className="text-xs text-dark-400 mt-1">
+              Specify how long the tokens will be streamed continuously.
+            </p>
           </div>
 
           <div>
-            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Duration (days)</label>
+            <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+              Duration (days)
+            </label>
             <input
               id="stream-duration"
               type="number"
@@ -302,7 +340,11 @@ export default function CreateStreamForm() {
               placeholder="30"
               className="w-full mt-1.5 bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
             />
-            {form2.formState.errors.durationDays && <p className="text-xs text-rose-400 mt-1.5">{form2.formState.errors.durationDays.message}</p>}
+            {form2.formState.errors.durationDays && (
+              <p className="text-xs text-rose-400 mt-1.5">
+                {form2.formState.errors.durationDays.message}
+              </p>
+            )}
           </div>
 
           <div className="bg-dark-800/40 border border-white/5 rounded-xl p-4 flex items-center gap-3">
@@ -313,10 +355,15 @@ export default function CreateStreamForm() {
               className="h-4 w-4 rounded border-white/10 bg-dark-800 text-primary focus:ring-primary focus:ring-offset-dark-900"
             />
             <div>
-              <label htmlFor="stream-start-now" className="text-sm font-medium text-white cursor-pointer select-none">
+              <label
+                htmlFor="stream-start-now"
+                className="text-sm font-medium text-white cursor-pointer select-none"
+              >
                 Start immediately
               </label>
-              <p className="text-xxs text-dark-500">The stream will begin accruing tokens as soon as the transaction is confirmed.</p>
+              <p className="text-xxs text-dark-500">
+                The stream will begin accruing tokens as soon as the transaction is confirmed.
+              </p>
             </div>
           </div>
 
@@ -344,21 +391,31 @@ export default function CreateStreamForm() {
         <form onSubmit={onStep3} className="space-y-5 animate-in fade-in duration-300">
           <div>
             <h3 className="text-xl font-bold text-white">Review & Confirm</h3>
-            <p className="text-xs text-dark-400 mt-1">Review the streaming configuration and sign the transaction with Freighter.</p>
+            <p className="text-xs text-dark-400 mt-1">
+              Review the streaming configuration and sign the transaction with Freighter.
+            </p>
           </div>
 
           <div className="bg-dark-800/80 border border-white/5 rounded-xl p-4 space-y-3 font-mono text-xs text-dark-300">
             <div className="flex justify-between">
               <span className="text-dark-500">SENDER (YOU)</span>
-              <span className="text-white text-right break-all max-w-[70%]">{publicKey ? `${publicKey.slice(0, 10)}...${publicKey.slice(-10)}` : 'Not Connected'}</span>
+              <span className="text-white text-right break-all max-w-[70%]">
+                {publicKey
+                  ? `${publicKey.slice(0, 10)}...${publicKey.slice(-10)}`
+                  : 'Not Connected'}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-dark-500">RECIPIENT</span>
-              <span className="text-teal-300 text-right break-all max-w-[70%]">{form1.getValues('recipient')}</span>
+              <span className="text-teal-300 text-right break-all max-w-[70%]">
+                {form1.getValues('recipient')}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-dark-500">ASSET CONTRACT</span>
-              <span className="text-purple-300 text-right break-all max-w-[70%]">{form1.getValues('asset')}</span>
+              <span className="text-purple-300 text-right break-all max-w-[70%]">
+                {form1.getValues('asset')}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-dark-500">TOTAL AMOUNT</span>
@@ -378,13 +435,20 @@ export default function CreateStreamForm() {
               className="h-4 w-4 rounded border-white/10 bg-dark-800 text-primary focus:ring-primary focus:ring-offset-dark-900 mt-0.5"
             />
             <div>
-              <label htmlFor="stream-confirm" className="text-sm font-medium text-white cursor-pointer select-none">
+              <label
+                htmlFor="stream-confirm"
+                className="text-sm font-medium text-white cursor-pointer select-none"
+              >
                 I confirm the stream details are correct
               </label>
-              <p className="text-xxs text-dark-500">This action requires a signature and will lock tokens in the vault.</p>
+              <p className="text-xxs text-dark-500">
+                This action requires a signature and will lock tokens in the vault.
+              </p>
             </div>
           </div>
-          {form3.formState.errors.confirmation && <p className="text-xs text-rose-400">{form3.formState.errors.confirmation.message}</p>}
+          {form3.formState.errors.confirmation && (
+            <p className="text-xs text-rose-400">{form3.formState.errors.confirmation.message}</p>
+          )}
 
           <div className="flex gap-3 mt-6">
             <Button
@@ -396,11 +460,7 @@ export default function CreateStreamForm() {
             >
               Back
             </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-              className="flex-1 py-3.5"
-            >
+            <Button type="submit" disabled={loading} className="flex-1 py-3.5">
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />

@@ -31,7 +31,7 @@ const client = new PayFlowClient({
   contractIds: {
     streamVault: 'CDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
     milestoneEscrow: 'CBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-    streamFactory: 'CCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+    streamFactory: 'CCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
   },
   // Provide either a browser wallet object or a Node.js secret key provider
   wallet: {
@@ -39,8 +39,8 @@ const client = new PayFlowClient({
       // e.g., Integrate Freighter wallet
       const { signTransaction } = await import('@stellar/freighter-api');
       return signTransaction({ xdr, network: 'TESTNET' });
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -49,6 +49,7 @@ const client = new PayFlowClient({
 ## 3. Streams API (`client.streams`)
 
 ### Create a Token Stream
+
 Deploy and lock funds into a continuous streaming ledger. Returns a raw transaction envelope or submits to network.
 
 ```typescript
@@ -57,10 +58,10 @@ import { CreateStreamParams } from '@payflow/sdk';
 const params: CreateStreamParams = {
   sender: 'GD3FA2...',
   recipient: 'GDYAAA...',
-  token: 'CDUSDC...',       // Soroban Token Contract Address
+  token: 'CDUSDC...', // Soroban Token Contract Address
   totalAmount: 1000000000n, // i128 (with 7 decimal places, e.g. 100.0000000 USDC)
   durationSeconds: 2592000n, // 30 days
-  autoSubmit: true          // Builds, signs via Freighter, and submits
+  autoSubmit: true, // Builds, signs via Freighter, and submits
 };
 
 try {
@@ -72,16 +73,18 @@ try {
 ```
 
 ### Claim Accrued Balances
+
 Invoked by the recipient to withdraw all tokens accrued since the last claim block.
 
 ```typescript
 const claimTx = await client.streams.claim({
   streamId: 42n,
-  autoSubmit: true
+  autoSubmit: true,
 });
 ```
 
 ### Stream Lifecycle Control
+
 Senders can temporarily pause streaming or cancel a stream entirely to reclaim remaining locked tokens.
 
 ```typescript
@@ -94,7 +97,7 @@ await client.streams.resume({ streamId: 42n, autoSubmit: true });
 // Cancel stream
 const refundResult = await client.streams.cancel({
   streamId: 42n,
-  autoSubmit: true
+  autoSubmit: true,
 });
 console.log('Refund processed successfully. Refunded amount:', refundResult.refundedAmount);
 ```
@@ -106,27 +109,25 @@ console.log('Refund processed successfully. Refunded amount:', refundResult.refu
 Escrows let senders distribute funds locked in a multi-sig vault upon milestone approvals.
 
 ### Create Milestone Escrow
+
 ```typescript
 const escrowTx = await client.escrow.create({
   sender: 'GD3FA2...',
   recipient: 'GDYAAA...',
   token: 'CDUSDC...',
   totalAmount: 5000000000n, // 500.0000000 USDC
-  threshold: 2,             // Requires 2 of 3 approver signatures to release a milestone
-  approvers: [
-    'GBAAAA...',
-    'GBBBBB...',
-    'GBCCCC...'
-  ],
+  threshold: 2, // Requires 2 of 3 approver signatures to release a milestone
+  approvers: ['GBAAAA...', 'GBBBBB...', 'GBCCCC...'],
   milestones: [
     { title: 'System Architecture Specification', amount: 2000000000n },
-    { title: 'Soroban Smart Contract Implementation', amount: 3000000000n }
+    { title: 'Soroban Smart Contract Implementation', amount: 3000000000n },
   ],
-  autoSubmit: true
+  autoSubmit: true,
 });
 ```
 
 ### Approve & Disburse Milestones
+
 Approvers use this interface to sign off on specific milestone accomplishments. Once the approval count matches the required threshold, the escrow contract auto-releases the allocated tranche.
 
 ```typescript
@@ -134,7 +135,7 @@ const approveTx = await client.escrow.approveMilestone({
   escrowId: 101n,
   milestoneIndex: 0, // Indexes from 0
   approver: 'GBAAAA...',
-  autoSubmit: true
+  autoSubmit: true,
 });
 ```
 
@@ -151,4 +152,3 @@ const streamsList = await response.json();
 
 console.log(`Active Streams for sender: ${streamsList.length}`);
 ```
-

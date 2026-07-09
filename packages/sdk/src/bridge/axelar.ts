@@ -10,6 +10,6 @@ export class AxelarBridgeAdapter {
     recipientAddress: string
   ): Promise<string> {
     console.log(`Axelar bridge: ${amount} to ${destinationChain} — not implemented`);
-    throw new Error("not implemented");
+    throw new Error('not implemented');
   }
 }

@@ -27,7 +27,8 @@ const nextConfig = {
     return [
       {
         source: '/api/rpc',
-        destination: process.env.NEXT_PUBLIC_HORIZON_RPC_URL || 'https://soroban-testnet.stellar.org',
+        destination:
+          process.env.NEXT_PUBLIC_HORIZON_RPC_URL || 'https://soroban-testnet.stellar.org',
       },
     ];
   },

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -14,7 +14,9 @@ export default function AdminPage() {
           Manage system factories, delegate roles, and configure multi-sig quorum rules.
         </p>
         <div className="glass p-6 rounded-2xl border border-white/5">
-          <p className="text-xs text-amber-400">Admin management module is pending implementation.</p>
+          <p className="text-xs text-amber-400">
+            Admin management module is pending implementation.
+          </p>
         </div>
         <Link href="/" className="inline-block text-xs text-primary-light hover:underline">
           ← Back Home

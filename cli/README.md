@@ -16,6 +16,7 @@ The CLI reads wallet and contract info from `~/.payflow/config.json`. If this fi
 
 To configure your secret key:
 Create a file at `~/.payflow/config.json`:
+
 ```json
 {
   "network": "testnet",

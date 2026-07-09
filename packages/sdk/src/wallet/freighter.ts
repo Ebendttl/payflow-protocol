@@ -8,7 +8,9 @@ import {
 export class FreighterWalletAdapter {
   private checkInstallation() {
     if (typeof window === 'undefined' || !(window as any).freighter) {
-      throw new Error('Freighter extension is not installed. Please install Freighter from freighter.app.');
+      throw new Error(
+        'Freighter extension is not installed. Please install Freighter from freighter.app.'
+      );
     }
   }
 
@@ -56,7 +58,7 @@ export class FreighterWalletAdapter {
   async signTransaction(xdr: string, networkPassphrase?: string): Promise<string> {
     try {
       this.checkInstallation();
-      
+
       let details;
       try {
         details = await getNetworkDetails();
@@ -65,7 +67,9 @@ export class FreighterWalletAdapter {
       }
 
       if (details && networkPassphrase && details.networkPassphrase !== networkPassphrase) {
-        throw new Error(`Freighter is configured for a different network. Please switch Freighter to the network with passphrase: ${networkPassphrase}`);
+        throw new Error(
+          `Freighter is configured for a different network. Please switch Freighter to the network with passphrase: ${networkPassphrase}`
+        );
       }
 
       const signedXdr = await signTransaction(xdr, {

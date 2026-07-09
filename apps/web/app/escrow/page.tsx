@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -15,18 +15,18 @@ export default function EscrowDashboard() {
   const mockEscrows: Escrow[] = [
     {
       id: 101n,
-      sender: publicKey || "GBX...",
-      recipient: "GDYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      token: "USDC",
+      sender: publicKey || 'GBX...',
+      recipient: 'GDYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+      token: 'USDC',
       totalAmount: 5000000000n, // 500 USDC
       threshold: 2,
-      approvers: ["GBA...", "GBB...", "GBC..."],
-      status: "Active",
+      approvers: ['GBA...', 'GBB...', 'GBC...'],
+      status: 'Active',
       milestones: [
-        { title: "Design Sign-off", amount: 2000000000n, approvalCount: 2, status: "Released" },
-        { title: "Smart Contract Audit", amount: 3000000000n, approvalCount: 1, status: "Pending" },
-      ]
-    }
+        { title: 'Design Sign-off', amount: 2000000000n, approvalCount: 2, status: 'Released' },
+        { title: 'Smart Contract Audit', amount: 3000000000n, approvalCount: 1, status: 'Pending' },
+      ],
+    },
   ];
 
   const truncate = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
@@ -40,7 +40,9 @@ export default function EscrowDashboard() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 className="text-3xl font-extrabold tracking-tight text-white">Milestone Escrows</h2>
-            <p className="text-xs text-dark-500">Secure funds held in smart contracts and release on milestone approvals</p>
+            <p className="text-xs text-dark-500">
+              Secure funds held in smart contracts and release on milestone approvals
+            </p>
           </div>
           <Link
             href="/escrow/create"
@@ -55,23 +57,33 @@ export default function EscrowDashboard() {
         {mockEscrows.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-8">
             {mockEscrows.map((escrow) => {
-              const released = escrow.milestones.filter(m => m.status === 'Released').reduce((sum: bigint, m) => sum + m.amount, 0n);
+              const released = escrow.milestones
+                .filter((m) => m.status === 'Released')
+                .reduce((sum: bigint, m) => sum + m.amount, 0n);
               const progress = Number((released * 100n) / escrow.totalAmount);
               return (
-                <div key={escrow.id.toString()} className="glass p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-64 hover:scale-[1.01] transition duration-300">
+                <div
+                  key={escrow.id.toString()}
+                  className="glass p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-64 hover:scale-[1.01] transition duration-300"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="text-xs text-primary font-bold uppercase tracking-wider">Escrow Account</span>
-                      <h3 className="text-xl font-bold text-white mt-1">Escrow #{escrow.id.toString()}</h3>
+                      <span className="text-xs text-primary font-bold uppercase tracking-wider">
+                        Escrow Account
+                      </span>
+                      <h3 className="text-xl font-bold text-white mt-1">
+                        Escrow #{escrow.id.toString()}
+                      </h3>
                     </div>
                     <span className="text-2xl font-black text-white">
-                      {Number(escrow.totalAmount) / 10**7} <span className="text-xs text-dark-600">USDC</span>
+                      {Number(escrow.totalAmount) / 10 ** 7}{' '}
+                      <span className="text-xs text-dark-600">USDC</span>
                     </span>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-dark-600">
-                      <span>Released: {Number(released) / 10**7} USDC</span>
+                      <span>Released: {Number(released) / 10 ** 7} USDC</span>
                       <span>{progress}% Completed</span>
                     </div>
                     <div className="w-full h-2 bg-dark-700 rounded-full overflow-hidden border border-white/5">
@@ -81,7 +93,8 @@ export default function EscrowDashboard() {
 
                   <div className="flex items-center justify-between pt-4 border-t border-white/5">
                     <span className="text-xs text-dark-600">
-                      Recipient: <span className="font-mono text-teal-300">{truncate(escrow.recipient)}</span>
+                      Recipient:{' '}
+                      <span className="font-mono text-teal-300">{truncate(escrow.recipient)}</span>
                     </span>
                     <Link
                       href={`/escrow/${escrow.id.toString()}`}
@@ -99,7 +112,9 @@ export default function EscrowDashboard() {
           <div className="glass p-12 rounded-2xl text-center border border-white/5">
             <ShieldAlert className="mx-auto text-dark-600 mb-4" size={40} />
             <h3 className="text-lg font-bold mb-1">No Escrows Found</h3>
-            <p className="text-xs text-dark-600">You haven&apos;t setup any milestone escrows yet.</p>
+            <p className="text-xs text-dark-600">
+              You haven&apos;t setup any milestone escrows yet.
+            </p>
           </div>
         )}
 
@@ -110,4 +125,3 @@ export default function EscrowDashboard() {
     </div>
   );
 }
-

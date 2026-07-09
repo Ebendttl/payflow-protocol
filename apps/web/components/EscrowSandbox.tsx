@@ -1,8 +1,19 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Plus, Trash2, Users, CheckCircle2, UserCheck, ArrowRight, Coins, Sparkles, RefreshCw } from 'lucide-react';
+import {
+  Shield,
+  Plus,
+  Trash2,
+  Users,
+  CheckCircle2,
+  UserCheck,
+  ArrowRight,
+  Coins,
+  Sparkles,
+  RefreshCw,
+} from 'lucide-react';
 
 interface MockMilestone {
   id: string;
@@ -13,24 +24,42 @@ interface MockMilestone {
 }
 
 const SIGNERS = ['Alice', 'Bob', 'Charlie'] as const;
-type SignerName = typeof SIGNERS[number];
+type SignerName = (typeof SIGNERS)[number];
 
 export default function EscrowSandbox() {
   // Escrow Configuration State
   const [threshold, setThreshold] = useState<number>(2);
   const [milestones, setMilestones] = useState<MockMilestone[]>([
-    { id: '1', title: 'Milestone 1: Smart Contract Auditing', amount: 150, approvedBy: ['Alice'], status: 'Pending' },
-    { id: '2', title: 'Milestone 2: Frontend Integration', amount: 250, approvedBy: [], status: 'Pending' },
-    { id: '3', title: 'Milestone 3: Mainnet Verification & Launch', amount: 100, approvedBy: [], status: 'Pending' }
+    {
+      id: '1',
+      title: 'Milestone 1: Smart Contract Auditing',
+      amount: 150,
+      approvedBy: ['Alice'],
+      status: 'Pending',
+    },
+    {
+      id: '2',
+      title: 'Milestone 2: Frontend Integration',
+      amount: 250,
+      approvedBy: [],
+      status: 'Pending',
+    },
+    {
+      id: '3',
+      title: 'Milestone 3: Mainnet Verification & Launch',
+      amount: 100,
+      approvedBy: [],
+      status: 'Pending',
+    },
   ]);
-  
+
   // Simulation Active Role State
   const [activeRole, setActiveRole] = useState<SignerName>('Alice');
-  
+
   // Visual Balances State
   const [vaultBalance, setVaultBalance] = useState<number>(500);
   const [recipientBalance, setRecipientBalance] = useState<number>(0);
-  
+
   // Milestone creation form state
   const [newTitle, setNewTitle] = useState('');
   const [newAmount, setNewAmount] = useState<number>(100);
@@ -38,7 +67,7 @@ export default function EscrowSandbox() {
   // Notifications
   const [activityLogs, setActivityLogs] = useState<string[]>([
     'Escrow Contract Initialized with threshold: 2 of 3 approvers',
-    'Alice approved Milestone #1'
+    'Alice approved Milestone #1',
   ]);
 
   // Recalculate balances whenever milestones status changes
@@ -47,7 +76,7 @@ export default function EscrowSandbox() {
     const released = milestones
       .filter((m) => m.status === 'Released')
       .reduce((sum, m) => sum + m.amount, 0);
-    
+
     setVaultBalance(total - released);
     setRecipientBalance(released);
   }, [milestones]);
@@ -62,17 +91,17 @@ export default function EscrowSandbox() {
       title: newTitle,
       amount: newAmount,
       approvedBy: [],
-      status: 'Pending'
+      status: 'Pending',
     };
 
-    setMilestones(prev => [...prev, newMilestone]);
+    setMilestones((prev) => [...prev, newMilestone]);
     logActivity(`Added Milestone: "${newTitle}" (${newAmount} USDC)`);
     setNewTitle('');
   };
 
   // Remove a milestone (only if pending)
   const removeMilestone = (id: string, title: string) => {
-    setMilestones(prev => prev.filter(m => m.id !== id));
+    setMilestones((prev) => prev.filter((m) => m.id !== id));
     logActivity(`Removed Milestone: "${title}"`);
   };
 
@@ -84,16 +113,16 @@ export default function EscrowSandbox() {
 
   // Approve a milestone
   const approveMilestone = (milestoneId: string) => {
-    setMilestones(prev =>
+    setMilestones((prev) =>
       prev.map((milestone) => {
         if (milestone.id !== milestoneId || milestone.status === 'Released') return milestone;
 
         // If already approved by activeRole, toggle/remove it, else add it
         const alreadyApproved = milestone.approvedBy.includes(activeRole);
         let updatedApprovers: string[];
-        
+
         if (alreadyApproved) {
-          updatedApprovers = milestone.approvedBy.filter(u => u !== activeRole);
+          updatedApprovers = milestone.approvedBy.filter((u) => u !== activeRole);
           logActivity(`${activeRole} revoked approval for: "${milestone.title}"`);
         } else {
           updatedApprovers = [...milestone.approvedBy, activeRole];
@@ -107,7 +136,7 @@ export default function EscrowSandbox() {
         return {
           ...milestone,
           approvedBy: updatedApprovers,
-          status
+          status,
         };
       })
     );
@@ -115,14 +144,16 @@ export default function EscrowSandbox() {
 
   // Disburse/Release milestone funds
   const releaseMilestone = (milestoneId: string) => {
-    setMilestones(prev =>
+    setMilestones((prev) =>
       prev.map((milestone) => {
         if (milestone.id !== milestoneId) return milestone;
-        
-        logActivity(`Funds Released for: "${milestone.title}" (+${milestone.amount} USDC to recipient)`);
+
+        logActivity(
+          `Funds Released for: "${milestone.title}" (+${milestone.amount} USDC to recipient)`
+        );
         return {
           ...milestone,
-          status: 'Released'
+          status: 'Released',
         };
       })
     );
@@ -130,16 +161,37 @@ export default function EscrowSandbox() {
 
   // Helper log function
   const logActivity = (message: string) => {
-    setActivityLogs(prev => [`[${new Date().toLocaleTimeString()}] ${message}`, ...prev.slice(0, 10)]);
+    setActivityLogs((prev) => [
+      `[${new Date().toLocaleTimeString()}] ${message}`,
+      ...prev.slice(0, 10),
+    ]);
   };
 
   // Reset demo
   const resetDemo = () => {
     setThreshold(2);
     setMilestones([
-      { id: '1', title: 'Milestone 1: Smart Contract Auditing', amount: 150, approvedBy: ['Alice'], status: 'Pending' },
-      { id: '2', title: 'Milestone 2: Frontend Integration', amount: 250, approvedBy: [], status: 'Pending' },
-      { id: '3', title: 'Milestone 3: Mainnet Verification & Launch', amount: 100, approvedBy: [], status: 'Pending' }
+      {
+        id: '1',
+        title: 'Milestone 1: Smart Contract Auditing',
+        amount: 150,
+        approvedBy: ['Alice'],
+        status: 'Pending',
+      },
+      {
+        id: '2',
+        title: 'Milestone 2: Frontend Integration',
+        amount: 250,
+        approvedBy: [],
+        status: 'Pending',
+      },
+      {
+        id: '3',
+        title: 'Milestone 3: Mainnet Verification & Launch',
+        amount: 100,
+        approvedBy: [],
+        status: 'Pending',
+      },
     ]);
     setActiveRole('Alice');
     logActivity('Reset simulator state to default');
@@ -159,7 +211,8 @@ export default function EscrowSandbox() {
             Milestone Escrow Sandbox & Approval Simulator
           </h3>
           <p className="text-xs text-dark-500">
-            Design multi-sig contract rules, simulate signing thresholds, and watch on-chain fund disbursements.
+            Design multi-sig contract rules, simulate signing thresholds, and watch on-chain fund
+            disbursements.
           </p>
         </div>
         <button
@@ -174,7 +227,6 @@ export default function EscrowSandbox() {
       <div className="grid lg:grid-cols-12 gap-8 items-start">
         {/* Left Side: Escrow Config & Simulated Ledger */}
         <div className="lg:col-span-5 space-y-6">
-          
           {/* Simulated Signer Selection */}
           <div className="space-y-3 p-5 rounded-2xl bg-dark-900/40 border border-white/5">
             <span className="text-xs font-bold text-dark-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -182,7 +234,8 @@ export default function EscrowSandbox() {
               1. Select Acting Signer Role
             </span>
             <p className="text-[11px] text-dark-500 leading-relaxed">
-              Multi-signature escrows require separate accounts to sign. Switch roles below to simulate signing as different approvers.
+              Multi-signature escrows require separate accounts to sign. Switch roles below to
+              simulate signing as different approvers.
             </p>
             <div className="grid grid-cols-3 gap-2 pt-2">
               {SIGNERS.map((signer) => {
@@ -241,7 +294,9 @@ export default function EscrowSandbox() {
             </span>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-dark-800/40 p-4 rounded-xl border border-white/5 text-center">
-                <span className="text-[10px] text-dark-500 font-bold block uppercase">Vault Balance</span>
+                <span className="text-[10px] text-dark-500 font-bold block uppercase">
+                  Vault Balance
+                </span>
                 <span className="text-xl font-black text-white font-mono block mt-1">
                   {vaultBalance} <span className="text-xs text-dark-600">USDC</span>
                 </span>
@@ -254,7 +309,9 @@ export default function EscrowSandbox() {
                 </div>
               </div>
               <div className="bg-dark-800/40 p-4 rounded-xl border border-white/5 text-center">
-                <span className="text-[10px] text-dark-500 font-bold block uppercase">Released Balance</span>
+                <span className="text-[10px] text-dark-500 font-bold block uppercase">
+                  Released Balance
+                </span>
                 <span className="text-xl font-black text-emerald-400 font-mono block mt-1">
                   {recipientBalance} <span className="text-xs text-dark-600">USDC</span>
                 </span>
@@ -275,7 +332,9 @@ export default function EscrowSandbox() {
 
           {/* Activity Logs Panel */}
           <div className="p-4 rounded-2xl bg-dark-900/30 border border-white/5 space-y-2">
-            <span className="text-[10px] font-bold text-dark-500 uppercase tracking-wider block">Simulator Event Log</span>
+            <span className="text-[10px] font-bold text-dark-500 uppercase tracking-wider block">
+              Simulator Event Log
+            </span>
             <div className="h-28 overflow-y-auto font-mono text-[10px] text-dark-500 space-y-1.5 scrollbar-thin scrollbar-thumb-dark-700 pr-1">
               <AnimatePresence initial={false}>
                 {activityLogs.map((log, index) => (
@@ -291,7 +350,6 @@ export default function EscrowSandbox() {
               </AnimatePresence>
             </div>
           </div>
-
         </div>
 
         {/* Right Side: Milestone Timeline & Builder */}
@@ -306,9 +364,9 @@ export default function EscrowSandbox() {
               <AnimatePresence initial={false}>
                 {milestones.map((m, index) => {
                   const hasSigned = m.approvedBy.includes(activeRole);
-                  const statusColors = 
-                    m.status === 'Released' 
-                      ? 'border-emerald-500/30 bg-emerald-500/5' 
+                  const statusColors =
+                    m.status === 'Released'
+                      ? 'border-emerald-500/30 bg-emerald-500/5'
                       : m.status === 'Approved'
                         ? 'border-accent/40 bg-accent/5 animate-pulse'
                         : 'border-white/5 bg-dark-900/20';
@@ -323,11 +381,16 @@ export default function EscrowSandbox() {
                       className={`relative p-5 rounded-2xl border transition duration-300 ${statusColors}`}
                     >
                       {/* Left timeline indicator circle */}
-                      <span 
+                      <span
                         style={{
-                          backgroundColor: m.status === 'Released' ? '#10B981' : m.status === 'Approved' ? '#8B5CF6' : '#374151'
+                          backgroundColor:
+                            m.status === 'Released'
+                              ? '#10B981'
+                              : m.status === 'Approved'
+                                ? '#8B5CF6'
+                                : '#374151',
                         }}
-                        className="absolute left-[-23px] top-7 w-3.5 h-3.5 rounded-full border border-dark-900 z-10 shadow-lg shadow-black/80" 
+                        className="absolute left-[-23px] top-7 w-3.5 h-3.5 rounded-full border border-dark-900 z-10 shadow-lg shadow-black/80"
                       />
 
                       <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
@@ -336,22 +399,28 @@ export default function EscrowSandbox() {
                             <span className="text-[10px] font-bold text-accent-purple uppercase tracking-wider">
                               Milestone #{index + 1}
                             </span>
-                            <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${
-                              m.status === 'Released' 
-                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/20'
-                                : m.status === 'Approved'
-                                  ? 'bg-accent/20 text-accent-purple border border-accent/20'
-                                  : 'bg-dark-700 text-dark-500 border border-white/5'
-                            }`}>
+                            <span
+                              className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                                m.status === 'Released'
+                                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/20'
+                                  : m.status === 'Approved'
+                                    ? 'bg-accent/20 text-accent-purple border border-accent/20'
+                                    : 'bg-dark-700 text-dark-500 border border-white/5'
+                              }`}
+                            >
                               {m.status}
                             </span>
                           </div>
                           <h4 className="text-sm font-bold text-white">{m.title}</h4>
                         </div>
-                        
+
                         <div className="text-right sm:self-center flex sm:flex-col items-center sm:items-end gap-2 sm:gap-0">
-                          <span className="text-md font-black text-white font-mono">{m.amount}</span>
-                          <span className="text-[10px] font-bold text-dark-600 uppercase">USDC</span>
+                          <span className="text-md font-black text-white font-mono">
+                            {m.amount}
+                          </span>
+                          <span className="text-[10px] font-bold text-dark-600 uppercase">
+                            USDC
+                          </span>
                         </div>
                       </div>
 
@@ -420,9 +489,7 @@ export default function EscrowSandbox() {
                             </button>
                           )}
                         </div>
-
                       </div>
-
                     </motion.div>
                   );
                 })}
@@ -430,8 +497,13 @@ export default function EscrowSandbox() {
             </div>
 
             {/* Custom Milestone Creator Form */}
-            <form onSubmit={addMilestone} className="glass p-5 rounded-2xl border border-white/5 space-y-4">
-              <span className="text-[10px] font-bold text-dark-500 uppercase tracking-wider block">Add Custom Milestone</span>
+            <form
+              onSubmit={addMilestone}
+              className="glass p-5 rounded-2xl border border-white/5 space-y-4"
+            >
+              <span className="text-[10px] font-bold text-dark-500 uppercase tracking-wider block">
+                Add Custom Milestone
+              </span>
               <div className="grid sm:grid-cols-12 gap-3">
                 <div className="sm:col-span-8">
                   <input
@@ -454,7 +526,9 @@ export default function EscrowSandbox() {
                       onChange={(e) => setNewAmount(Number(e.target.value))}
                       className="w-full bg-dark-900 border border-white/5 rounded-xl pl-3 pr-8 py-2 text-xs text-white font-mono focus:outline-none focus:border-accent"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-dark-500">USDC</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-dark-500">
+                      USDC
+                    </span>
                   </div>
                 </div>
                 <div className="sm:col-span-1 flex items-stretch">
@@ -468,7 +542,6 @@ export default function EscrowSandbox() {
                 </div>
               </div>
             </form>
-
           </div>
         </div>
       </div>

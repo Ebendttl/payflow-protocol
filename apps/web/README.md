@@ -4,14 +4,14 @@ Next.js 14 App Router dApp for the PayFlow Protocol. This is the primary user in
 
 ## Tech Stack
 
-| Layer         | Technology                                    |
-|---------------|-----------------------------------------------|
-| Framework     | Next.js 14 (App Router)                       |
-| Styling       | Tailwind CSS (dark glassmorphism theme)       |
-| State         | Zustand (wallet + stream state)               |
-| Wallet        | `@stellar/freighter-api`                      |
-| Forms         | `react-hook-form` + `zod`                     |
-| SDK           | `@payflow/sdk` (workspace dependency)         |
+| Layer     | Technology                              |
+| --------- | --------------------------------------- |
+| Framework | Next.js 14 (App Router)                 |
+| Styling   | Tailwind CSS (dark glassmorphism theme) |
+| State     | Zustand (wallet + stream state)         |
+| Wallet    | `@stellar/freighter-api`                |
+| Forms     | `react-hook-form` + `zod`               |
+| SDK       | `@payflow/sdk` (workspace dependency)   |
 
 ## Directory Structure
 
@@ -45,12 +45,15 @@ lib/
 ## Local Setup
 
 ### 1. Install Dependencies (from monorepo root)
+
 ```bash
 pnpm install
 ```
 
 ### 2. Set Environment Variables
+
 Create `apps/web/.env.local`:
+
 ```env
 NEXT_PUBLIC_NETWORK=testnet
 NEXT_PUBLIC_INDEXER_URL=http://localhost:3001
@@ -60,6 +63,7 @@ NEXT_PUBLIC_STREAM_FACTORY_CONTRACT=CCAAA...
 ```
 
 ### 3. Run Development Server
+
 ```bash
 pnpm --filter payflow-web dev
 # App runs at http://localhost:3000

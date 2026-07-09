@@ -5,12 +5,18 @@ import type { PayFlowConfig, NetworkConfig } from '@payflow/sdk';
 
 export const NETWORK_CONFIG: Record<'testnet' | 'mainnet', NetworkConfig> = {
   testnet: {
-    rpcUrl: typeof window !== 'undefined' ? '/api/rpc' : (process.env.NEXT_PUBLIC_HORIZON_RPC_URL || 'https://soroban-rpc.testnet.stellar.gateway.fm'),
+    rpcUrl:
+      typeof window !== 'undefined'
+        ? '/api/rpc'
+        : process.env.NEXT_PUBLIC_HORIZON_RPC_URL ||
+          'https://soroban-rpc.testnet.stellar.gateway.fm',
     networkPassphrase: Networks.TESTNET,
     horizonUrl: 'https://horizon-testnet.stellar.org',
   },
   mainnet: {
-    rpcUrl: process.env.NEXT_PUBLIC_MAINNET_RPC_URL || 'https://mainnet.stellar.validationcloud.io/v1/soroban/rpc',
+    rpcUrl:
+      process.env.NEXT_PUBLIC_MAINNET_RPC_URL ||
+      'https://mainnet.stellar.validationcloud.io/v1/soroban/rpc',
     networkPassphrase: Networks.PUBLIC,
     horizonUrl: 'https://horizon.stellar.org',
   },
@@ -20,9 +26,9 @@ export const NETWORK_CONFIG: Record<'testnet' | 'mainnet', NetworkConfig> = {
 
 export function getContractIds() {
   return {
-    streamVault:    process.env.NEXT_PUBLIC_STREAM_VAULT_CONTRACT_ID    ?? '',
+    streamVault: process.env.NEXT_PUBLIC_STREAM_VAULT_CONTRACT_ID ?? '',
     milestoneEscrow: process.env.NEXT_PUBLIC_MILESTONE_ESCROW_CONTRACT_ID ?? '',
-    streamFactory:  process.env.NEXT_PUBLIC_STREAM_FACTORY_CONTRACT_ID  ?? '',
+    streamFactory: process.env.NEXT_PUBLIC_STREAM_FACTORY_CONTRACT_ID ?? '',
   };
 }
 
@@ -52,7 +58,9 @@ export function createPayFlowClient(wallet: PayFlowConfig['wallet']) {
 /**
  * Returns the appropriate SDK wallet adapter based on the active connection type
  */
-export async function getActiveWalletAdapter(walletType: 'freighter' | 'lobstr' | null): Promise<PayFlowConfig['wallet']> {
+export async function getActiveWalletAdapter(
+  walletType: 'freighter' | 'lobstr' | null
+): Promise<PayFlowConfig['wallet']> {
   if (walletType === 'lobstr') {
     const { LobstrWalletAdapter } = await import('@payflow/sdk');
     return new LobstrWalletAdapter() as any;
@@ -60,4 +68,3 @@ export async function getActiveWalletAdapter(walletType: 'freighter' | 'lobstr' 
   const { FreighterWalletAdapter } = await import('@payflow/sdk');
   return new FreighterWalletAdapter() as any;
 }
-

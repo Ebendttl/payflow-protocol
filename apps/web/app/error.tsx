@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { AlertTriangle } from "lucide-react";
-import Button from "../components/ui/Button";
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { AlertTriangle } from 'lucide-react';
+import Button from '../components/ui/Button';
 
 export default function Error({
   error,
@@ -13,7 +13,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[PayFlow Error]", error);
+    console.error('[PayFlow Error]', error);
   }, [error]);
 
   return (
@@ -26,13 +26,10 @@ export default function Error({
         </div>
         <h1 className="text-2xl font-bold text-white">Something went wrong</h1>
         <p className="text-sm text-dark-500">
-          {error.message || "An unexpected error occurred. Please try again."}
+          {error.message || 'An unexpected error occurred. Please try again.'}
         </p>
         <div className="flex gap-3">
-          <Button
-            onClick={reset}
-            className="flex-1 py-3"
-          >
+          <Button onClick={reset} className="flex-1 py-3">
             Try Again
           </Button>
           <Link

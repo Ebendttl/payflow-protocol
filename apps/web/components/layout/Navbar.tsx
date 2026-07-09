@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -46,15 +46,9 @@ export default function Navbar() {
           {/* Logo / Wordmark */}
           <Link href="/" id="tour-logo" className="flex items-center gap-2 group">
             <div className="relative h-9 w-9 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-md shadow-primary/10">
-              <Image
-                src="/icon.png"
-                alt="PayFlow Logo"
-                fill
-                priority
-                className="object-cover"
-              />
+              <Image src="/icon.png" alt="PayFlow Logo" fill priority className="object-cover" />
             </div>
-            <span 
+            <span
               className="font-bold text-lg tracking-tight text-[#F0EEE9] group-hover:text-primary-light transition-colors duration-200"
               style={{ fontSize: '18px', letterSpacing: '-0.02em', fontWeight: 700 }}
             >
@@ -65,7 +59,8 @@ export default function Navbar() {
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => {
-              const isActive = pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
+              const isActive =
+                pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
               return (
                 <Link
                   key={link.path}
@@ -132,12 +127,7 @@ export default function Navbar() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <div className="relative h-8 w-8 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center">
-                      <Image
-                        src="/icon.png"
-                        alt="PayFlow Logo"
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src="/icon.png" alt="PayFlow Logo" fill className="object-cover" />
                     </div>
                     <span className="font-bold text-md text-[#F0EEE9]">PayFlow</span>
                   </div>
@@ -153,7 +143,9 @@ export default function Navbar() {
                 {/* Vertical links */}
                 <nav className="flex flex-col gap-4">
                   {navLinks.map((link) => {
-                    const isActive = pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
+                    const isActive =
+                      pathname === link.path ||
+                      (link.path !== '/' && pathname.startsWith(link.path));
                     const Icon = link.icon;
                     return (
                       <Link

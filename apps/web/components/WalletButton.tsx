@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useWalletStore } from '../lib/store/walletStore';
@@ -7,7 +7,8 @@ import { toast } from 'react-hot-toast';
 import WalletOptionButton from './ui/WalletOptionButton';
 
 export default function WalletButton() {
-  const { publicKey, isConnected, isConnecting, walletType, connectionError, connect, disconnect } = useWalletStore();
+  const { publicKey, isConnected, isConnecting, walletType, connectionError, connect, disconnect } =
+    useWalletStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -20,8 +21,8 @@ export default function WalletButton() {
         setDropdownOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function WalletButton() {
 
   const handleDisconnect = () => {
     disconnect();
-    toast.success("Wallet disconnected");
+    toast.success('Wallet disconnected');
   };
 
   if (isConnected && publicKey) {
@@ -79,18 +80,32 @@ export default function WalletButton() {
       <button
         id="wallet-connect-btn"
         type="button"
-        onClick={() => { setLocalError(null); setDropdownOpen(!dropdownOpen); }}
+        onClick={() => {
+          setLocalError(null);
+          setDropdownOpen(!dropdownOpen);
+        }}
         disabled={isConnecting}
         className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-dark-800 hover:bg-dark-700 border border-white/10 rounded-xl transition duration-150 disabled:opacity-50"
       >
-        {isConnecting ? <Loader2 size={14} className="animate-spin text-primary" /> : <Wallet size={14} className="text-primary" />}
+        {isConnecting ? (
+          <Loader2 size={14} className="animate-spin text-primary" />
+        ) : (
+          <Wallet size={14} className="text-primary" />
+        )}
         {isConnecting ? 'Connecting…' : 'Connect Wallet'}
-        {!isConnecting && <ChevronDown size={12} className={`transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`} />}
+        {!isConnecting && (
+          <ChevronDown
+            size={12}
+            className={`transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`}
+          />
+        )}
       </button>
 
       {dropdownOpen && !isConnecting && (
         <div className="absolute right-0 mt-2 w-[220px] bg-dark-900 border border-white/10 rounded-xl p-2 z-[9999] shadow-lg shadow-black/40">
-          <p className="text-[10px] font-bold text-dark-500 uppercase tracking-wider px-3 py-1.5">Select Wallet</p>
+          <p className="text-[10px] font-bold text-dark-500 uppercase tracking-wider px-3 py-1.5">
+            Select Wallet
+          </p>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between px-1">
               <WalletOptionButton
@@ -98,7 +113,9 @@ export default function WalletButton() {
                 label="Freighter Wallet"
                 isConnecting={false}
               />
-              {walletType === 'freighter' && <Check size={14} className="text-primary shrink-0 ml-1.5" />}
+              {walletType === 'freighter' && (
+                <Check size={14} className="text-primary shrink-0 ml-1.5" />
+              )}
             </div>
             <div className="flex items-center justify-between px-1">
               <WalletOptionButton
@@ -106,7 +123,9 @@ export default function WalletButton() {
                 label="LOBSTR Wallet"
                 isConnecting={false}
               />
-              {walletType === 'lobstr' && <Check size={14} className="text-primary shrink-0 ml-1.5" />}
+              {walletType === 'lobstr' && (
+                <Check size={14} className="text-primary shrink-0 ml-1.5" />
+              )}
             </div>
           </div>
         </div>

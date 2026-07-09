@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { clsx } from 'clsx';
@@ -12,7 +12,7 @@ export default function Skeleton({ width, height, className, style, ...props }: 
   return (
     <div
       className={clsx(
-        "relative rounded-2xl bg-dark-800/80 border border-white/5 animate-pulse",
+        'relative rounded-2xl bg-dark-800/80 border border-white/5 animate-pulse',
         className
       )}
       style={{

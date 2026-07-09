@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -27,7 +27,7 @@ export default function CreateEscrowPage() {
   const [threshold, setThreshold] = useState('2');
   const [approvers, setApprovers] = useState<string[]>(['', '']);
   const [milestones, setMilestones] = useState<MilestoneForm[]>([
-    { title: 'Milestone 1', description: 'Initial deliverable', amount: '' }
+    { title: 'Milestone 1', description: 'Initial deliverable', amount: '' },
   ]);
 
   // Validation states
@@ -52,7 +52,10 @@ export default function CreateEscrowPage() {
 
   // Add/remove milestones
   const addMilestone = () => {
-    setMilestones([...milestones, { title: `Milestone ${milestones.length + 1}`, description: '', amount: '' }]);
+    setMilestones([
+      ...milestones,
+      { title: `Milestone ${milestones.length + 1}`, description: '', amount: '' },
+    ]);
   };
   const removeMilestone = (idx: number) => {
     if (milestones.length <= 1) return;
@@ -71,7 +74,7 @@ export default function CreateEscrowPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isConnected || !publicKey) {
-      toast.error("Please connect your wallet first.");
+      toast.error('Please connect your wallet first.');
       return;
     }
 
@@ -79,13 +82,13 @@ export default function CreateEscrowPage() {
     const nextErrors: Record<string, string> = {};
 
     if (!isValidStellarAddress(recipient)) {
-      nextErrors.recipient = "Must be a valid G... Stellar address (56 chars)";
+      nextErrors.recipient = 'Must be a valid G... Stellar address (56 chars)';
     }
     if (!isValidContractAddress(token)) {
-      nextErrors.token = "Must be a valid C... contract ID (56 chars)";
+      nextErrors.token = 'Must be a valid C... contract ID (56 chars)';
     }
     if (totalNum <= 0) {
-      nextErrors.totalAmount = "Amount must be greater than 0";
+      nextErrors.totalAmount = 'Amount must be greater than 0';
     }
 
     const thresh = parseInt(threshold) || 0;
@@ -95,13 +98,13 @@ export default function CreateEscrowPage() {
 
     approvers.forEach((appr, idx) => {
       if (!isValidStellarAddress(appr)) {
-        nextErrors[`approver_${idx}`] = "Invalid G... address";
+        nextErrors[`approver_${idx}`] = 'Invalid G... address';
       }
     });
 
     milestones.forEach((m, idx) => {
-      if (!m.title.trim()) nextErrors[`m_title_${idx}`] = "Title required";
-      if ((parseFloat(m.amount) || 0) <= 0) nextErrors[`m_amount_${idx}`] = "Amount must be > 0";
+      if (!m.title.trim()) nextErrors[`m_title_${idx}`] = 'Title required';
+      if ((parseFloat(m.amount) || 0) <= 0) nextErrors[`m_amount_${idx}`] = 'Amount must be > 0';
     });
 
     if (!isAllocationMatch) {
@@ -110,24 +113,24 @@ export default function CreateEscrowPage() {
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      toast.error("Please resolve form errors before submitting.");
+      toast.error('Please resolve form errors before submitting.');
       return;
     }
 
     setErrors({});
     setLoading(true);
-    const toastId = toast.loading("Deploying milestone escrow contract...");
+    const toastId = toast.loading('Deploying milestone escrow contract...');
 
     try {
       const wallet = await getActiveWalletAdapter(walletType);
       const client = createPayFlowClient(wallet);
 
       // Map to contract params format
-      const formattedMilestones = milestones.map(m => ({
+      const formattedMilestones = milestones.map((m) => ({
         title: m.title,
         amount: BigInt(Math.round((parseFloat(m.amount) || 0) * 10000000)), // Decimal scaling
         approvalCount: 0,
-        status: "Pending" as const
+        status: 'Pending' as const,
       }));
 
       // Call SDK stub
@@ -138,10 +141,10 @@ export default function CreateEscrowPage() {
         totalAmount: BigInt(Math.round(totalNum * 10000000)),
         threshold: thresh,
         approvers,
-        milestones: formattedMilestones as any
+        milestones: formattedMilestones as any,
       });
 
-      toast.success("Escrow deployed successfully!", { id: toastId });
+      toast.success('Escrow deployed successfully!', { id: toastId });
       router.push('/escrow');
     } catch (err: any) {
       const msg = err.message || String(err);
@@ -169,72 +172,94 @@ export default function CreateEscrowPage() {
             Create Milestone Escrow
             <Sparkles className="text-primary-light" size={20} />
           </h2>
-          <p className="text-xs text-dark-500">Deploy a multi-sig governed escrow vault locked on-chain</p>
+          <p className="text-xs text-dark-500">
+            Deploy a multi-sig governed escrow vault locked on-chain
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Escrow Configuration */}
           <div className="lg:col-span-7 space-y-6 bg-dark-800/40 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
-            <h3 className="text-md font-bold text-white border-b border-white/5 pb-2.5">Escrow Configuration</h3>
+            <h3 className="text-md font-bold text-white border-b border-white/5 pb-2.5">
+              Escrow Configuration
+            </h3>
 
             {/* Recipient */}
             <div>
-              <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Recipient Address (G...)</label>
+              <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                Recipient Address (G...)
+              </label>
               <input
                 type="text"
                 value={recipient}
-                onChange={e => setRecipient(e.target.value)}
+                onChange={(e) => setRecipient(e.target.value)}
                 placeholder="GD..."
                 className="w-full mt-1.5 bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-dark-600 focus:outline-none focus:border-primary transition"
               />
-              {errors.recipient && <p className="text-xs text-accent-rose mt-1.5">{errors.recipient}</p>}
+              {errors.recipient && (
+                <p className="text-xs text-accent-rose mt-1.5">{errors.recipient}</p>
+              )}
             </div>
 
             {/* Token & Total Amount */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Token Contract (C...)</label>
+                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                  Token Contract (C...)
+                </label>
                 <input
                   type="text"
                   value={token}
-                  onChange={e => setToken(e.target.value)}
+                  onChange={(e) => setToken(e.target.value)}
                   placeholder="CC..."
                   className="w-full mt-1.5 bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder-dark-600 focus:outline-none focus:border-primary transition"
                 />
                 {errors.token && <p className="text-xs text-accent-rose mt-1.5">{errors.token}</p>}
               </div>
               <div>
-                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Total Locked Amount</label>
+                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                  Total Locked Amount
+                </label>
                 <input
                   type="number"
                   step="any"
                   value={totalAmount}
-                  onChange={e => setTotalAmount(e.target.value)}
+                  onChange={(e) => setTotalAmount(e.target.value)}
                   placeholder="0.0"
                   className="w-full mt-1.5 bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
                 />
-                {errors.totalAmount && <p className="text-xs text-accent-rose mt-1.5">{errors.totalAmount}</p>}
+                {errors.totalAmount && (
+                  <p className="text-xs text-accent-rose mt-1.5">{errors.totalAmount}</p>
+                )}
               </div>
             </div>
 
             {/* Signer Threshold */}
             <div>
-              <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Approver Threshold</label>
+              <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                Approver Threshold
+              </label>
               <input
                 type="number"
                 value={threshold}
-                onChange={e => setThreshold(e.target.value)}
+                onChange={(e) => setThreshold(e.target.value)}
                 placeholder="2"
                 className="w-full mt-1.5 bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
               />
-              <p className="text-xxs text-dark-500 mt-1">Number of approvals needed to disburse a milestone</p>
-              {errors.threshold && <p className="text-xs text-accent-rose mt-1.5">{errors.threshold}</p>}
+              <p className="text-xxs text-dark-500 mt-1">
+                Number of approvals needed to disburse a milestone
+              </p>
+              {errors.threshold && (
+                <p className="text-xs text-accent-rose mt-1.5">{errors.threshold}</p>
+              )}
             </div>
 
             {/* Approvers Stack */}
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">Governing Approvers</label>
+                <label className="text-xs text-dark-400 font-bold uppercase tracking-wider">
+                  Governing Approvers
+                </label>
                 <button
                   type="button"
                   onClick={addApprover}
@@ -249,7 +274,7 @@ export default function CreateEscrowPage() {
                     <input
                       type="text"
                       value={appr}
-                      onChange={e => updateApprover(idx, e.target.value)}
+                      onChange={(e) => updateApprover(idx, e.target.value)}
                       placeholder={`Approver #${idx + 1} Address (G...)`}
                       className="flex-grow bg-dark-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white font-mono placeholder-dark-600 focus:outline-none focus:border-primary transition"
                     />
@@ -284,9 +309,14 @@ export default function CreateEscrowPage() {
               {/* Milestones Stack */}
               <div className="space-y-4 max-h-[360px] overflow-y-auto pr-1">
                 {milestones.map((m, idx) => (
-                  <div key={idx} className="bg-dark-900/60 p-4 rounded-xl border border-white/5 space-y-3 relative">
+                  <div
+                    key={idx}
+                    className="bg-dark-900/60 p-4 rounded-xl border border-white/5 space-y-3 relative"
+                  >
                     <div className="flex justify-between items-center">
-                      <span className="text-xxs font-bold text-dark-500 uppercase">Milestone #{idx + 1}</span>
+                      <span className="text-xxs font-bold text-dark-500 uppercase">
+                        Milestone #{idx + 1}
+                      </span>
                       <button
                         type="button"
                         onClick={() => removeMilestone(idx)}
@@ -301,14 +331,14 @@ export default function CreateEscrowPage() {
                       <input
                         type="text"
                         value={m.title}
-                        onChange={e => updateMilestone(idx, 'title', e.target.value)}
+                        onChange={(e) => updateMilestone(idx, 'title', e.target.value)}
                         placeholder="Milestone Title"
                         className="bg-dark-900 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
                       />
                       <input
                         type="text"
                         value={m.description}
-                        onChange={e => updateMilestone(idx, 'description', e.target.value)}
+                        onChange={(e) => updateMilestone(idx, 'description', e.target.value)}
                         placeholder="Description (optional)"
                         className="bg-dark-900 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
                       />
@@ -317,11 +347,13 @@ export default function CreateEscrowPage() {
                           type="number"
                           step="any"
                           value={m.amount}
-                          onChange={e => updateMilestone(idx, 'amount', e.target.value)}
+                          onChange={(e) => updateMilestone(idx, 'amount', e.target.value)}
                           placeholder="Amount"
                           className="w-full bg-dark-900 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-dark-600 focus:outline-none focus:border-primary transition"
                         />
-                        <span className="text-xxs text-dark-600 font-bold uppercase shrink-0">USDC</span>
+                        <span className="text-xxs text-dark-600 font-bold uppercase shrink-0">
+                          USDC
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -329,7 +361,9 @@ export default function CreateEscrowPage() {
               </div>
 
               {/* Dynamic matching widget */}
-              <div className={`p-4 rounded-xl border flex items-center justify-between transition duration-200 ${isAllocationMatch ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/5 border-rose-500/20 text-rose-400'}`}>
+              <div
+                className={`p-4 rounded-xl border flex items-center justify-between transition duration-200 ${isAllocationMatch ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/5 border-rose-500/20 text-rose-400'}`}
+              >
                 <div className="flex items-center gap-2">
                   {isAllocationMatch ? (
                     <div className="h-5 w-5 bg-emerald-500/20 rounded-full flex items-center justify-center shrink-0">
@@ -341,13 +375,21 @@ export default function CreateEscrowPage() {
                     </div>
                   )}
                   <div className="space-y-0.5">
-                    <span className="text-xxs font-bold uppercase tracking-wider block">Allocation Sum</span>
-                    <span className="text-xs font-mono">{milestonesSum.toFixed(2)} / {totalNum.toFixed(2)} USDC</span>
+                    <span className="text-xxs font-bold uppercase tracking-wider block">
+                      Allocation Sum
+                    </span>
+                    <span className="text-xs font-mono">
+                      {milestonesSum.toFixed(2)} / {totalNum.toFixed(2)} USDC
+                    </span>
                   </div>
                 </div>
-                <span className="text-xxs font-bold uppercase">{isAllocationMatch ? 'Match' : 'Mismatch'}</span>
+                <span className="text-xxs font-bold uppercase">
+                  {isAllocationMatch ? 'Match' : 'Mismatch'}
+                </span>
               </div>
-              {errors.allocation && <p className="text-xs text-accent-rose mt-1">{errors.allocation}</p>}
+              {errors.allocation && (
+                <p className="text-xs text-accent-rose mt-1">{errors.allocation}</p>
+              )}
             </div>
 
             {/* Submission */}
@@ -357,7 +399,7 @@ export default function CreateEscrowPage() {
               fullWidth
               className="font-bold py-4 text-sm hover:scale-[1.01]"
             >
-              {loading ? "Deploying Escrow..." : "Sign & Deploy Escrow"}
+              {loading ? 'Deploying Escrow...' : 'Sign & Deploy Escrow'}
             </Button>
           </div>
         </form>

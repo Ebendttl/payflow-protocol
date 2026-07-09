@@ -1,11 +1,19 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import StreamCard from '../../components/StreamCard';
 import { useWalletStore } from '../../lib/store/walletStore';
 import { useStreams } from '../../lib/hooks/useStream';
-import { Plus, LayoutGrid, SlidersHorizontal, Wallet, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import {
+  Plus,
+  LayoutGrid,
+  SlidersHorizontal,
+  Wallet,
+  Loader2,
+  RefreshCw,
+  AlertCircle,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../../components/ui/Skeleton';
 
@@ -17,8 +25,8 @@ const gridVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.08,
-    }
-  }
+    },
+  },
 };
 
 export default function StreamsDashboard() {
@@ -26,13 +34,17 @@ export default function StreamsDashboard() {
   const [filter, setFilter] = useState<'All' | 'Active' | 'Paused' | 'Cancelled'>('All');
 
   const handleConnect = async (type: 'freighter' | 'lobstr') => {
-    try { await connect(type); } catch (_) { /* error is in connectionError state */ }
+    try {
+      await connect(type);
+    } catch (_) {
+      /* error is in connectionError state */
+    }
   };
 
   // Fetch live streams from the blockchain via StreamClient
   const { streams, isLoading, error, refetch } = useStreams(publicKey);
 
-  const filteredStreams = streams.filter(s => filter === 'All' || s.status === filter);
+  const filteredStreams = streams.filter((s) => filter === 'All' || s.status === filter);
 
   return (
     <div className="min-h-[calc(100vh-160px)] bg-dark-900 flex flex-col justify-between relative overflow-hidden">
@@ -55,7 +67,9 @@ export default function StreamsDashboard() {
                 </button>
               )}
             </h2>
-            <p className="text-xs text-dark-500">Track and manage your continuous real-time payouts</p>
+            <p className="text-xs text-dark-500">
+              Track and manage your continuous real-time payouts
+            </p>
           </div>
           {publicKey && (
             <Link
@@ -77,7 +91,8 @@ export default function StreamsDashboard() {
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-white">Connect Your Wallet</h3>
               <p className="text-sm text-dark-400 leading-relaxed">
-                Connect your Stellar wallet to view your outgoing streams, manage paused streams, or establish new real-time payment channels.
+                Connect your Stellar wallet to view your outgoing streams, manage paused streams, or
+                establish new real-time payment channels.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -153,8 +168,8 @@ export default function StreamsDashboard() {
                     onClick={() => setFilter(status)}
                     className={`px-4 py-1.5 rounded-xl text-xs font-bold transition ${
                       filter === status
-                        ? "bg-dark-700 text-white border border-white/10"
-                        : "text-dark-600 hover:text-white"
+                        ? 'bg-dark-700 text-white border border-white/10'
+                        : 'text-dark-600 hover:text-white'
                     }`}
                   >
                     {status}
@@ -169,7 +184,7 @@ export default function StreamsDashboard() {
 
             {/* Streams Grid with Stagger Motion */}
             {filteredStreams.length > 0 ? (
-              <motion.div 
+              <motion.div
                 variants={gridVariants}
                 initial="hidden"
                 animate="show"
@@ -185,7 +200,9 @@ export default function StreamsDashboard() {
               <div className="glass p-12 rounded-2xl text-center border border-white/5">
                 <LayoutGrid className="mx-auto text-dark-600 mb-4" size={40} />
                 <h3 className="text-lg font-bold mb-1 text-white">No Streams Found</h3>
-                <p className="text-xs text-dark-500">Get started by creating your first token stream.</p>
+                <p className="text-xs text-dark-500">
+                  Get started by creating your first token stream.
+                </p>
               </div>
             )}
           </div>

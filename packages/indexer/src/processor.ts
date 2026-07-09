@@ -9,7 +9,7 @@ export class EventProcessor {
   async processEvents(events: any[]): Promise<void> {
     for (const event of events) {
       // TODO(issue): #H5 — Parse event topic, extract fields, and dispatch to specific handlers
-      console.log("Processing event:", event);
+      console.log('Processing event:', event);
     }
   }
 
@@ -18,7 +18,7 @@ export class EventProcessor {
    */
   async handleStreamCreated(event: any): Promise<void> {
     // TODO(issue): #H5 — Parse StreamCreated XDR parameters, map them to streams DB schema, and insert/upsert.
-    throw new Error("not implemented — see issue #H5");
+    throw new Error('not implemented — see issue #H5');
   }
 
   /**
@@ -26,7 +26,7 @@ export class EventProcessor {
    */
   async handleClaimed(event: any): Promise<void> {
     // TODO(issue): #H5 — Parse Claimed event, calculate updated claimed balance, and update DB.
-    throw new Error("not implemented — see issue #H5");
+    throw new Error('not implemented — see issue #H5');
   }
 
   /**
@@ -34,7 +34,7 @@ export class EventProcessor {
    */
   async handleEscrowCreated(event: any): Promise<void> {
     // TODO(issue): #H5 — Parse EscrowCreated event details, including the multi-sig criteria and milestone arrays, and write to escrows and milestones tables.
-    throw new Error("not implemented — see issue #H5");
+    throw new Error('not implemented — see issue #H5');
   }
 
   /**
@@ -42,6 +42,6 @@ export class EventProcessor {
    */
   async handleMilestoneApproved(event: any): Promise<void> {
     // TODO(issue): #H5 — Parse approvals, verify against active milestones in database, and push the approver address.
-    throw new Error("not implemented — see issue #H5");
+    throw new Error('not implemented — see issue #H5');
   }
 }

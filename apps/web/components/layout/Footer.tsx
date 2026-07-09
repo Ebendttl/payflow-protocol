@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -12,19 +12,18 @@ export default function Footer() {
         <div className="text-center md:text-left space-y-2">
           <div className="flex items-center justify-center md:justify-start gap-2">
             <div className="relative h-6 w-6 overflow-hidden rounded bg-dark-800 border border-white/5 flex items-center justify-center">
-              <Image
-                src="/icon.png"
-                alt="PayFlow Logo"
-                fill
-                className="object-cover"
-              />
+              <Image src="/icon.png" alt="PayFlow Logo" fill className="object-cover" />
             </div>
-            <span className="font-bold text-[#F0EEE9] tracking-tight" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
+            <span
+              className="font-bold text-[#F0EEE9] tracking-tight"
+              style={{ fontSize: '15px', letterSpacing: '-0.02em' }}
+            >
               PayFlow Protocol
             </span>
           </div>
           <p className="text-xs text-dark-500 max-w-sm leading-relaxed">
-            Continuous token streaming and secure milestone-based escrow contracts built on Stellar Soroban.
+            Continuous token streaming and secure milestone-based escrow contracts built on Stellar
+            Soroban.
           </p>
         </div>
 
@@ -46,10 +45,7 @@ export default function Footer() {
           >
             Documentation
           </a>
-          <Link
-            href="/admin"
-            className="hover:text-primary-light transition-colors"
-          >
+          <Link href="/admin" className="hover:text-primary-light transition-colors">
             Admin Controls
           </Link>
         </div>

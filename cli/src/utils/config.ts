@@ -7,22 +7,22 @@ export interface CLIConfig {
   /** WARNING: never log or print this value */
   secretKey: string;
   contractIds: {
-    streamVault:    string;
+    streamVault: string;
     milestoneEscrow: string;
-    streamFactory:  string;
+    streamFactory: string;
   };
 }
 
-const CONFIG_DIR  = path.join(os.homedir(), '.payflow');
+const CONFIG_DIR = path.join(os.homedir(), '.payflow');
 const CONFIG_PATH = path.join(CONFIG_DIR, 'config.json');
 
 const DEFAULTS: CLIConfig = {
   network: 'testnet',
   secretKey: '',
   contractIds: {
-    streamVault:     '',
+    streamVault: '',
     milestoneEscrow: '',
-    streamFactory:   '',
+    streamFactory: '',
   },
 };
 

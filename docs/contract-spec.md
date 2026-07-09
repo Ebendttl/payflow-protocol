@@ -5,6 +5,7 @@ This document outlines the detailed interfaces, structs, and events for the Soro
 ## 1. StreamVault Contract
 
 ### Data Structs
+
 ```rust
 #[contracttype]
 pub enum StreamStatus {
@@ -29,6 +30,7 @@ pub struct Stream {
 ```
 
 ### Events
+
 - `StreamCreated(stream_id, sender, recipient, amount)`
 - `Claimed(stream_id, recipient, amount)`
 - `Cancelled(stream_id, refunded_amount)`
@@ -40,6 +42,7 @@ pub struct Stream {
 ## 2. MilestoneEscrow Contract
 
 ### Data Structs
+
 ```rust
 #[contracttype]
 pub struct Milestone {
@@ -64,6 +67,7 @@ pub struct Escrow {
 ```
 
 ### Events
+
 - `EscrowCreated(escrow_id, sender, recipient, amount)`
 - `MilestoneApproved(escrow_id, milestone_index, approver)`
 - `MilestoneReleased(escrow_id, milestone_index, amount)`

@@ -29,11 +29,11 @@ function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise
 }
 
 export const useWalletStore = create<WalletState>((set) => ({
-  publicKey:       null,
-  isConnected:     false,
-  network:         'testnet',
-  isConnecting:    false,
-  walletType:      null,
+  publicKey: null,
+  isConnected: false,
+  network: 'testnet',
+  isConnecting: false,
+  walletType: null,
   connectionError: null,
 
   connect: async (type = 'freighter') => {
@@ -46,10 +46,15 @@ export const useWalletStore = create<WalletState>((set) => ({
         // CRITICAL: Freighter v2 isConnected() returns the window.freighter
         // object (truthy!) when installed, or { isConnected: false } when not.
         // We must coerce properly.
-        const connResult = await withTimeout(freighterApi.isConnected(), 3000, 'Freighter isConnected');
-        const isInstalled = typeof connResult === 'boolean'
-          ? connResult
-          : !!(connResult && (connResult as any).isConnected !== false);
+        const connResult = await withTimeout(
+          freighterApi.isConnected(),
+          3000,
+          'Freighter isConnected'
+        );
+        const isInstalled =
+          typeof connResult === 'boolean'
+            ? connResult
+            : !!(connResult && (connResult as any).isConnected !== false);
 
         if (!isInstalled) {
           throw new Error(
@@ -59,27 +64,38 @@ export const useWalletStore = create<WalletState>((set) => ({
 
         // requestAccess() triggers the Freighter popup for authorization
         // and returns the public key string on success.
-        const accessResult = await withTimeout(freighterApi.requestAccess(), 30000, 'Freighter requestAccess');
+        const accessResult = await withTimeout(
+          freighterApi.requestAccess(),
+          30000,
+          'Freighter requestAccess'
+        );
 
         // v2 may return { address: string } or a plain string depending on version
-        const publicKey = typeof accessResult === 'string'
-          ? accessResult
-          : (accessResult as any)?.address || (accessResult as any)?.publicKey || '';
+        const publicKey =
+          typeof accessResult === 'string'
+            ? accessResult
+            : (accessResult as any)?.address || (accessResult as any)?.publicKey || '';
 
         if (!publicKey) {
           throw new Error('Freighter authorization was rejected or the wallet is locked.');
         }
 
-        set({ publicKey, isConnected: true, isConnecting: false, walletType: 'freighter', connectionError: null });
-
+        set({
+          publicKey,
+          isConnected: true,
+          isConnecting: false,
+          walletType: 'freighter',
+          connectionError: null,
+        });
       } else {
         // ── LOBSTR flow ─────────────────────────────────────────────
         const lobstrApi = await import('@lobstrco/signer-extension-api');
 
         const connResult = await withTimeout(lobstrApi.isConnected(), 3000, 'LOBSTR isConnected');
-        const isInstalled = typeof connResult === 'boolean'
-          ? connResult
-          : !!(connResult && (connResult as any).isConnected !== false);
+        const isInstalled =
+          typeof connResult === 'boolean'
+            ? connResult
+            : !!(connResult && (connResult as any).isConnected !== false);
 
         if (!isInstalled) {
           throw new Error(
@@ -94,7 +110,13 @@ export const useWalletStore = create<WalletState>((set) => ({
           throw new Error('LOBSTR authorization was rejected or the wallet is locked.');
         }
 
-        set({ publicKey, isConnected: true, isConnecting: false, walletType: 'lobstr', connectionError: null });
+        set({
+          publicKey,
+          isConnected: true,
+          isConnecting: false,
+          walletType: 'lobstr',
+          connectionError: null,
+        });
       }
     } catch (err: any) {
       const msg = err?.message || String(err);
@@ -104,7 +126,8 @@ export const useWalletStore = create<WalletState>((set) => ({
     }
   },
 
-  disconnect: () => set({ publicKey: null, isConnected: false, walletType: null, connectionError: null }),
+  disconnect: () =>
+    set({ publicKey: null, isConnected: false, walletType: null, connectionError: null }),
 
   setNetwork: (network) => set({ network }),
 }));

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // TODO(issue): #M3 — Implement full escrow management panel
 import type { Escrow } from '@payflow/sdk';
@@ -19,12 +19,20 @@ export default function EscrowPanel({ escrow }: EscrowPanelProps) {
       {/* Escrow summary */}
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-xs text-dark-600 font-semibold uppercase mb-0.5">Escrow #{String(escrow.id)}</p>
-          <p className="text-sm font-mono text-teal-300">{escrow.recipient.slice(0, 8)}…{escrow.recipient.slice(-4)}</p>
+          <p className="text-xs text-dark-600 font-semibold uppercase mb-0.5">
+            Escrow #{String(escrow.id)}
+          </p>
+          <p className="text-sm font-mono text-teal-300">
+            {escrow.recipient.slice(0, 8)}…{escrow.recipient.slice(-4)}
+          </p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-extrabold text-white">{(Number(escrow.totalAmount) / 1e7).toFixed(2)}</p>
-          <p className="text-xs text-dark-600">Milestones: {releasedCount}/{escrow.milestones.length} released</p>
+          <p className="text-2xl font-extrabold text-white">
+            {(Number(escrow.totalAmount) / 1e7).toFixed(2)}
+          </p>
+          <p className="text-xs text-dark-600">
+            Milestones: {releasedCount}/{escrow.milestones.length} released
+          </p>
         </div>
       </div>
 

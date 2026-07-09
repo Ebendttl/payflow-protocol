@@ -9,7 +9,9 @@ export default function AnalyticsLoading() {
           <Skeleton className="h-4 w-80" />
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          {[1,2,3,4].map(i => <Skeleton key={i} className="h-28 w-full rounded-2xl" />)}
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-28 w-full rounded-2xl" />
+          ))}
         </div>
         <div className="grid lg:grid-cols-3 gap-6">
           <Skeleton className="lg:col-span-2 h-72 rounded-2xl" />

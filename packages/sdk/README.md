@@ -18,13 +18,13 @@ const client = new PayFlowClient({
   contractIds: {
     streamVault: 'CD...',
     milestoneEscrow: 'CB...',
-    streamFactory: 'CC...'
-  }
+    streamFactory: 'CC...',
+  },
 });
 
 // Stream operations
 const claimable = await client.streams.claimableAmount(1n);
-console.log("Claimable accrued amount:", claimable);
+console.log('Claimable accrued amount:', claimable);
 ```
 
 ## Running Tests

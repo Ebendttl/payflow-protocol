@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { createPayFlowClient } from '../stellar';
@@ -65,7 +65,7 @@ export function useStreams(sender: string | null): UseStreamsResult {
       const wallet = new FreighterWalletAdapter();
       const client = createPayFlowClient(wallet);
       const ids = await client.streams.getStreamsBySender(sender);
-      
+
       const details = await Promise.all(
         ids.map(async (id) => {
           return client.streams.getStream(id);

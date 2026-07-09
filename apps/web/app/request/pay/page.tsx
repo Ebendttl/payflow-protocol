@@ -1,12 +1,22 @@
-"use client";
+'use client';
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-  Link2, Coins, Clock, User, ArrowRight, Shield,
-  Wallet, Activity, CheckCircle2, Copy, Check, Zap,
+  Link2,
+  Coins,
+  Clock,
+  User,
+  ArrowRight,
+  Shield,
+  Wallet,
+  Activity,
+  CheckCircle2,
+  Copy,
+  Check,
+  Zap,
 } from 'lucide-react';
 import { useWalletStore } from '../../../lib/store/walletStore';
 import WalletOptionButton from '../../../components/ui/WalletOptionButton';
@@ -18,13 +28,16 @@ export default function PayRequestPage() {
   const { publicKey, isConnected, connect, isConnecting, walletType } = useWalletStore();
   const [copied, setCopied] = useState(false);
 
-  const params = useMemo(() => ({
-    to:     searchParams.get('to') || '',
-    amount: Number(searchParams.get('amount') || '0'),
-    token:  searchParams.get('token') || 'USDC',
-    dur:    Number(searchParams.get('dur') || '30'),
-    memo:   searchParams.get('memo') || '',
-  }), [searchParams]);
+  const params = useMemo(
+    () => ({
+      to: searchParams.get('to') || '',
+      amount: Number(searchParams.get('amount') || '0'),
+      token: searchParams.get('token') || 'USDC',
+      dur: Number(searchParams.get('dur') || '30'),
+      memo: searchParams.get('memo') || '',
+    }),
+    [searchParams]
+  );
 
   const ratePerDay = params.dur > 0 ? (params.amount / params.dur).toFixed(2) : '0.00';
   const ratePerSec = params.dur > 0 ? (params.amount / (params.dur * 86400)).toFixed(6) : '0';
@@ -73,8 +86,10 @@ export default function PayRequestPage() {
   return (
     <div className="min-h-[calc(100vh-160px)] bg-dark-900 relative overflow-hidden flex items-center justify-center px-6 py-12">
       {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full blur-[150px] pointer-events-none"
-        style={{ background: `radial-gradient(circle, ${tokenColor}12, transparent 70%)` }} />
+      <div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full blur-[150px] pointer-events-none"
+        style={{ background: `radial-gradient(circle, ${tokenColor}12, transparent 70%)` }}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -85,8 +100,10 @@ export default function PayRequestPage() {
         {/* Card */}
         <div className="rounded-3xl border border-white/10 bg-dark-800/70 backdrop-blur-md overflow-hidden shadow-2xl shadow-black/30">
           {/* Gradient header band */}
-          <div className="h-28 relative overflow-hidden"
-            style={{ background: `linear-gradient(135deg, ${tokenColor}35, #8B5CF625, #0D948825)` }}>
+          <div
+            className="h-28 relative overflow-hidden"
+            style={{ background: `linear-gradient(135deg, ${tokenColor}35, #8B5CF625, #0D948825)` }}
+          >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.1),transparent_60%)]" />
             {/* Floating particles */}
             {[...Array(6)].map((_, i) => (
@@ -106,7 +123,9 @@ export default function PayRequestPage() {
                   <Link2 size={18} className="text-white" />
                 </div>
                 <div>
-                  <p className="text-[9px] text-white/50 font-bold uppercase tracking-[0.2em]">PayFlow Request</p>
+                  <p className="text-[9px] text-white/50 font-bold uppercase tracking-[0.2em]">
+                    PayFlow Request
+                  </p>
                   <p className="text-xs text-white/90 font-bold">Payment Stream</p>
                 </div>
               </div>
@@ -146,7 +165,9 @@ export default function PayRequestPage() {
               <span className="text-[9px] text-dark-500 font-bold uppercase tracking-widest flex items-center gap-1">
                 <User size={10} /> Recipient
               </span>
-              <p className="font-mono text-xs text-teal-300 break-all leading-relaxed">{params.to}</p>
+              <p className="font-mono text-xs text-teal-300 break-all leading-relaxed">
+                {params.to}
+              </p>
             </div>
 
             {/* Stats grid */}
@@ -193,7 +214,9 @@ export default function PayRequestPage() {
                 </Link>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-[10px] text-dark-500 font-bold uppercase tracking-widest text-center">Connect wallet to fund</p>
+                  <p className="text-[10px] text-dark-500 font-bold uppercase tracking-widest text-center">
+                    Connect wallet to fund
+                  </p>
                   <div className="flex gap-2">
                     <WalletOptionButton
                       label="Freighter"
@@ -211,7 +234,10 @@ export default function PayRequestPage() {
 
               {/* Secondary link */}
               <div className="flex items-center justify-center gap-4 text-[10px]">
-                <Link href="/request" className="text-dark-500 hover:text-white font-bold transition">
+                <Link
+                  href="/request"
+                  className="text-dark-500 hover:text-white font-bold transition"
+                >
                   Create your own link
                 </Link>
                 <span className="text-dark-700">·</span>

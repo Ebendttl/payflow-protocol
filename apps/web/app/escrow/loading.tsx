@@ -13,7 +13,10 @@ export default function EscrowLoading() {
         {/* Escrow card skeletons */}
         <div className="grid md:grid-cols-2 gap-8">
           {[1, 2].map((i) => (
-            <div key={i} className="glass h-64 rounded-2xl border border-white/5 p-6 space-y-4 animate-pulse">
+            <div
+              key={i}
+              className="glass h-64 rounded-2xl border border-white/5 p-6 space-y-4 animate-pulse"
+            >
               <div className="flex justify-between">
                 <div className="space-y-2">
                   <div className="h-3 w-24 bg-dark-700/60 rounded-md" />
