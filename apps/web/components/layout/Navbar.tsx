@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, Activity, ShieldCheck, BarChart3 } from 'lucide-react';
+import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2 } from 'lucide-react';
 import WalletButton from '../WalletButton';
 
 export default function Navbar() {
@@ -30,6 +30,7 @@ export default function Navbar() {
     { label: 'Streams', path: '/streams', icon: Activity },
     { label: 'Escrow', path: '/escrow', icon: ShieldCheck },
     { label: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { label: 'Request', path: '/request', icon: Link2 },
   ];
 
   return (
