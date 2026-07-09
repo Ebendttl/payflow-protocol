@@ -3,11 +3,12 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWalletStore } from '../lib/store/walletStore';
 import { createPayFlowClient, getActiveWalletAdapter } from '../lib/stellar';
-import { Loader2, CheckCircle2, AlertCircle, ExternalLink, ArrowRight } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, ExternalLink, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import Button from './ui/Button';
 
@@ -39,12 +40,53 @@ export default function CreateStreamForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successTx, setSuccessTx] = useState<string | null>(null);
+  const [prefilled, setPrefilled] = useState(false);
 
   const { publicKey, isConnected, connect, walletType } = useWalletStore();
 
   const form1 = useForm<Step1>({ resolver: zodResolver(Step1Schema) });
   const form2 = useForm<Step2>({ resolver: zodResolver(Step2Schema), defaultValues: { startNow: true } });
   const form3 = useForm<Step3>({ resolver: zodResolver(Step3Schema) });
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const prefill = searchParams.get('prefill');
+    if (prefill) {
+      setPrefilled(true);
+      const recipient = searchParams.get('recipient');
+      const token = searchParams.get('token');
+      const amount = searchParams.get('amount');
+      const dur = searchParams.get('dur');
+
+      if (recipient) {
+        form1.setValue('recipient', recipient);
+      }
+      
+      if (token) {
+        const tokenMap: Record<string, string> = {
+          'XLM': 'CDLZFC3SYJ3RYXP7OUGDN274YDXJW6K5UG326BBONYFAA2ZJGIP57ARE',
+          'USDC': 'CCW6KG642HZD75SU7E5YEOK3R72JAEG7H2Q4FB3NPF3JHU4W4K357ARE'
+        };
+        const tokenValue = tokenMap[token.toUpperCase()] || token;
+        form1.setValue('asset', tokenValue);
+      }
+
+      if (amount) {
+        const amt = parseFloat(amount);
+        if (!isNaN(amt)) {
+          form1.setValue('amount', amt);
+        }
+      }
+
+      if (dur) {
+        const d = parseInt(dur);
+        if (!isNaN(d)) {
+          form2.setValue('durationDays', d);
+        }
+      }
+    }
+  }, [searchParams, form1, form2]);
 
   const onStep1 = form1.handleSubmit(() => setStep(2));
   const onStep2 = form2.handleSubmit(() => setStep(3));
@@ -173,6 +215,13 @@ export default function CreateStreamForm() {
           </div>
         ))}
       </div>
+
+      {prefilled && (
+        <div className="mb-6 bg-accent/10 border border-accent/20 rounded-xl p-4 flex gap-3 text-accent-purple text-sm animate-in slide-in-from-top-2 duration-250">
+          <Sparkles size={18} className="shrink-0 mt-0.5" />
+          <p>Prefilled parameters from your shareable PayFlow Link!</p>
+        </div>
+      )}
 
       {error && (
         <div className="mb-6 bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 flex gap-3 text-rose-400 text-sm animate-in slide-in-from-top-2 duration-250">
