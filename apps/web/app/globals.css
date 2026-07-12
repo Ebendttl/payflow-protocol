@@ -5,33 +5,31 @@
 :root {
   --background: #090d16;
   --foreground: #f3f4f6;
-  --text-white: 255 255 255;
-  --bg-dark-900: 9 13 22;
-  --bg-dark-800: 17 24 39;
-  --bg-dark-700: 31 41 55;
-  --bg-dark-600: 55 65 81;
-  --bg-dark-500: 75 85 99;
-  --bg-dark-400: 156 163 175;
-  --bg-dark-300: 209 213 219;
+  --bg-dark-900: #090d16;
+  --bg-dark-800: #111827;
+  --bg-dark-700: #1f2937;
+  --bg-dark-600: #374151;
+  --bg-dark-500: #4b5563;
+  --bg-dark-400: #9ca3af;
+  --bg-dark-300: #d1d5db;
   --glass-bg: rgba(17, 24, 39, 0.7);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-hover-bg: rgba(31, 41, 55, 0.8);
 }
 
-html.light {
+.light {
   --background: #f8fafc;
   --foreground: #0f172a;
-  --text-white: 15 23 42;
-  --bg-dark-900: 241 245 249;
-  --bg-dark-800: 255 255 255;
-  --bg-dark-700: 226 232 240;
-  --bg-dark-600: 203 213 225;
-  --bg-dark-500: 148 163 184;
-  --bg-dark-400: 100 116 139;
-  --bg-dark-300: 71 85 105;
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --glass-hover-bg: rgba(248, 250, 252, 0.8);
+  --bg-dark-900: #f8fafc;
+  --bg-dark-800: #ffffff;
+  --bg-dark-700: #f1f5f9;
+  --bg-dark-600: #e2e8f0;
+  --bg-dark-500: #94a3b8;
+  --bg-dark-400: #64748b;
+  --bg-dark-300: #475569;
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-hover-bg: rgba(241, 245, 249, 0.8);
 }
 
 body {
@@ -54,6 +52,80 @@ body {
   background: var(--glass-hover-bg);
   border-color: var(--glass-border);
 }
+
+/* ─── Light Mode Overrides ────────────────────────────────────────────────── */
+
+.light body {
+  background-color: #f8fafc !important;
+}
+
+/* Headings & Text Specificity */
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  color: #0f172a !important;
+}
+
+.light .text-white:not(button):not(a):not([class*="bg-primary"]):not([class*="bg-accent"]):not([class*="bg-emerald"]):not([class*="bg-purple"]):not([class*="bg-rose"]):not([class*="bg-teal"]):not([class*="bg-[#"]):not([class*="shadow-"]) {
+  color: #0f172a !important;
+}
+
+.light .text-dark-300 { color: #334155 !important; }
+.light .text-dark-400 { color: #475569 !important; }
+.light .text-dark-500 { color: #64748b !important; }
+.light .text-dark-600 { color: #94a3b8 !important; }
+
+/* Custom Brand Text in Navbar */
+.light .text-\[\#F0EEE9\] {
+  color: #0f172a !important;
+}
+
+/* Specific component tags (like form legends) */
+.light label {
+  color: #334155 !important;
+}
+
+/* Background Class Overrides */
+.light .bg-dark-900 {
+  background-color: #f8fafc !important;
+}
+
+.light .bg-dark-800 {
+  background-color: #ffffff !important;
+}
+
+.light .bg-dark-700 {
+  background-color: #f1f5f9 !important;
+}
+
+.light .bg-dark-600 {
+  background-color: #e2e8f0 !important;
+}
+
+/* Borders & Hover States */
+.light .border-white\/5 {
+  border-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+.light .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+.light .border-white\/20 {
+  border-color: rgba(15, 23, 42, 0.15) !important;
+}
+
+.light .hover\:bg-white\/5:hover {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+
+.light .hover\:bg-dark-700:hover {
+  background-color: #f1f5f9 !important;
+}
+
 
 
 
