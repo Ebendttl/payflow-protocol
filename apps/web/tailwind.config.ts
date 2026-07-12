@@ -12,20 +12,19 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        white: 'rgb(var(--text-white) / <alpha-value>)',
         primary: {
           DEFAULT: '#0D9488', // Teal
           dark: '#0F766E',
           light: '#2DD4BF',
         },
         dark: {
-          900: 'rgb(var(--bg-dark-900) / <alpha-value>)',
-          800: 'rgb(var(--bg-dark-800) / <alpha-value>)',
-          700: 'rgb(var(--bg-dark-700) / <alpha-value>)',
-          600: 'rgb(var(--bg-dark-600) / <alpha-value>)',
-          500: 'rgb(var(--bg-dark-500) / <alpha-value>)',
-          400: 'rgb(var(--bg-dark-400) / <alpha-value>)',
-          300: 'rgb(var(--bg-dark-300) / <alpha-value>)',
+          900: 'var(--bg-dark-900)',
+          800: 'var(--bg-dark-800)',
+          700: 'var(--bg-dark-700)',
+          600: 'var(--bg-dark-600)',
+          500: 'var(--bg-dark-500)',
+          400: 'var(--bg-dark-400)',
+          300: 'var(--bg-dark-300)',
         },
         accent: {
           DEFAULT: '#8B5CF6', // Violet
