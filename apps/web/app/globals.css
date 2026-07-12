@@ -5,6 +5,33 @@
 :root {
   --background: #090d16;
   --foreground: #f3f4f6;
+  --text-white: 255 255 255;
+  --bg-dark-900: 9 13 22;
+  --bg-dark-800: 17 24 39;
+  --bg-dark-700: 31 41 55;
+  --bg-dark-600: 55 65 81;
+  --bg-dark-500: 75 85 99;
+  --bg-dark-400: 156 163 175;
+  --bg-dark-300: 209 213 219;
+  --glass-bg: rgba(17, 24, 39, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover-bg: rgba(31, 41, 55, 0.8);
+}
+
+html.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --text-white: 15 23 42;
+  --bg-dark-900: 241 245 249;
+  --bg-dark-800: 255 255 255;
+  --bg-dark-700: 226 232 240;
+  --bg-dark-600: 203 213 225;
+  --bg-dark-500: 148 163 184;
+  --bg-dark-400: 100 116 139;
+  --bg-dark-300: 71 85 105;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-hover-bg: rgba(248, 250, 252, 0.8);
 }
 
 body {
@@ -12,18 +39,21 @@ body {
   background-color: var(--background);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Glassmorphism utility */
 .glass {
-  background: rgba(17, 24, 39, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-hover:hover {
-  background: rgba(31, 41, 55, 0.8);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--glass-hover-bg);
+  border-color: var(--glass-border);
 }
+
 
 
