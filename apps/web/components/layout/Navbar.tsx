@@ -5,13 +5,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2 } from 'lucide-react';
+import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2, Sun, Moon } from 'lucide-react';
 import WalletButton from '../WalletButton';
+import { useTheme } from '../ThemeProvider';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,6 +87,15 @@ export default function Navbar() {
 
           {/* Action / Wallet button & mobile toggle */}
           <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl border border-white/5 bg-dark-800 hover:bg-dark-700 text-teal-400 hover:text-teal-300 transition duration-150"
+              aria-label="Toggle theme"
+              title="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+
             <div id="tour-wallet-btn" className="hidden sm:block">
               <WalletButton />
             </div>
@@ -168,8 +179,17 @@ export default function Navbar() {
 
               {/* Wallet button in drawer for mobile view (if not sm screen size) */}
               <div className="space-y-4 pt-6 border-t border-white/5">
-                <div className="block sm:hidden w-full">
-                  <WalletButton />
+                <div className="flex items-center gap-3 w-full">
+                  <div className="flex-grow sm:hidden">
+                    <WalletButton />
+                  </div>
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2.5 rounded-xl border border-white/5 bg-dark-800 hover:bg-dark-700 text-teal-400 hover:text-teal-300 transition duration-150 shrink-0"
+                    aria-label="Toggle theme"
+                  >
+                    {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                  </button>
                 </div>
                 <p className="text-xxs text-dark-600 text-center font-medium">
                   Stellar Soroban Continuous Flow
