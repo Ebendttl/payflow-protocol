@@ -5,15 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2, Sun, Moon } from 'lucide-react';
+import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2 } from 'lucide-react';
 import WalletButton from '../WalletButton';
-import { useTheme } from '../ThemeProvider';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +47,7 @@ export default function Navbar() {
           {/* Logo / Wordmark */}
           <Link href="/" id="tour-logo" className="flex items-center gap-2 group">
             <div className="relative h-9 w-9 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-md shadow-primary/10">
-              <Image src="/icon.png" alt="PayFlow Logo" fill priority className="object-cover" />
+              <Image src="/icon.png" alt="PayFlow Logo" fill priority sizes="32px" className="object-cover" />
             </div>
             <span
               className="font-bold text-lg tracking-tight text-[#F0EEE9] group-hover:text-primary-light transition-colors duration-200"
@@ -87,14 +86,6 @@ export default function Navbar() {
 
           {/* Action / Wallet button & mobile toggle */}
           <div className="flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="p-2.5 rounded-xl border border-white/5 bg-dark-800 hover:bg-dark-700 text-teal-400 hover:text-teal-300 transition duration-150"
-              aria-label="Toggle theme"
-              title="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
 
             <div id="tour-wallet-btn" className="hidden sm:block">
               <WalletButton />
@@ -138,7 +129,7 @@ export default function Navbar() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <div className="relative h-8 w-8 overflow-hidden rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center">
-                      <Image src="/icon.png" alt="PayFlow Logo" fill className="object-cover" />
+                      <Image src="/icon.png" alt="PayFlow Logo" fill sizes="32px" className="object-cover" />
                     </div>
                     <span className="font-bold text-md text-[#F0EEE9]">PayFlow</span>
                   </div>
@@ -183,13 +174,6 @@ export default function Navbar() {
                   <div className="flex-grow sm:hidden">
                     <WalletButton />
                   </div>
-                  <button
-                    onClick={toggleTheme}
-                    className="p-2.5 rounded-xl border border-white/5 bg-dark-800 hover:bg-dark-700 text-teal-400 hover:text-teal-300 transition duration-150 shrink-0"
-                    aria-label="Toggle theme"
-                  >
-                    {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                  </button>
                 </div>
                 <p className="text-xxs text-dark-600 text-center font-medium">
                   Stellar Soroban Continuous Flow
