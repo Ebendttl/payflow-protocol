@@ -5,13 +5,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2 } from 'lucide-react';
+import { Menu, X, Home, Activity, ShieldCheck, BarChart3, Link2, Bell } from 'lucide-react';
 import WalletButton from '../WalletButton';
+import { useNotifications } from '../NotificationProvider';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { unreadCount, toggleOpen } = useNotifications();
 
 
   useEffect(() => {
