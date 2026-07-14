@@ -21,7 +21,7 @@ export function useStream(streamId: bigint): UseStreamResult {
     setIsLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = new FreighterWalletAdapter() as any;
       const client = createPayFlowClient(wallet);
       const detail = await client.streams.getStream(streamId);
       setStream(detail);
@@ -62,7 +62,7 @@ export function useStreams(sender: string | null): UseStreamsResult {
     setIsLoading(true);
     setError(null);
     try {
-      const wallet = new FreighterWalletAdapter();
+      const wallet = new FreighterWalletAdapter() as any;
       const client = createPayFlowClient(wallet);
       const ids = await client.streams.getStreamsBySender(sender);
 
