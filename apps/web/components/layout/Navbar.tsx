@@ -88,6 +88,20 @@ export default function Navbar() {
 
           {/* Action / Wallet button & mobile toggle */}
           <div className="flex items-center gap-3">
+            {/* Bell Activity Notification Button */}
+            <button
+              onClick={toggleOpen}
+              className="relative p-2.5 rounded-xl border border-white/5 bg-dark-800 hover:bg-dark-700 text-teal-400 hover:text-teal-300 transition duration-150 shrink-0 animate-in fade-in"
+              aria-label="Activity Feed"
+              title="Activity Feed"
+            >
+              <Bell size={18} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-lg shadow-rose-500/20 border border-dark-900 animate-pulse">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
 
             <div id="tour-wallet-btn" className="hidden sm:block">
               <WalletButton />
