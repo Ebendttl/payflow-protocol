@@ -5,6 +5,8 @@ import Footer from '../components/layout/Footer';
 import ProductTour from '../components/ui/ProductTour';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '../components/ThemeProvider';
+import { NotificationProvider } from '../components/NotificationProvider';
+import NotificationDrawer from '../components/layout/NotificationDrawer';
 
 export const metadata: Metadata = {
   title: 'PayFlow Protocol | Decentralized Streaming & Escrows',
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+  }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
@@ -45,22 +47,25 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen flex flex-col bg-dark-900 text-white">
         <ThemeProvider>
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: 'rgba(17, 24, 39, 0.9)',
-                color: '#f3f4f6',
-                border: '1px solid rgba(13, 148, 136, 0.3)',
-                backdropFilter: 'blur(12px)',
-              },
-            }}
-          />
-          <Navbar />
-          {children}
-          <Footer />
-          <ProductTour />
+          <NotificationProvider>
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: 'rgba(17, 24, 39, 0.9)',
+                  color: '#f3f4f6',
+                  border: '1px solid rgba(13, 148, 136, 0.3)',
+                  backdropFilter: 'blur(12px)',
+                },
+              }}
+            />
+            <Navbar />
+            {children}
+            <Footer />
+            <ProductTour />
+            <NotificationDrawer />
+          </NotificationProvider>
         </ThemeProvider>
       </body>
     </html>
