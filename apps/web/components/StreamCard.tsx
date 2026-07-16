@@ -21,7 +21,7 @@ const STATUS_STYLES: Record<string, string> = {
   Completed: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
 };
 
-function calculateActiveDuration(now: number, stream: Stream): number {
+export function calculateActiveDuration(now: number, stream: Stream): number {
   const startTime = Number(stream.startTime);
   const pausedAt = stream.pausedAt ? Number(stream.pausedAt) : null;
   const totalPausedDuration = Number(stream.totalPausedDuration);
@@ -42,7 +42,7 @@ function calculateActiveDuration(now: number, stream: Stream): number {
   return activeDuration > totalDuration ? totalDuration : activeDuration;
 }
 
-function calculateAccrued(now: number, stream: Stream): bigint {
+export function calculateAccrued(now: number, stream: Stream): bigint {
   if (stream.status === 'Completed') {
     return stream.totalAmount;
   }
