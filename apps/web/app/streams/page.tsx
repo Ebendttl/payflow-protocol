@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import StreamCard from '../../components/StreamCard';
+import StreamCard, { calculateAccrued } from '../../components/StreamCard';
 import { useWalletStore } from '../../lib/store/walletStore';
-import { useStreams } from '../../lib/hooks/useStream';
+import { useStreams, useIncomingStreams } from '../../lib/hooks/useStream';
+import { createPayFlowClient, getActiveWalletAdapter } from '../../lib/stellar';
 import {
   Plus,
   LayoutGrid,
@@ -13,9 +14,13 @@ import {
   Loader2,
   RefreshCw,
   AlertCircle,
+  Download,
+  Upload,
+  Coins,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../../components/ui/Skeleton';
+import { toast } from 'react-hot-toast';
 
 import WalletOptionButton from '../../components/ui/WalletOptionButton';
 
@@ -32,6 +37,15 @@ const gridVariants = {
 export default function StreamsDashboard() {
   const { publicKey, connect, isConnecting, connectionError, walletType } = useWalletStore();
   const [filter, setFilter] = useState<'All' | 'Active' | 'Paused' | 'Cancelled'>('All');
+  const [tab, setTab] = useState<'outgoing' | 'incoming'>('outgoing');
+  const [isClaimingAll, setIsClaimingAll] = useState(false);
+  const [claimProgress, setClaimProgress] = useState('');
+  const [now, setNow] = useState<number>(Math.floor(Date.now() / 1000));
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Math.floor(Date.now() / 1000)), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleConnect = async (type: 'freighter' | 'lobstr') => {
     try {
@@ -42,9 +56,60 @@ export default function StreamsDashboard() {
   };
 
   // Fetch live streams from the blockchain via StreamClient
-  const { streams, isLoading, error, refetch } = useStreams(publicKey);
+  const { streams: outgoingStreams, isLoading: isLoadingOutgoing, error: errorOutgoing, refetch: refetchOutgoing } = useStreams(publicKey);
+  const { streams: incomingStreams, isLoading: isLoadingIncoming, error: errorIncoming, refetch: refetchIncoming } = useIncomingStreams(publicKey);
 
-  const filteredStreams = streams.filter((s) => filter === 'All' || s.status === filter);
+  const activeStreams = tab === 'outgoing' ? outgoingStreams : incomingStreams;
+  const isLoading = tab === 'outgoing' ? isLoadingOutgoing : isLoadingIncoming;
+  const error = tab === 'outgoing' ? errorOutgoing : errorIncoming;
+
+  const refetch = () => {
+    refetchOutgoing();
+    refetchIncoming();
+  };
+
+  const filteredStreams = activeStreams.filter((s) => filter === 'All' || s.status === filter);
+
+  // Compute number of claimable incoming streams
+  const claimableIncomingStreams = incomingStreams.filter((stream) => {
+    if (stream.status !== 'Active' && stream.status !== 'Paused' && stream.status !== 'Completed') {
+      return false;
+    }
+    const accrued = calculateAccrued(now, stream);
+    const claimable = accrued > stream.claimedAmount ? accrued - stream.claimedAmount : 0n;
+    return claimable > 0n;
+  });
+
+  const handleClaimAll = async () => {
+    if (claimableIncomingStreams.length === 0) {
+      toast.error('No claimable balances found.');
+      return;
+    }
+
+    setIsClaimingAll(true);
+    const toastId = toast.loading(`Initiating claims for ${claimableIncomingStreams.length} streams...`);
+
+    try {
+      const wallet = await getActiveWalletAdapter(walletType);
+      const client = createPayFlowClient(wallet);
+
+      for (let i = 0; i < claimableIncomingStreams.length; i++) {
+        const stream = claimableIncomingStreams[i];
+        setClaimProgress(`Claiming ${i + 1}/${claimableIncomingStreams.length}...`);
+        toast.loading(`[${i + 1}/${claimableIncomingStreams.length}] Requesting claim for Stream #${stream.id}...`, { id: toastId });
+        await client.streams.claim({ streamId: stream.id });
+      }
+
+      toast.success('All pending balances claimed successfully!', { id: toastId });
+      refetch();
+    } catch (err: any) {
+      const msg = err.message || String(err);
+      toast.error(`Claim All failed: ${msg}`, { id: toastId });
+    } finally {
+      setIsClaimingAll(false);
+      setClaimProgress('');
+    }
+  };
 
   return (
     <div className="min-h-[calc(100vh-160px)] bg-dark-900 flex flex-col justify-between relative overflow-hidden">
