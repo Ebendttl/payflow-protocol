@@ -117,33 +117,85 @@ export default function StreamsDashboard() {
 
       {/* Main Content */}
       <main className="max-w-6xl w-full mx-auto px-6 py-12 flex-grow space-y-8 z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              Active Streams
-              {publicKey && (
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div>
+              <h2 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                Streams
+                {publicKey && (
+                  <button
+                    onClick={refetch}
+                    disabled={isLoading}
+                    className="p-1.5 rounded-xl bg-dark-800 hover:bg-dark-700 text-dark-400 hover:text-white transition disabled:opacity-50"
+                    title="Refresh streams"
+                  >
+                    <RefreshCw size={14} className={isLoading ? 'animate-spin text-primary' : ''} />
+                  </button>
+                )}
+              </h2>
+              <p className="text-xs text-dark-500">
+                Track and manage your continuous real-time payouts
+              </p>
+            </div>
+
+            {publicKey && (
+              <div className="flex bg-dark-800 p-1 rounded-2xl border border-white/5 gap-1 self-start sm:self-auto shadow-md">
                 <button
-                  onClick={refetch}
-                  disabled={isLoading}
-                  className="p-1.5 rounded-xl bg-dark-800 hover:bg-dark-700 text-dark-400 hover:text-white transition disabled:opacity-50"
-                  title="Refresh streams"
+                  onClick={() => setTab('outgoing')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    tab === 'outgoing'
+                      ? 'bg-dark-700 text-white border border-white/5'
+                      : 'text-dark-500 hover:text-white'
+                  }`}
                 >
-                  <RefreshCw size={14} className={isLoading ? 'animate-spin text-primary' : ''} />
+                  <Upload size={14} />
+                  <span>Outgoing ({outgoingStreams.length})</span>
+                </button>
+                <button
+                  onClick={() => setTab('incoming')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    tab === 'incoming'
+                      ? 'bg-dark-700 text-white border border-white/5'
+                      : 'text-dark-500 hover:text-white'
+                  }`}
+                >
+                  <Download size={14} />
+                  <span>Incoming ({incomingStreams.length})</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {publicKey && (
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+              {tab === 'incoming' && claimableIncomingStreams.length > 0 && (
+                <button
+                  onClick={handleClaimAll}
+                  disabled={isClaimingAll}
+                  className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.02]"
+                >
+                  {isClaimingAll ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>{claimProgress || 'Claiming...'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Coins size={16} />
+                      <span>Claim All ({claimableIncomingStreams.length})</span>
+                    </>
+                  )}
                 </button>
               )}
-            </h2>
-            <p className="text-xs text-dark-500">
-              Track and manage your continuous real-time payouts
-            </p>
-          </div>
-          {publicKey && (
-            <Link
-              href="/streams/create"
-              className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-[1.02]"
-            >
-              <Plus size={16} />
-              New Stream
-            </Link>
+
+              <Link
+                href="/streams/create"
+                className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-[1.02] w-full sm:w-auto"
+              >
+                <Plus size={16} />
+                New Stream
+              </Link>
+            </div>
           )}
         </div>
 
@@ -196,7 +248,7 @@ export default function StreamsDashboard() {
               Retry
             </button>
           </div>
-        ) : isLoading && streams.length === 0 ? (
+        ) : isLoading && activeStreams.length === 0 ? (
           /* Loading State Skeletons */
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
@@ -264,9 +316,13 @@ export default function StreamsDashboard() {
             ) : (
               <div className="glass p-12 rounded-2xl text-center border border-white/5">
                 <LayoutGrid className="mx-auto text-dark-600 mb-4" size={40} />
-                <h3 className="text-lg font-bold mb-1 text-white">No Streams Found</h3>
+                <h3 className="text-lg font-bold mb-1 text-white">
+                  {tab === 'outgoing' ? 'No Outgoing Streams Found' : 'No Incoming Streams Found'}
+                </h3>
                 <p className="text-xs text-dark-500">
-                  Get started by creating your first token stream.
+                  {tab === 'outgoing'
+                    ? 'Get started by creating your first token stream.'
+                    : 'You do not have any active incoming payment streams.'}
                 </p>
               </div>
             )}
@@ -275,4 +331,5 @@ export default function StreamsDashboard() {
       </main>
     </div>
   );
+}
 }
