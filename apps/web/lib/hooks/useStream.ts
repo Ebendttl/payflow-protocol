@@ -88,3 +88,53 @@ export function useStreams(sender: string | null): UseStreamsResult {
 
   return { streams, isLoading, error, refetch: fetchStreams };
 }
+
+export function useIncomingStreams(recipient: string | null): UseStreamsResult {
+  const [streams, setStreams] = useState<Stream[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchStreams = useCallback(async () => {
+    if (!recipient) {
+      setStreams([]);
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const wallet = new FreighterWalletAdapter() as any;
+      const client = createPayFlowClient(wallet);
+
+      // Parallel scan of first 50 IDs to find matching incoming streams
+      const ids = Array.from({ length: 50 }, (_, i) => BigInt(i + 1));
+      const details: Stream[] = [];
+
+      const results = await Promise.allSettled(
+        ids.map((id) => client.streams.getStream(id))
+      );
+
+      results.forEach((res) => {
+        if (res.status === 'fulfilled' && res.value) {
+          if (res.value.recipient === recipient) {
+            details.push(res.value);
+          }
+        }
+      });
+
+      setStreams(details);
+    } catch (err: any) {
+      setError(err.message || String(err));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [recipient]);
+
+  useEffect(() => {
+    fetchStreams();
+    // Poll every 10 seconds for new incoming streams or status updates
+    const interval = setInterval(fetchStreams, 10000);
+    return () => clearInterval(interval);
+  }, [fetchStreams]);
+
+  return { streams, isLoading, error, refetch: fetchStreams };
+}
