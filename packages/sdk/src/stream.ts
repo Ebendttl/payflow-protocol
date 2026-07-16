@@ -11,6 +11,7 @@ import {
   Transaction,
 } from '@stellar/stellar-sdk';
 
+
 import type {
   Stream,
   CreateStreamParams,
@@ -154,15 +155,17 @@ export class StreamClient {
 
     const simRes = await server.simulateTransaction(tx);
     if (rpc.Api.isSimulationError(simRes)) {
-      throw new Error(`Simulation failed: ${simRes.error}`);
+      throw new Error(`Simulation failed: ${(simRes as rpc.Api.SimulateTransactionErrorResponse).error}`);
     }
 
-    if (!simRes.result || !simRes.result.retval) {
+    const successRes = simRes as rpc.Api.SimulateTransactionSuccessResponse;
+    if (!successRes.result || !successRes.result.retval) {
       throw new Error('No return value in simulation response');
     }
 
-    return scValToNative(simRes.result.retval);
+    return scValToNative(successRes.result.retval);
   }
+
 
   /** Build and optionally submit a create_stream transaction. */
   async createStream(params: CreateStreamParams): Promise<string> {

@@ -85,8 +85,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
   const toggleOpen = () => setIsOpen((prev) => !prev);
 
+  const welcomeAddedRef = useRef(false);
+
   // Initial welcome / guide notification
   useEffect(() => {
+    if (welcomeAddedRef.current) return;
+    welcomeAddedRef.current = true;
     addNotification(
       'Welcome to PayFlow Protocol! Connecting your wallet will unlock real-time stream monitoring.',
       'info'
@@ -126,26 +130,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     prevStreamsRef.current = streams;
   }, [streams, publicKey]);
 
-  // Simulate real-time mock updates to showcase premium feed experience
-  useEffect(() => {
-    // List of realistic notifications matching user specifications
-    const mockEvents = [
-      { message: 'Stream #42 reached 80% completion', type: 'success' as const, link: '/streams' },
-      { message: 'You have 12.5 USDC claimable from incoming streams', type: 'info' as const, link: '/streams' },
-      { message: 'Escrow #101 milestone 2 was approved by the arbiter', type: 'success' as const, link: '/escrow' },
-      { message: 'Escrow #205 milestone 1 has a dispute raised', type: 'alert' as const, link: '/escrow' },
-      { message: 'Gas warning: Stellar testnet XLM reserves are running low', type: 'warning' as const },
-      { message: 'New transaction batch settled on Stellar Soroban ledger', type: 'success' as const },
-    ];
 
-    // Trigger one every 40-50 seconds
-    const interval = setInterval(() => {
-      const randomEvent = mockEvents[Math.floor(Math.random() * mockEvents.length)];
-      addNotification(randomEvent.message, randomEvent.type, randomEvent.link);
-    }, 45000);
 
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <NotificationContext.Provider

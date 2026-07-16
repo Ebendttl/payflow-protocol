@@ -153,14 +153,17 @@ export default function StreamsDashboard() {
                 </button>
                 <button
                   onClick={() => setTab('incoming')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all relative overflow-hidden ${
                     tab === 'incoming'
                       ? 'bg-dark-700 text-white border border-white/5'
                       : 'text-dark-500 hover:text-white'
                   }`}
                 >
                   <Download size={14} />
-                  <span>Incoming ({incomingStreams.length})</span>
+                  <span className="mr-1">Incoming</span>
+                  <span className="text-[9px] bg-primary/20 text-primary-light px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wide">
+                    Soon
+                  </span>
                 </button>
               </div>
             )}
@@ -168,26 +171,6 @@ export default function StreamsDashboard() {
 
           {publicKey && (
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-              {tab === 'incoming' && claimableIncomingStreams.length > 0 && (
-                <button
-                  onClick={handleClaimAll}
-                  disabled={isClaimingAll}
-                  className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.02]"
-                >
-                  {isClaimingAll ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      <span>{claimProgress || 'Claiming...'}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Coins size={16} />
-                      <span>Claim All ({claimableIncomingStreams.length})</span>
-                    </>
-                  )}
-                </button>
-              )}
-
               <Link
                 href="/streams/create"
                 className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-[1.02] w-full sm:w-auto"
@@ -232,7 +215,24 @@ export default function StreamsDashboard() {
               </p>
             )}
           </div>
-        ) : error ? (
+        ) : tab === 'incoming' ? (
+          /* Recipient View - Coming Soon Placeholder */
+          <div className="glass p-12 rounded-2xl text-center border border-white/5 max-w-xl mx-auto my-6 space-y-6 animate-in fade-in duration-300">
+            <div className="h-16 w-16 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center mx-auto">
+              <Coins className="text-primary animate-pulse" size={32} />
+            </div>
+            <div className="space-y-2 animate-in slide-in-from-bottom-2 duration-400">
+              <span className="text-[10px] bg-primary/20 text-primary-light px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
+                Coming Soon
+              </span>
+              <h3 className="text-xl font-bold text-white mt-3">Recipient View & Claim-All</h3>
+              <p className="text-xs text-dark-400 leading-relaxed max-w-md mx-auto">
+                Easily monitor streams sent to your address, track incoming real-time token flows,
+                and claim all accrued balances at once with a single transaction.
+              </p>
+            </div>
+          </div>
+        ) : (error && activeStreams.length === 0) ? (
           /* Error State */
           <div className="glass p-8 rounded-2xl border border-rose-500/20 max-w-lg mx-auto text-center space-y-4">
             <AlertCircle className="mx-auto text-accent-rose" size={36} />

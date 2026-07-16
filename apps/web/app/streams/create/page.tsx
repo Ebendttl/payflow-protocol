@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import CreateStreamForm from '../../../components/CreateStreamForm';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
-export default function CreateStreamPage() {
+function CreateStreamPageInner() {
   return (
     <div className="min-h-[calc(100vh-160px)] bg-dark-900 flex flex-col justify-between relative overflow-hidden">
       <div className="absolute top-[-10%] left-[-10%] h-[50%] w-[50%] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
@@ -24,3 +24,18 @@ export default function CreateStreamPage() {
     </div>
   );
 }
+
+export default function CreateStreamPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[calc(100vh-160px)] flex items-center justify-center">
+          <Loader2 className="text-primary animate-spin" size={32} />
+        </div>
+      }
+    >
+      <CreateStreamPageInner />
+    </Suspense>
+  );
+}
+

@@ -7,7 +7,7 @@ export const NETWORK_CONFIG: Record<'testnet' | 'mainnet', NetworkConfig> = {
   testnet: {
     rpcUrl:
       typeof window !== 'undefined'
-        ? '/api/rpc'
+        ? `${window.location.origin}/api/rpc`
         : process.env.NEXT_PUBLIC_HORIZON_RPC_URL ||
           'https://soroban-rpc.testnet.stellar.gateway.fm',
     networkPassphrase: Networks.TESTNET,
